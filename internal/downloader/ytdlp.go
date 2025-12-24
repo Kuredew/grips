@@ -2,16 +2,20 @@ package downloader
 
 import (
 	"bufio"
-	"log"
 	"os/exec"
 	"strings"
+
+	"github.com/sirupsen/logrus"
 )
 
 type YtdlpDownloader struct {
+	Log        *logrus.Logger
 	BinaryPath string
 }
 
 func (ytdlp *YtdlpDownloader) GetTitle(url string) (string, error) {
+	ytdlp.Log.Info("Started.")
+
 	out, err := exec.Command(ytdlp.BinaryPath, "--get-title", url).Output()
 	if err != nil {
 		return "", err
@@ -26,33 +30,33 @@ func (ytdlp *YtdlpDownloader) ExtractVideoUrls(url string) ([]string, error) {
 	cmd := exec.Command(ytdlp.BinaryPath, "-g", "--cookies-from-browser", "firefox", "--js-runtimes", "node", url)
 	var urls []string
 
-	log.Print("[extractvideo] Start extract.")
+	ytdlp.Log.Info("Start extract.")
 
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		log.Printf("[extractvideo/err] %v", err)
+		ytdlp.Log.Error(err)
 		return nil, nil
 	}
 
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
-		log.Printf("[extractvideo/err] %v", err)
+		ytdlp.Log.Error(err)
 		return nil, nil
 	}
 
 	if err := cmd.Start(); err != nil {
-		log.Printf("[extractvideo/err] %v", err)
+		ytdlp.Log.Error(err)
 	}
 
 	go func() {
 		scanner := bufio.NewScanner(stdout)
 		for scanner.Scan() {
 			m := scanner.Text()
-			log.Printf("[extractvideo/stdout] %v\n", m)
+			ytdlp.Log.Info(m)
 
 			if strings.HasPrefix(m, "https") {
 				urls = append(urls, m)
-				log.Printf("[extractvideo] Appended url")
+				ytdlp.Log.Info("Appended URL from stdout")
 			}
 		}
 	}()
@@ -61,14 +65,14 @@ func (ytdlp *YtdlpDownloader) ExtractVideoUrls(url string) ([]string, error) {
 		scanner := bufio.NewScanner(stderr)
 		for scanner.Scan() {
 			m := scanner.Text()
-			log.Printf("[extractvideo/stderr] %v\n", m)
+			ytdlp.Log.Warn(m)
 		}
 	}()
 
 	if err := cmd.Wait(); err != nil {
-		log.Printf("[extractvideo/err] %v", err)
+		ytdlp.Log.Error(err)
 	}
 
-	log.Print("[extractvideo] Extract complete.")
+	ytdlp.Log.Info("Extract complete.")
 	return urls, nil
 }
