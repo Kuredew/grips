@@ -8,9 +8,11 @@ import (
 )
 
 func Init() {
-	ytdlp := downloader.YtdlpDownloader{BinaryPath: "./bin/ytdlp"}
+	ytdlp := downloader.YtdlpDownloader{BinaryPath: "yt-dlp"}
 
 	h := handler.DownloadHandler{Worker: ytdlp}
 
 	http.HandleFunc("/getinfo", h.HandleGetInfo)
+
+	http.ListenAndServe(":8000", nil)
 }

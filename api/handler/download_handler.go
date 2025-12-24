@@ -17,6 +17,7 @@ func (h *DownloadHandler) HandleGetInfo(w http.ResponseWriter, r *http.Request) 
 	title, err := h.Worker.GetTitle(url)
 	if err != nil {
 		http.Error(w, "Failed to get video title : "+err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	response := map[string]string{"title": title, "url": url}
