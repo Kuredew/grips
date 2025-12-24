@@ -13,4 +13,6 @@ func Init() {
 	h := handler.DownloadHandler{Worker: ytdlp}
 
 	http.HandleFunc("/getinfo", h.HandleGetInfo)
+
+	http.ListenAndServe(":8000", nil)
 }
