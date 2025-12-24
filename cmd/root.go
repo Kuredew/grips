@@ -8,7 +8,7 @@ import (
 )
 
 func Init() {
-	ytdlp := downloader.YtdlpDownloader{BinaryPath: "./bin/ytdlp"}
+	ytdlp := downloader.YtdlpDownloader{BinaryPath: "yt-dlp"}
 
 	h := handler.DownloadHandler{Worker: ytdlp}
 
