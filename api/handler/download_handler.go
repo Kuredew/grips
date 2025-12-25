@@ -99,7 +99,6 @@ func (h *DownloadHandler) HandleExtractVideo(w http.ResponseWriter, r *http.Requ
 	done := make(chan struct{})
 
 	go func() {
-		URLInfo, errWorker = h.Worker.GetTitle(url)
 		URLInfo, errWorker = h.Worker.ExtractVideoUrls(url, logChan)
 		close(done)
 	}()
