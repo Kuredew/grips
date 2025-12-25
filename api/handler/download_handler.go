@@ -83,23 +83,40 @@ func (h *DownloadHandler) HandleGetInfo(w http.ResponseWriter, r *http.Request) 
 	h.respond(w, http.StatusOK, payload)
 }
 
-func (h *DownloadHandler) HandleExtractVideo(w http.ResponseWriter, r *http.Request) {
+func (h *DownloadHandler) HandleExtract(w http.ResponseWriter, r *http.Request) {
 	var URLInfo downloader.URLInfo
 	var errWorker error
 
 	h.Log.Info("Started extractVideo handler")
 
+	// validate options
 	url := r.URL.Query().Get("url")
 	if url == "" {
 		h.Log.Error("Rejected request because URL is empty")
 		return
+	}
+	mode := r.URL.Query().Get("mode")
+	if mode == "" {
+		h.Log.Error("Rejected request because Mode is empty")
+		return
+	}
+	resolution := r.URL.Query().Get("resolution")
+	if resolution == "" {
+		h.Log.Error("Rejected request because Resolution is empty")
+		return
+	}
+
+	options := downloader.Options{
+		URL:        url,
+		Mode:       mode,
+		Resolution: resolution,
 	}
 
 	logChan := make(chan string)
 	done := make(chan struct{})
 
 	go func() {
-		URLInfo, errWorker = h.Worker.ExtractVideoUrls(url, logChan)
+		URLInfo, errWorker = h.Worker.Extract(options, logChan)
 		close(done)
 	}()
 
@@ -126,6 +143,10 @@ func (h *DownloadHandler) HandleExtractVideo(w http.ResponseWriter, r *http.Requ
 			if errWorker != nil {
 				payload.Status = ERROR
 				payload.Description = errWorker.Error()
+				h.respondStream(w, payload, false)
+
+				h.Log.Errorf("Completed with yt-dlp error: %v", errWorker.Error())
+				return
 			}
 
 			h.respondStream(w, payload, false)
