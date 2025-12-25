@@ -46,7 +46,7 @@ func Init() {
 	log.Info("App Started.")
 
 	http.HandleFunc("/getinfo", h.HandleGetInfo)
-	http.HandleFunc("/extractvideo", h.HandleExtractVideo)
+	http.HandleFunc("/extract", h.HandleExtract)
 
 	http.ListenAndServe(":8000", nil)
 }
