@@ -21,6 +21,10 @@ type Options struct {
 	Resolution string
 }
 
+func (o *Options) IsValid() bool {
+	return o.URL != "" && o.Mode != "" && o.Resolution != ""
+}
+
 type URLInfo struct {
 	Title string `json:"title"`
 	URL   string `json:"url"`
