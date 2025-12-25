@@ -89,27 +89,21 @@ func (h *DownloadHandler) HandleExtract(w http.ResponseWriter, r *http.Request) 
 
 	h.Log.Info("Started extractVideo handler")
 
-	// validate options
-	url := r.URL.Query().Get("url")
-	if url == "" {
-		h.Log.Error("Rejected request because URL is empty")
-		return
-	}
-	mode := r.URL.Query().Get("mode")
-	if mode == "" {
-		h.Log.Error("Rejected request because Mode is empty")
-		return
-	}
-	resolution := r.URL.Query().Get("resolution")
-	if resolution == "" {
-		h.Log.Error("Rejected request because Resolution is empty")
-		return
+	options := downloader.Options{
+		URL:        r.URL.Query().Get("url"),
+		Mode:       r.URL.Query().Get("mode"),
+		Resolution: r.URL.Query().Get("resolution"),
 	}
 
-	options := downloader.Options{
-		URL:        url,
-		Mode:       mode,
-		Resolution: resolution,
+	// validate
+	if !options.IsValid() {
+		errorStr := "Rejected request because some url parameter is not valid"
+		h.Log.Error(errorStr)
+		h.respond(w, http.StatusBadRequest, Response{
+			Status:      ERROR,
+			Description: errorStr,
+		})
+		return
 	}
 
 	logChan := make(chan string)
