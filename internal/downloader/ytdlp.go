@@ -2,6 +2,8 @@ package downloader
 
 import (
 	"bufio"
+	"encoding/json"
+	"fmt"
 	"os/exec"
 	"strings"
 
@@ -13,39 +15,56 @@ type YtdlpDownloader struct {
 	BinaryPath string
 }
 
-func (ytdlp *YtdlpDownloader) GetTitle(url string) (string, error) {
+type URLInfo struct {
+	Title string `json:"title"`
+	URL   string `json:"url"`
+}
+
+func (ytdlp *YtdlpDownloader) GetTitle(url string) (URLInfo, error) {
+	var urlInfo URLInfo
+
 	ytdlp.Log.Info("Started.")
 
 	out, err := exec.Command(ytdlp.BinaryPath, "--get-title", url).Output()
 	if err != nil {
-		return "", err
+		return urlInfo, err
 	}
 
 	// remove newline
 	title := strings.TrimSpace(string(out))
-	return title, nil
+
+	urlInfo = URLInfo{
+		Title: title,
+	}
+	ytdlp.Log.Info("Got title")
+	return urlInfo, nil
 }
 
-func (ytdlp *YtdlpDownloader) ExtractVideoUrls(url string) ([]string, error) {
-	cmd := exec.Command(ytdlp.BinaryPath, "-g", "--cookies-from-browser", "firefox", "--js-runtimes", "node", url)
-	var urls []string
+func (ytdlp *YtdlpDownloader) ExtractVideoUrls(url string, logChan chan<- string) (URLInfo, error) {
+	var urlInfo URLInfo
+	var finalJsonString string
+
+	cmd := exec.Command(ytdlp.BinaryPath, "--print", `{"title": "%(title)s", "url": "%(urls)s" }`, "--cookies-from-browser", "firefox", "--js-runtimes", "node", url)
+
+	defer close(logChan)
 
 	ytdlp.Log.Info("Start extract.")
 
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		ytdlp.Log.Error(err)
-		return nil, nil
+		return urlInfo, err
 	}
 
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
 		ytdlp.Log.Error(err)
-		return nil, nil
+		return urlInfo, err
 	}
 
 	if err := cmd.Start(); err != nil {
 		ytdlp.Log.Error(err)
+		return urlInfo, err
 	}
 
 	go func() {
@@ -53,10 +72,15 @@ func (ytdlp *YtdlpDownloader) ExtractVideoUrls(url string) ([]string, error) {
 		for scanner.Scan() {
 			m := scanner.Text()
 			ytdlp.Log.Info(m)
+			logChan <- m
 
+			if strings.HasPrefix(m, "{") {
+				finalJsonString += m
+				ytdlp.Log.Info("Appended string that have prefix '{'")
+			}
 			if strings.HasPrefix(m, "https") {
-				urls = append(urls, m)
-				ytdlp.Log.Info("Appended URL from stdout")
+				finalJsonString += fmt.Sprintf(" | %v", m)
+				ytdlp.Log.Info("Appended string that have prefix 'https'")
 			}
 		}
 	}()
@@ -66,13 +90,21 @@ func (ytdlp *YtdlpDownloader) ExtractVideoUrls(url string) ([]string, error) {
 		for scanner.Scan() {
 			m := scanner.Text()
 			ytdlp.Log.Warn(m)
+			logChan <- m
 		}
 	}()
 
 	if err := cmd.Wait(); err != nil {
 		ytdlp.Log.Error(err)
+		return urlInfo, err
 	}
-
 	ytdlp.Log.Info("Extract complete.")
-	return urls, nil
+
+	ytdlp.Log.Infof("Unmarshalling json string from : \n%v", finalJsonString)
+	if err := json.Unmarshal([]byte(finalJsonString), &urlInfo); err != nil {
+		ytdlp.Log.Errorf("Error unmarshalling json : %v", err)
+		return urlInfo, err
+	}
+	ytdlp.Log.Info("Operation completed.")
+	return urlInfo, nil
 }
