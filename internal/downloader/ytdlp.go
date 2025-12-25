@@ -15,6 +15,12 @@ type YtdlpDownloader struct {
 	BinaryPath string
 }
 
+type Options struct {
+	URL        string
+	Mode       string
+	Resolution string
+}
+
 type URLInfo struct {
 	Title string `json:"title"`
 	URL   string `json:"url"`
@@ -40,11 +46,24 @@ func (ytdlp *YtdlpDownloader) GetTitle(url string) (URLInfo, error) {
 	return urlInfo, nil
 }
 
-func (ytdlp *YtdlpDownloader) ExtractVideoUrls(url string, logChan chan<- string) (URLInfo, error) {
+func (ytdlp *YtdlpDownloader) Extract(options Options, logChan chan<- string) (URLInfo, error) {
 	var urlInfo URLInfo
 	var finalJsonString string
+	args := []string{"--print", `{"title": "%(title)s", "url": "%(urls)s" }`, "--cookies-from-browser", "firefox", "--js-runtimes", "node"}
 
-	cmd := exec.Command(ytdlp.BinaryPath, "--print", `{"title": "%(title)s", "url": "%(urls)s" }`, "--cookies-from-browser", "firefox", "--js-runtimes", "node", url)
+	switch options.Mode {
+	case "video":
+		args = append(args, fmt.Sprintf("-S res:%v", options.Resolution))
+	case "audio":
+		args = append(args, `-f "ba"`)
+	default:
+		errorStr := fmt.Errorf("Uncompatible mode : %v", options.Mode)
+		ytdlp.Log.Error(errorStr)
+		return urlInfo, errorStr
+	}
+
+	args = append(args, options.URL)
+	cmd := exec.Command(ytdlp.BinaryPath, args...)
 
 	defer close(logChan)
 
