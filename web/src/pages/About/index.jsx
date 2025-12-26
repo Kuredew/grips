@@ -21,8 +21,6 @@ export default function AboutPage() {
   `
 
   const footer = `
-  ![barcode](${frame})
-
   grips is unlicensed, see [unlicense.org](https://unlicense.org/)
   `
   return (
@@ -30,6 +28,7 @@ export default function AboutPage() {
     <div className="w-full h-[99dvh] p-10 overflow-y-auto bg-blue-800 ">
       <div className="prose prose-sm prose-invert text-white pb-50">
         <Markdown children={about}/>
+        <img src={frame} alt="" />
         <Markdown children={footer}/>
       </div>
     </div> 
