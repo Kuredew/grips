@@ -37,16 +37,9 @@ const notification = create((set) => ({
     return id
   },
   deleteNotifFromId: (id) => {
-    set(state => {
-      return state.map(notif => {
-        if (notif.id == id && notif.canDelete) {
-          // return empty to delete
-          return
-        } else {
-          return notif
-        }
-      })
-    })
+    set(state => ({
+      notifs: state.notifs.filter(notif => notif.id != id)
+    }))
 
     return id
   }
