@@ -43,10 +43,10 @@ export default function SettingsPage() {
           activeMenu == item.id && (
             <motion.div
               key={item.id}
-              initial={{opacity: 0, left: 100}}
-              animate={{opacity: 1, left: 0}}
-              exit={{opacity: 0, left: 100}}
-              className="fixed top-0 left-0 w-dvw h-dvh flex justify-center items-center p-5"
+              initial={{opacity: 0, scaleY: 0.95}}
+              animate={{opacity: 1, scaleY: 1}}
+              exit={{opacity: 0, scaleY: 0.95}}
+              className="absolute top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] xl:translate-x-[50%] p-5"
             >
               
               <Modal title={item.id} close={closeMenu}>
