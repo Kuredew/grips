@@ -8,6 +8,7 @@ import SettingsPage from "./pages/Settings"
 import DownloadIcon from "./components/icons/DownloadIcon"
 import SettingsIcon from "./components/icons/SettingsIcon"
 import AboutIcon from "./components/icons/AboutIcon"
+import Notification from "./components/Notification"
 
 function App() {
   const [activePage, setActivePage] = useState("download")
@@ -35,6 +36,10 @@ function App() {
 
   return (
   <>
+    <div className="w-50 absolute left-[50%] translate-x-[-50%] z-20">
+      <Notification autoHide={true} />
+    </div>
+
     <AnimatePresence mode="wait">
       {pages.map((item) => (
         activePage == item.id && (
