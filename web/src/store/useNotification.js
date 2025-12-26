@@ -7,7 +7,7 @@ export const types = {
 
 const notification = create((set) => ({
   notifs: [],
-  addNotif: (title, message, type) => {
+  addNotif: (title, message, type, canDelete) => {
     const id = Date.now()
     set(state => ({
       notifs: [...state.notifs, {
@@ -15,7 +15,8 @@ const notification = create((set) => ({
         title: title,
         type: type,
         message: message,
-        progress: 0
+        progress: 0,
+        canDelete: canDelete
       }]
     }))
 
@@ -32,6 +33,20 @@ const notification = create((set) => ({
           }
       })
     }))
+
+    return id
+  },
+  deleteNotifFromId: (id) => {
+    set(state => {
+      return state.map(notif => {
+        if (notif.id == id && notif.canDelete) {
+          // return empty to delete
+          return
+        } else {
+          return notif
+        }
+      })
+    })
 
     return id
   }
