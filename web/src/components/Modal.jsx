@@ -11,7 +11,7 @@ export default function Modal({title, close, children})  {
         <p>{title}</p>
       </div>
 
-      <div className="p-5">
+      <div className="p-5 max-h-[80dvh] overflow-auto scrollbar">
         {children}
       </div>
     </div>
