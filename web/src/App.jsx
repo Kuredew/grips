@@ -1,34 +1,62 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react"
+import { motion, AnimatePresence } from "motion/react"
+
+import Bar from "./components/Bar"
+import AboutPage from "./pages/About"
+import DownloadPage from "./pages/Download"
+import SettingsPage from "./pages/Settings"
+import DownloadIcon from "./components/icons/DownloadIcon"
+import SettingsIcon from "./components/icons/SettingsIcon"
+import AboutIcon from "./components/icons/AboutIcon"
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [activePage, setActivePage] = useState("download")
+
+  const pages = [
+    {
+      id: "download", 
+      page: <DownloadPage />,
+      icon: <DownloadIcon />,
+      action: () => setActivePage('download')
+    },
+    {
+      id: "settings",
+      page: <SettingsPage />,
+      icon: <SettingsIcon />,
+      action: () => setActivePage('settings')
+    },
+    {
+      id: "about", 
+      page: <AboutPage />,
+      icon: <AboutIcon />,
+      action: () => setActivePage('about')
+    },
+  ]
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+  <>
+    <AnimatePresence mode="wait">
+      {pages.map((item) => (
+        activePage == item.id && (
+          <motion.div
+              key={item.id}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.1 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 flex items-center justify-center"
+          >
+            {item.page}
+          </motion.div>
+        )
+      ))}
+    </AnimatePresence>
+
+    <div className="absolute bottom-0 mb-10 left-[50%] translate-x-[-50%]">
+      <Bar pages={pages} />
+    </div>
+
+  </>
   )
 }
 
