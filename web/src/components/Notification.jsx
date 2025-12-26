@@ -59,7 +59,7 @@ export default function Notification({autoHide}) {
 
                 {notif.type == types.PROGRESS && (
                   <div className="w-full mt-2 h-px bg-[#505050]">
-                    <div className={`w-[${notif.progress}%] bg-[#ffffff] h-px`}>
+                    <div className={`bg-[#ffffff] h-px`} style={{ width: `${notif.progress}%` }}>
                     </div>
                   </div>
                 )}
