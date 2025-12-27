@@ -13,7 +13,7 @@ export default function PagesManager() {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 1.1 }}
           transition={{ duration: 0.2 }}
-          className="inset-0 flex items-center justify-center h-dvh w-dvw"
+          className="inset-0 flex flex-col items-center justify-center h-dvh w-dvw"
       >
         {INSTALLED_PAGES[activePage].component}
       </motion.div>
