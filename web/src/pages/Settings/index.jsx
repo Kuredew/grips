@@ -8,9 +8,11 @@ import Window from "../../components/Window";
 import SparklesIcon from "../../components/icons/SparklesIcon";
 import VideoIcon from "../../components/icons/VideoIcon";
 import AudioIcon from "../../components/icons/AudioIcon";
+import { useWindow } from "../../store/useWindow";
 
 export default function SettingsPage() {
   const [activeMenu, setActiveMenu] = useState([])
+  const { openWindow } = useWindow()
 
   const closeMenu = (menu) => {
     setActiveMenu(prev => {return prev.filter(active => active != menu)})
@@ -25,42 +27,23 @@ export default function SettingsPage() {
   const menus = [
     {
       id: "appearance", 
-      menu: <AppearanceSettings/>,
       icon: <SparklesIcon/>, 
-      action: () => addActiveMenu('appearance')
+      action: () => openWindow('appearanceSettings')
     },
     {
       id: "video", 
-      menu: <VideoSettings/>,
       icon: <VideoIcon/>, 
-      action: () => addActiveMenu('video')
+      action: () => openWindow('videoSettings')
     },
     {
       id: "audio", 
-      menu: <AudioSettings/>,
       icon: <AudioIcon/>, 
-      action: () => addActiveMenu('audio')
+      action: () => openWindow('audioSettings')
     },
   ]
 
   return (
     <>
-      <AnimatePresence>
-        {activeMenu.map((menuId) => {
-          const menuData = menus.find((m) => m.id === menuId)
-          if (!menuData) return
-          
-          return (
-            <Window 
-              key={menuId}
-              title={menuId}
-              close={() => closeMenu(menuId)}
-            >
-              {menuData.menu}
-            </Window>
-          )
-        })}
-      </AnimatePresence>
     <div>
       <p className="text-lg text-center mb-5">settings</p>
       <SettingsNavigation menus={menus} />
