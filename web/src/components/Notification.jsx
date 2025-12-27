@@ -30,7 +30,7 @@ export default function Notification({autoHide}) {
   }, 3000)
  }, [notifs, hideNotifs])
 
-  return (
+ if (notifs.length > 0) return (
     <div className="z-20 flex flex-col-reverse gap-2 pt-3 w-full">
       <AnimatePresence>
         {notifs.map(notif => !hideNotifs.includes(notif.id) && (
@@ -82,5 +82,8 @@ export default function Notification({autoHide}) {
         ))}
         </AnimatePresence>
     </div>
-  )
+  ) 
+  else if (!autoHide) {
+    return (<div className="text-sm">theres nothing here :/</div>)
+  }
 }
