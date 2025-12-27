@@ -2,10 +2,10 @@ import ToggleSwitch from "./ToggleSwitch"
 import { motion } from "motion/react"
 import { AnimatePresence } from "motion/react"
 
-export default function Menu({options}) {
+export default function Menu({settingsList}) {
   return (
     <div>
-      {options.map((item, index) => (
+      {settingsList.map((item, index) => (
         <div className={`${index != 0 ? "mt-5" : ""}`}>
           {item.type == "toggle" && (
             <div className="flex justify-between bg-[#121212] border-2 border-[#1f1f1f] py-2 items-center px-4 rounded-xl">

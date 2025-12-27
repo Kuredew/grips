@@ -1,9 +1,9 @@
 import { useState } from "react";
-import Sidebar from "./Sidebar";
-import AppearanceMenu from "./AppearanceMenu";
+import SettingsNavigation from "./SettingsNavigation";
+import AppearanceSettings from "./AppearanceSettings";
 import { motion, AnimatePresence } from "motion/react";
-import VideoMenu from "./VideoMenu";
-import AudioMenu from "./AudioMenu";
+import VideoSettings from "./VideoSettings";
+import AudioSettings from "./AudioSettings";
 import Window from "../../components/Window";
 import SparklesIcon from "../../components/icons/SparklesIcon";
 import VideoIcon from "../../components/icons/VideoIcon";
@@ -25,19 +25,19 @@ export default function SettingsPage() {
   const menus = [
     {
       id: "appearance", 
-      menu: <AppearanceMenu/>,
+      menu: <AppearanceSettings/>,
       icon: <SparklesIcon/>, 
       action: () => addActiveMenu('appearance')
     },
     {
       id: "video", 
-      menu: <VideoMenu/>,
+      menu: <VideoSettings/>,
       icon: <VideoIcon/>, 
       action: () => addActiveMenu('video')
     },
     {
       id: "audio", 
-      menu: <AudioMenu/>,
+      menu: <AudioSettings/>,
       icon: <AudioIcon/>, 
       action: () => addActiveMenu('audio')
     },
@@ -63,7 +63,7 @@ export default function SettingsPage() {
       </AnimatePresence>
     <div>
       <p className="text-lg text-center mb-5">settings</p>
-      <Sidebar menus={menus} />
+      <SettingsNavigation menus={menus} />
     </div>
     </>
   )
