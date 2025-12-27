@@ -1,9 +1,9 @@
 import { useState } from "react"
-import Menu from "../../components/Menu"
+import SettingsList from "../../components/SettingsList"
 
 export default function AppearanceMenu() {
   const [mode, setMode] = useState('dark')
-  const options = [
+  const settingsList = [
     {
       "id": "darkLightMode",
       "name": "dark / light mode",
@@ -24,7 +24,7 @@ export default function AppearanceMenu() {
   ]
   return (
     <div>
-      <Menu options={options} />
+      <SettingsList settingsList={settingsList} />
     </div>
   )
 }

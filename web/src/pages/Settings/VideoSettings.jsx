@@ -1,10 +1,10 @@
 import { useState } from "react"
-import Menu from "../../components/Menu"
+import SettingsList from "../../components/SettingsList"
 
 export default function VideoMenu() {
   const [resolution, setResolution] = useState("Best")
 
-  const options = [
+  const settingsList = [
     {
       id: "preferredResolution",
       name: "preferred resolution",
@@ -32,7 +32,7 @@ export default function VideoMenu() {
 
   return (
     <div>
-      <Menu options={options} />
+      <SettingsList settingsList={settingsList} />
     </div>
   )
 }

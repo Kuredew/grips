@@ -1,63 +1,69 @@
 import { useState } from "react";
-import Sidebar from "./Sidebar";
-import AppearanceMenu from "./AppearanceMenu";
+import SettingsNavigation from "./SettingsNavigation";
+import AppearanceSettings from "./AppearanceSettings";
 import { motion, AnimatePresence } from "motion/react";
-import VideoMenu from "./VideoMenu";
-import AudioMenu from "./AudioMenu";
-import Modal from "../../components/Modal";
+import VideoSettings from "./VideoSettings";
+import AudioSettings from "./AudioSettings";
+import Window from "../../components/Window";
 import SparklesIcon from "../../components/icons/SparklesIcon";
 import VideoIcon from "../../components/icons/VideoIcon";
 import AudioIcon from "../../components/icons/AudioIcon";
 
 export default function SettingsPage() {
-  const [activeMenu, setActiveMenu] = useState(null)
-  const closeMenu = () => setActiveMenu(null)
+  const [activeMenu, setActiveMenu] = useState([])
+
+  const closeMenu = (menu) => {
+    setActiveMenu(prev => {return prev.filter(active => active != menu)})
+  }
+
+  const addActiveMenu = (menu) => {
+    if (activeMenu.includes(menu)) return;
+
+    setActiveMenu(prev => [...prev, menu])
+  }
 
   const menus = [
     {
       id: "appearance", 
-      menu: <AppearanceMenu/>,
+      menu: <AppearanceSettings/>,
       icon: <SparklesIcon/>, 
-      action: () => setActiveMenu('appearance')
+      action: () => addActiveMenu('appearance')
     },
     {
       id: "video", 
-      menu: <VideoMenu/>,
+      menu: <VideoSettings/>,
       icon: <VideoIcon/>, 
-      action: () => setActiveMenu('video')
+      action: () => addActiveMenu('video')
     },
     {
       id: "audio", 
-      menu: <AudioMenu/>,
+      menu: <AudioSettings/>,
       icon: <AudioIcon/>, 
-      action: () => setActiveMenu('audio')
+      action: () => addActiveMenu('audio')
     },
   ]
 
   return (
     <>
-    <div className="py-10">
-      <p className="text-lg text-center mb-5">settings</p>
-      <AnimatePresence mode="wait">
-        {menus.map(item => (
-          activeMenu == item.id && (
-            <motion.div
-              key={item.id}
-              initial={{opacity: 0, scaleY: 0.95}}
-              animate={{opacity: 1, scaleY: 1}}
-              exit={{opacity: 0, scaleY: 0.95}}
-              className="absolute top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] xl:translate-x-[50%] p-5"
+      <AnimatePresence>
+        {activeMenu.map((menuId) => {
+          const menuData = menus.find((m) => m.id === menuId)
+          if (!menuData) return
+          
+          return (
+            <Window 
+              key={menuId}
+              title={menuId}
+              close={() => closeMenu(menuId)}
             >
-              
-              <Modal title={item.id} close={closeMenu}>
-                {item.menu}
-              </Modal>
-            </motion.div>
+              {menuData.menu}
+            </Window>
           )
-        ))}
+        })}
       </AnimatePresence>
-
-      <Sidebar menus={menus} />
+    <div>
+      <p className="text-lg text-center mb-5">settings</p>
+      <SettingsNavigation menus={menus} />
     </div>
     </>
   )
