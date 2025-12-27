@@ -24,7 +24,7 @@ export default function Window({title, close, children})  {
     }, []); // Run only once after initial render
 
   return (
-    <Rnd ref={rndRef} default={{x:0, y:0, }} maxWidth={'90vw'}>
+    <Rnd ref={rndRef} default={{x:0, y:0, }} maxWidth={'90vw'} minWidth={'350px'}>
       <motion.div
         key={title}
         initial={{opacity: 0, scaleY: 0.95}}
@@ -32,7 +32,7 @@ export default function Window({title, close, children})  {
         exit={{opacity: 0, scaleY: 0.95}}
         className="h-full w-full"
       >
-        <div className="h-full w-full border-2 rounded-xl border-[#1F1F1F] bg-black">
+        <div className="h-full w-full border-2 rounded-xl border-[#1F1F1F] bg-[#1d1d1d]">
           <div id="header" className="flex justify-between p-5">
             <motion.button key={"back"} whileHover={{scale:1.1}} whileTap={{scale:0.95}} onClick={close} className="cursor-pointer scale-80">
               <BackIcon />
