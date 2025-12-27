@@ -8,43 +8,58 @@ import Window from "../../components/Window";
 import SparklesIcon from "../../components/icons/SparklesIcon";
 import VideoIcon from "../../components/icons/VideoIcon";
 import AudioIcon from "../../components/icons/AudioIcon";
-import { Rnd } from "react-rnd";
 
 export default function SettingsPage() {
-  const [activeMenu, setActiveMenu] = useState(null)
-  const closeMenu = () => setActiveMenu(null)
+  const [activeMenu, setActiveMenu] = useState([])
+
+  const closeMenu = (menu) => {
+    setActiveMenu(prev => {return prev.filter(active => active != menu)})
+  }
+
+  const addActiveMenu = (menu) => {
+    if (activeMenu.includes(menu)) return;
+
+    setActiveMenu(prev => [...prev, menu])
+  }
 
   const menus = [
     {
       id: "appearance", 
       menu: <AppearanceMenu/>,
       icon: <SparklesIcon/>, 
-      action: () => setActiveMenu('appearance')
+      action: () => addActiveMenu('appearance')
     },
     {
       id: "video", 
       menu: <VideoMenu/>,
       icon: <VideoIcon/>, 
-      action: () => setActiveMenu('video')
+      action: () => addActiveMenu('video')
     },
     {
       id: "audio", 
       menu: <AudioMenu/>,
       icon: <AudioIcon/>, 
-      action: () => setActiveMenu('audio')
+      action: () => addActiveMenu('audio')
     },
   ]
 
   return (
     <>
-      <AnimatePresence mode="wait">
-        {menus.map(item => (
-          activeMenu == item.id && (
-          <Window title={item.id} close={closeMenu}>
-            {item.menu}
-          </Window>
+      <AnimatePresence>
+        {activeMenu.map((menuId) => {
+          const menuData = menus.find((m) => m.id === menuId)
+          if (!menuData) return
+          
+          return (
+            <Window 
+              key={menuId}
+              title={menuId}
+              close={() => closeMenu(menuId)}
+            >
+              {menuData.menu}
+            </Window>
           )
-        ))}
+        })}
       </AnimatePresence>
     <div>
       <p className="text-lg text-center mb-5">settings</p>
