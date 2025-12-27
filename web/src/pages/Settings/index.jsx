@@ -4,10 +4,11 @@ import AppearanceMenu from "./AppearanceMenu";
 import { motion, AnimatePresence } from "motion/react";
 import VideoMenu from "./VideoMenu";
 import AudioMenu from "./AudioMenu";
-import Modal from "../../components/Modal";
+import Window from "../../components/Window";
 import SparklesIcon from "../../components/icons/SparklesIcon";
 import VideoIcon from "../../components/icons/VideoIcon";
 import AudioIcon from "../../components/icons/AudioIcon";
+import { Rnd } from "react-rnd";
 
 export default function SettingsPage() {
   const [activeMenu, setActiveMenu] = useState(null)
@@ -36,27 +37,17 @@ export default function SettingsPage() {
 
   return (
     <>
-    <div className="py-10">
-      <p className="text-lg text-center mb-5">settings</p>
       <AnimatePresence mode="wait">
         {menus.map(item => (
           activeMenu == item.id && (
-            <motion.div
-              key={item.id}
-              initial={{opacity: 0, scaleY: 0.95}}
-              animate={{opacity: 1, scaleY: 1}}
-              exit={{opacity: 0, scaleY: 0.95}}
-              className="absolute top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] xl:translate-x-[50%] p-5"
-            >
-              
-              <Modal title={item.id} close={closeMenu}>
-                {item.menu}
-              </Modal>
-            </motion.div>
+          <Window title={item.id} close={closeMenu}>
+            {item.menu}
+          </Window>
           )
         ))}
       </AnimatePresence>
-
+    <div>
+      <p className="text-lg text-center mb-5">settings</p>
       <Sidebar menus={menus} />
     </div>
     </>

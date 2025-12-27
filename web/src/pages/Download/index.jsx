@@ -4,8 +4,8 @@ import { types } from "../../store/useNotification"
 import { runDownloadTask } from "./services/download"
 import { useState } from "react"
 import DownloadIcon from "../../components/icons/DownloadIcon"
-import Modal from "../../components/Modal"
 import Notification from "../../components/Notification"
+import Window from "../../components/Window"
 
 export default function DownloadPage() {
   const { addNotif, updateNotifFromId } = useNotification()
@@ -37,18 +37,9 @@ export default function DownloadPage() {
 
     <AnimatePresence>
     {activeModal == "notification" && (
-            <motion.div
-              key={"Notification"}
-              initial={{opacity: 0, scaleY: 0.95}}
-              animate={{opacity: 1, scaleY: 1}}
-              exit={{opacity: 0, scaleY: 0.95}}
-              className="absolute top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] xl:translate-x-[50%] p-5"
-            >
-              
-              <Modal title={"Notification"} close={() => setActiveModal(null)}>
-                <Notification autoHide={false} />
-              </Modal>
-            </motion.div>
+      <Window title={"Notification"} close={() => setActiveModal(null)}>
+        <Notification autoHide={false} />
+      </Window>
     )}
     </AnimatePresence>
 
