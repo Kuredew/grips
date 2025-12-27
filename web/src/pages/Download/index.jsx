@@ -1,23 +1,36 @@
 import { motion } from "motion/react"
 import { useNotification } from "../../store/useNotification"
 import { types } from "../../store/useNotification"
-import { runDownloadTask } from "./services/download"
 import DownloadIcon from "../../components/icons/DownloadIcon"
 import { useWindow } from "../../store/useWindow"
+import { useFFmpeg } from "../../store/useFfmpeg"
+import { useState } from "react"
+import DownIcon from "../../components/icons/DownIcon"
 
 export default function DownloadPage() {
+  const [fileURL, setFileURL] = useState(null)
+  const [mode, setMode] = useState(null)
   const { addNotif, updateNotifFromId } = useNotification()
+  const { convertVideo } = useFFmpeg()
   const { openWindow } = useWindow()
 
-  const createNewBatch = () => {
+  const modes = [
+    {  }
+  ]
+
+  const createNewBatch = async () => {
+    console.log("[batch] batch created")
+
+    // create new notification
     const notifId = addNotif("waiting", "getting ready...", types.PROGRESS, false)
+    console.log('[batch] notification created')
 
-    runDownloadTask((newProgress) => {
-      updateNotifFromId(notifId, { progress: newProgress })
-      console.log(`Updated ${notifId}`)
-    })
-
-    console.log("Batch created...")
+    console.log('[batch] starting download...')
+    const exampleURL = 'https://res.cloudinary.com/ddsuizdgf/video/upload/v1766837725/Out_s89xtz.mp4'
+    const setProgress = (newProgress) => updateNotifFromId(notifId, { progress: newProgress })
+    const setLog = (newLog) => updateNotifFromId(notifId, { message: newLog })
+      
+    await convertVideo('video.webm', exampleURL, setProgress, setLog)
   }
 
   return (
@@ -33,9 +46,33 @@ export default function DownloadPage() {
       <DownloadIcon />
     </motion.div>
 
+    <div className="text-3xl mb-5">
+      grips
+    </div>
+
     <div>
-      <motion.button onClick={createNewBatch} whileTap={{scale: 0.95}} className="text-lg bg-white rounded-lg text-black px-3 py-2 cursor-pointer">download</motion.button>
-    </div> 
+      <motion.div whileTap={{borderColor: "#ffffff"}} id="form" className="flex gap-3 border-2 border-[#1f1f1f] py-2 px-3 rounded-t-xl w-[500px] max-w-[90dvw]">
+        <input className="w-full outline-0 border-0 text-sm" placeholder="paste the url here yaps" type="text" onChange={(e) => setFileURL(e.target.value)} />
+
+      </motion.div> 
+      <div className="flex justify-between">
+        <div className="flex border-2 border-[#1f1f1f] rounded-b-xl overflow-hidden">
+          <div className="px-2 py-1 text-sm">
+            video + audio
+          </div>  
+          <div className="px-2 py-1 text-sm bg-[#292929] text-white">
+            audio only
+          </div>  
+        </div>
+        <motion.div
+          onClick={createNewBatch} 
+          whileTap={{scale: 0.95}} 
+          className="px-2 flex items-center justify-center text-sm bg-white rounded-b-xl text-black cursor-pointer"
+        >
+          start!
+        </motion.div>
+      </div>
+    </div>
     </>
   )
 }
