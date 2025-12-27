@@ -1,7 +1,7 @@
 import { useState } from "react"
 import SettingsList from "../../components/SettingsList"
 
-export default function AppearanceMenu() {
+export default function AppearanceSettings() {
   const [mode, setMode] = useState('dark')
   const settingsList = [
     {

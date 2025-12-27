@@ -1,7 +1,7 @@
 import { useState } from "react"
 import SettingsList from "../../components/SettingsList"
 
-export default function VideoMenu() {
+export default function VideoSettings() {
   const [resolution, setResolution] = useState("Best")
 
   const settingsList = [

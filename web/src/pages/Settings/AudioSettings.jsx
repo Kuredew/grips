@@ -1,4 +1,4 @@
-export default function AudioMenu() {
+export default function AudioSettings() {
   return (
     <div>
       coming soon hehe!
