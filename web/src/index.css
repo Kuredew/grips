@@ -6,4 +6,5 @@ body {
   font-family: 'IBM Plex Mono';
   background-color: black;
   color: white;
+  overflow: hidden;
 }

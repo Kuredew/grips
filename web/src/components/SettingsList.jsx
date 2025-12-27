@@ -6,7 +6,7 @@ export default function Menu({settingsList}) {
   return (
     <div>
       {settingsList.map((item, index) => (
-        <div className={`${index != 0 ? "mt-5" : ""}`}>
+        <div key={index} className={`${index != 0 ? "mt-5" : ""}`}>
           {item.type == "toggle" && (
             <div className="flex justify-between bg-[#121212] border-2 border-[#1f1f1f] py-2 items-center px-4 rounded-xl">
               <p>{item.name}</p>
@@ -20,7 +20,7 @@ export default function Menu({settingsList}) {
 
               <div className="flex bg-[#121212] border-2 border-[#1f1f1f] w-full py-1 justify-between items-center px-4 rounded-xl">
                 {item.choices.map(choice => (
-                  <div>
+                  <div key={choice}>
                     <AnimatePresence mode="wait">
                       {item.state.value == choice && (
                         <motion.div 
