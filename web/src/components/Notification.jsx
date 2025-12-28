@@ -28,7 +28,7 @@ export default function Notification({autoHide}) {
 
     setHideNotifs(prev => [...prev, id])
   }, 3000)
- }, [notifs, hideNotifs])
+ }, [notifs])
 
  if (notifs.length > 0) return (
     <div className="z-20 flex flex-col-reverse gap-2 pt-3 w-full">
