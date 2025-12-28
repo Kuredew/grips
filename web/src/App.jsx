@@ -4,9 +4,10 @@ import PagesManager from "./components/PagesManager"
 import NotificationManager from "./components/NotificationManager"
 import { useFFmpeg } from "./store/useFfmpeg"
 import { useEffect } from "react"
+import Loading from "./components/Loading"
 
 function App() {
-  const { loadFFmpeg } = useFFmpeg()
+  const { loaded, loadFFmpeg } = useFFmpeg()
 
   useEffect(() => {
     const load = async () => {
@@ -18,13 +19,19 @@ function App() {
 
   return (
   <div className="overflow-hidden h-screen w-screen">
-    <NotificationManager />
+    <Loading />
+    
+    {loaded && (
+      <>
+      <NotificationManager />
 
-    <WindowManager />
+      <WindowManager />
 
-    <PagesManager />
+      <PagesManager />
 
-    <Bar />
+      <Bar />
+      </>
+    )}
   </div>
   )
 }
