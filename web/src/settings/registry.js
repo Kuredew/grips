@@ -4,6 +4,16 @@ export const SETTINGS_TYPES = {
 }
 
 export const AVALAIBLE_SETTINGS = {
+  download: {
+    mode: {
+      id: 'mode',
+      name: 'mode',
+      description: 'select download mode',
+      choices: ['video', 'audio'],
+      type: SETTINGS_TYPES.RADIO,
+      default: 'video'
+    }
+  },
   appearance: {
     darkLightMode: {
       id: "darkLightMode",

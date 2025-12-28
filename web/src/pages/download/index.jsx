@@ -6,11 +6,19 @@ import { useWindow } from "../../store/useWindow"
 // import { useFFmpeg } from "../../store/useFfmpeg"
 import { useState } from "react"
 import { runDownloadTask } from "../../services/download"
+import { useSetting } from "../../store/useSetting"
+import { AVALAIBLE_SETTINGS } from "../../settings/registry"
 
 export default function DownloadPage() {
   const { addNotif } = useNotification()
+  const { settings, updateSetting } = useSetting()
   const [mediaUrl, setMediaUrl] = useState('')
   const { openWindow } = useWindow()
+  const avalaibleSettings = AVALAIBLE_SETTINGS['download']
+  const downloadSettings = settings['download']
+  const updateDownloadSetting = (subKey, value) => {
+    updateSetting('download', subKey, value)
+  }
 
   const createNewBatch = async () => {
     if (!mediaUrl) return
@@ -59,12 +67,11 @@ export default function DownloadPage() {
       </motion.div> 
       <div className="flex justify-between">
         <div className="flex border-2 border-[#1f1f1f] rounded-b-xl overflow-hidden">
-          <div className="px-2 py-1 text-sm">
-            video + audio
-          </div>  
-          <div className="px-2 py-1 text-sm bg-[#292929] text-white">
-            audio only
-          </div>  
+        {avalaibleSettings['mode'].choices.map((choice) => (
+            <div key={choice} onClick={() => {updateDownloadSetting('mode', choice)}} className={`cursor-pointer px-2 py-1 text-sm ${choice == downloadSettings['mode'] ? "bg-[#292929] text-white" : ""}`}>
+              {choice}
+            </div>  
+        ))}
         </div>
         <motion.div
           onClick={createNewBatch} 
