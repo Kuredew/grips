@@ -2,14 +2,28 @@ import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile } from "@ffmpeg/util";
 import { toBlobURL } from "@ffmpeg/util";
 import { create } from "zustand";
+import { nanoid } from "nanoid";
+
+export const FFmpegActionTypes = {
+  MERGECHUNK: "mergechunk",
+  ENCODECHUNK: "encodechunk",
+}
+
 
 export const useFFmpeg = create((set, get) => ({
+    // FFMPEG HANDLER SYSTEM FOR GRIPS
     ffmpeg: new FFmpeg(),
     loaded: false,
-    status: '',
-    setProgress: null,
+    status: 'unloaded',
+    processInfo: {
+      processId: null,
+      processLog: null,
+      progress: null,
+    },
+    queueList: [],
+    // Load ffmpeg first before use ffmpeg
     loadFFmpeg: async () => {
-      const { setProgress, ffmpeg, status, loaded } = get()
+      const { ffmpeg, status, loaded } = get()
 
       if (status === 'loading' || loaded) {console.error('[useFFmpeg] ignore load because ffmpeg is loading or was loaded'); return}
       set({ status: 'loading' })
@@ -24,11 +38,71 @@ export const useFFmpeg = create((set, get) => ({
 
       // listen progress
       ffmpeg.on('progress', ({progress}) => {
-        setProgress(Math.round(progress * 100))
+        const parsedProgress = Math.round(progress * 100)
+
+        set((state) => ({
+          processInfo: { ...state.processInfo, progress: parsedProgress }
+        }))
       })
 
       console.log('[useFFmpeg] loaded ffmpeg')
       set({ loaded: true, status: 'idle' })
+    },
+    addQueue: ((id, inputList, outputFileName, action, outputHandler) => {
+      set((state) => {
+        const newQueue = { 
+          id: id, 
+          inputList: inputList,
+          outputFileName: outputFileName,
+          action: action,
+          outputHandler: outputHandler,
+        }
+
+        console.log(`[useFFmpeg/addQueue] newQueue created`)
+        return {
+          queueList: [...state.queueList, { newQueue }]
+        }
+      })
+    }),
+    startQueue: async () => {
+      const { encodeMediaChunk, mergeMediaChunk, status, queueList } = get()
+
+      if (!status === 'idle') {console.warn('[useFFmpeg/startQueue] aborted startQueue request because status is not idle'); return}
+
+      set(() => ({ status: 'processing' }))
+      for (const queue of queueList) {
+        // set id for process
+        set((state) => ({
+          processInfo: { ...state.processInfo, processId: queue.id }
+        }))
+
+        // run action
+        switch (queue.action) {
+          case FFmpegActionTypes.ENCODECHUNK: {
+            let outputList = []
+
+            for (const input of queue.inputList) {
+              const newUrl = await encodeMediaChunk(input, queue.outputFileName)
+              outputList = [ ...outputList, newUrl ]
+            }
+
+            queue.outputHandler(outputList)
+            break
+          }
+          case FFmpegActionTypes.MERGECHUNK: {
+            const output = await mergeMediaChunk(queue.inputList, queue.outputFileName)
+
+            queue.outputHandler(output)
+            break
+          }
+        }
+
+        set((state) => ({ 
+          queueList: state.queueList.filter(prevQueue => prevQueue !== queue) 
+        }))
+      }
+
+      set(() => ({status: "idle"}))
     },
     downloadFile: async (url, setLog, setProgress) => {
       setLog('getting ready...')
@@ -61,18 +135,64 @@ export const useFFmpeg = create((set, get) => ({
       setLog('download completed.')
       return chunksAll;
     },
-    convertVideoToH264: async (file, newFileName) => {
+    encodeMedia: async (file, newFileName) => {
       const { loaded, loadFFmpeg, ffmpeg } = get()
-      const newFile = `${newFileName}.mp4`
+      const mediaId = nanoid(10)
       
       if (!loaded) await loadFFmpeg();
 
-      await ffmpeg.writeFile('video.mov', await fetchFile(file))
-      await ffmpeg.exec(['-i', 'video.mov', newFile])
+      await ffmpeg.writeFile(`${mediaId}.media`, await fetchFile(file))
+      await ffmpeg.exec(['-i', `${mediaId}.media`, newFileName])
 
-      const convertedFileChunk = await ffmpeg.readFile(newFile)
-      const newUrl = URL.createObjectURL(new Blob([convertedFileChunk.buffer], { type: 'video/mp4' }))
+      const convertedFileChunk = await ffmpeg.readFile(newFileName)
+      const newUrl = URL.createObjectURL(new Blob([convertedFileChunk.buffer]))
+
+      // await ffmpeg.deleteFile(`${mediaId}.media`)
       return newUrl
-    }
+    },
+    encodeMediaChunk: async (file, newFileName) => {
+      const { loaded, loadFFmpeg, ffmpeg } = get()
+      const mediaId = nanoid(10)
+      
+      if (!loaded) await loadFFmpeg();
+
+      await ffmpeg.writeFile(`${mediaId}.media`, file)
+      await ffmpeg.exec(['-i', `${mediaId}.media`, newFileName])
+
+      const convertedFileChunk = await ffmpeg.readFile(newFileName)
+      const newUrl = URL.createObjectURL(new Blob([convertedFileChunk.buffer]))
+
+      // await ffmpeg.deleteFile(`${mediaId}.media`)
+      return newUrl
+    },
+    mergeMediaChunk: async (files, newFileName) => {
+      const { loaded, loadFFmpeg, ffmpeg } = get()
+      let ffmpegArgs = []
+
+      if (!loaded) await loadFFmpeg();
+
+      for (const fileChunk of files) {
+        const mediaId = nanoid(10)
+        await ffmpeg.writeFile(`${mediaId}`, fileChunk)
+
+        ffmpegArgs = [ ...ffmpegArgs, '-i', mediaId ]
+      }
+
+      // gak jadi karena ini berarti bikin fungsi ini jadi mergeMediaChunkToMP4
+      // const outputFileName = `${newFileName}.mp4`
+
+      // ini jadi bebas nyimpennya
+      // awowkwkkw udh malas bikin comment bhs inggris
+      const outputFileName = `${newFileName}`
+
+      ffmpegArgs = [ ...ffmpegArgs, '-c', 'copy', outputFileName]
+      await ffmpeg.exec()
+
+      const convertedFileChunk = await ffmpeg.readFile(outputFileName)
+      const newUrl = URL.createObjectURL(new Blob([convertedFileChunk.buffer]))
+
+      // await ffmpeg.deleteFile(`${mediaId}.media`)
+      return newUrl
+    },
   })
 )
