@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "motion/react";
-import { useFFmpeg } from "../store/useFfmpeg";
+import { useFFmpeg } from "../store/useFFmpeg";
 
 export default function Loading() {
   const { loaded } = useFFmpeg()

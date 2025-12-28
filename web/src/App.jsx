@@ -2,7 +2,7 @@ import Bar from "./components/Bar"
 import WindowManager from "./components/WindowManager"
 import PagesManager from "./components/PagesManager"
 import NotificationManager from "./components/NotificationManager"
-import { useFFmpeg } from "./store/useFfmpeg"
+import { useFFmpeg } from "./store/useFFmpeg"
 import { useEffect } from "react"
 import Loading from "./components/Loading"
 
