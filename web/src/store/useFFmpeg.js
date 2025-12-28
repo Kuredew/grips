@@ -9,12 +9,12 @@ export const useFFmpeg = create((set, get) => ({
     status: '',
     setProgress: null,
     loadFFmpeg: async () => {
-      console.log('[useFFmpeg] loading ffmpeg')
-      const { setProgress, ffmpeg, status } = get()
+      const { setProgress, ffmpeg, status, loaded } = get()
 
-      if (status === 'loading') {console.log('[useFFmpeg] ignore load because ffmpeg is loading'); return}
+      if (status === 'loading' || loaded) {console.error('[useFFmpeg] ignore load because ffmpeg is loading or was loaded'); return}
       set({ status: 'loading' })
 
+      console.log('[useFFmpeg] loading ffmpeg...')
       const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm';
       
       await ffmpeg.load({
@@ -28,7 +28,7 @@ export const useFFmpeg = create((set, get) => ({
       })
 
       console.log('[useFFmpeg] loaded ffmpeg')
-      set({ loaded: true })
+      set({ loaded: true, status: 'idle' })
     },
     downloadFile: async (url, setLog, setProgress) => {
       setLog('getting ready...')
