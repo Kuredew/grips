@@ -72,7 +72,7 @@ export const useSetting = create((set) => {
 
         console.log(`[useSetting] Updated setting at ${key}.${subKey} -> ${value}`)
 
-        localStorage.setItem('settings', JSON.stringify(newState))
+        localStorage.setItem('settings', JSON.stringify(newState.settings))
         return newState
       })
     }
