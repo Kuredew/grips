@@ -1,7 +1,5 @@
 import Notification from "../components/Notification";
-import AppearanceSettings from "../pages/settings/AppearanceSettings";
-import AudioSettings from "../pages/settings/AudioSettings";
-import VideoSettings from "../pages/settings/VideoSettings";
+import SettingsList from "../components/SettingsList";
 
 export const INSTALLED_WINDOWS = {
   notification: {
@@ -12,16 +10,16 @@ export const INSTALLED_WINDOWS = {
   appearanceSettings: {
     id: 'appearanceSettings',
     title: "appearance settings",
-    component: <AppearanceSettings />
+    component: <SettingsList settingKey={'appearance'} />
   },
   videoSettings: {
     id: 'videoSettings',
     title: "video settings",
-    component: <VideoSettings />
+    component: <SettingsList settingKey={'video'} />
   },
   audioSettings: {
     id: 'audioSettings',
     title: "audio Settings",
-    component: <AudioSettings />
+    component: <SettingsList settingKey={'audio'} />
   }
 }
