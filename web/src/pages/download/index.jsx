@@ -3,14 +3,13 @@ import { useNotification } from "../../store/useNotification"
 import { types } from "../../store/useNotification"
 import DownloadIcon from "../../components/icons/DownloadIcon"
 import { useWindow } from "../../store/useWindow"
-// import { useFFmpeg } from "../../store/useFfmpeg"
 import { useState } from "react"
 import { runDownloadTask } from "../../services/download"
 import { useSetting } from "../../store/useSetting"
 import { AVALAIBLE_SETTINGS } from "../../settings/registry"
 
 export default function DownloadPage() {
-  const { addNotif } = useNotification()
+  const { addNotif, updateNotifFromId } = useNotification()
   const { settings, updateSetting } = useSetting()
   const [mediaUrl, setMediaUrl] = useState('')
   const { openWindow } = useWindow()
@@ -31,16 +30,23 @@ export default function DownloadPage() {
 
     console.log("[batch] batch created")
 
-    // create new notification
     const notifId = addNotif("waiting", "getting ready...", types.PROGRESS, false)
-    console.log('[batch] notification created')
 
+    console.log('[batch] notification created')
     console.log('[batch] starting download...')
-    // const exampleURL = 'https://res.cloudinary.com/ddsuizdgf/video/upload/v1766837725/Out_s89xtz.mp4'
-      
-    // await convertVideo('video.webm', mediaUrl, setProgress, setLog)
     setMediaUrl('')
-    await runDownloadTask(notifId, mediaUrl)
+
+    try {
+      await runDownloadTask(mediaUrl, (progress) => updateNotifFromId(notifId, {
+        message: progress.log,
+        progress: progress.progress,
+      }))
+    } catch (e) {
+      updateNotifFromId(notifId, {
+        title: `error downloading files`,
+        message: e.message
+      })
+    }
   }
 
   return (
