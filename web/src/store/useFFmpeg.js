@@ -10,7 +10,7 @@ export const queueActionTypes = {
 
 export const useFFmpeg = create((set, get) => ({
     // FFMPEG HANDLER SYSTEM FOR GRIPS
-    ffmpeg: new FFmpeg(),
+    ffmpeg: new FFmpeg({ log: true }),
     loaded: false,
     status: 'unloaded',
     processInfo: {
@@ -39,7 +39,7 @@ export const useFFmpeg = create((set, get) => ({
         const parsedProgress = Math.round(progress * 100)
 
         set((state) => ({
-          processInfo: { ...state.processInfo, progress: parsedProgress }
+          processInfo: { ...state.processInfo, progress: parsedProgress, processLog: `[ffmpeg] processing (${parsedProgress})` }
         }))
       })
 
@@ -152,7 +152,7 @@ export const useFFmpeg = create((set, get) => ({
       // await ffmpeg.deleteFile(`${mediaId}.media`)
       return newUrl
     },
-    mergeMedia: async (mediaDataLists, outputFileName) => {
+    mergeMedia: async (id, mediaDataLists, outputFileName, reEncode = false) => {
       const { loaded, loadFFmpeg, ffmpeg } = get()
       let ffmpegArgs = []
 
@@ -165,14 +165,17 @@ export const useFFmpeg = create((set, get) => ({
         ffmpegArgs = [ ...ffmpegArgs, '-i', mediaId ]
       }
 
-      ffmpegArgs = [ ...ffmpegArgs, '-c', 'copy', outputFileName]
-      await ffmpeg.exec()
+      if (reEncode) ffmpegArgs = [ ...ffmpegArgs, '-c:v', 'h264', '-c:a', 'aac' ]
+      else ffmpegArgs = [ ...ffmpegArgs, '-c', 'copy' ]
 
-      const convertedFileChunk = await ffmpeg.readFile(outputFileName)
-      const newUrl = URL.createObjectURL(new Blob([convertedFileChunk.buffer]))
+      ffmpegArgs = [ ...ffmpegArgs, outputFileName]
+      console.log(`[useFFmpeg] Merging media with args: ${ffmpegArgs}`)
 
-      // await ffmpeg.deleteFile(`${mediaId}.media`)
-      return newUrl
-    },
+      set((state) => ({ ...state, status: "processing", processInfo: { ...state.procesInfo, processId: id } }))
+      await ffmpeg.exec(ffmpegArgs)
+
+      set((state) => ({ ...state, status: "finished" }))
+      return await ffmpeg.readFile(outputFileName)
+    }
   })
 )

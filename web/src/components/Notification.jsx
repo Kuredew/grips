@@ -5,9 +5,11 @@ import CloseIcon from "./icons/CloseIcon"
 import VideoIcon from "./icons/VideoIcon"
 import { AnimatePresence, motion } from "motion/react"
 import { useEffect } from "react"
+import { useFFmpeg } from "../store/useFFmpeg"
 
 export default function Notification({autoHide}) {
- const { notifs, deleteNotifFromId } = useNotification()
+ const { notifs, deleteNotifFromId, updateNotifFromId } = useNotification()
+ const { processInfo, status } = useFFmpeg()
  const [hideNotifs, setHideNotifs] = useState([])
  const [active, setActive] = useState(null)
 
@@ -29,6 +31,12 @@ export default function Notification({autoHide}) {
     setHideNotifs(prev => [...prev, id])
   }, 3000)
  }, [notifs])
+
+ useEffect(() => {
+  if (status === 'processing') {
+    updateNotifFromId(processInfo.processId, { progress: processInfo.progress })
+  }
+ }, [processInfo, status])
 
  if (notifs.length > 0) return (
     <div className="z-20 flex flex-col-reverse gap-2 pt-3 w-full justify-center items-center">
