@@ -42,11 +42,15 @@ func Init() {
 		Log:    log,
 		Worker: ytdlp,
 	}
+	p := handler.ProxyHandler{
+		Log: log,
+	}
 
 	log.Info("App Started.")
 
 	// http.HandleFunc("/getinfo", h.HandleGetInfo)
 	http.HandleFunc("/extract", h.HandleExtract)
+	http.HandleFunc("/proxy", p.RequestHandler)
 
 	http.ListenAndServe(":8000", nil)
 }
