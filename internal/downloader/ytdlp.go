@@ -15,14 +15,18 @@ type YtdlpDownloader struct {
 	BinaryPath string
 }
 
+type ModeOptions struct {
+	PreferredResolution string
+}
+
 type Options struct {
-	URL        string
-	Mode       string
-	Resolution string
+	URL    string
+	Mode   string
+	Option ModeOptions
 }
 
 func (o *Options) IsValid() bool {
-	return o.URL != "" && o.Mode != "" && o.Resolution != ""
+	return o.URL != "" && o.Mode != "" && o.Option != ModeOptions{}
 }
 
 type URLInfo struct {
@@ -57,7 +61,7 @@ func (ytdlp *YtdlpDownloader) Extract(options Options, logChan chan<- string) (U
 
 	switch options.Mode {
 	case "video":
-		args = append(args, fmt.Sprintf("-S res:%v", options.Resolution))
+		args = append(args, fmt.Sprintf("-S res:%v", options.Option.PreferredResolution))
 	case "audio":
 		args = append(args, `-f "ba"`)
 	default:
