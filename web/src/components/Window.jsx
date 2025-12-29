@@ -24,14 +24,14 @@ export default function Window({title, close, children})  {
     }, []); // Run only once after initial render
 
   return (
-    <Rnd ref={rndRef} default={{x:0, y:0, }} maxWidth={'90vw'} className="z-900" dragHandleClassName="handle">
+    <Rnd ref={rndRef} default={{x:0, y:0, width: "50dvw" }} maxWidth={'90vw'} className="z-900" dragHandleClassName="handle">
       <motion.div
         initial={{opacity: 0, scaleY: 0.95}}
         animate={{opacity: 1, scaleY: 1}}
         exit={{opacity: 0, scaleY: 0.95}}
         className="h-full w-full"
       >
-        <div className="h-full w-full border-2 rounded-xl border-[#1F1F1F] bg-[#1d1d1d]">
+        <div className="h-full w-full border-2 rounded-xl border-[#1F1F1F] flex flex-col bg-[#1d1d1d] overflow-hidden">
           <div id="header" className="flex justify-between p-5 handle gap-5">
             <motion.button key={"back"} whileHover={{scale:1.1}} whileTap={{scale:0.95}} onTap={close} className="cursor-pointer scale-80">
               <BackIcon />
@@ -39,7 +39,7 @@ export default function Window({title, close, children})  {
             <p>{title}</p>
           </div>
 
-          <div className="p-5 max-h-[80dvh] overflow-auto scrollbar">
+          <div className="p-5 flex-1 overflow-auto scrollbar">
             {children}
           </div>
         </div>

@@ -31,7 +31,7 @@ export default function Notification({autoHide}) {
  }, [notifs])
 
  if (notifs.length > 0) return (
-    <div className="z-20 flex flex-col-reverse gap-2 pt-3 w-full">
+    <div className="z-20 flex flex-col-reverse gap-2 pt-3 w-full justify-center items-center">
       <AnimatePresence>
         {notifs.map(notif => !hideNotifs.includes(notif.id) && (
           <motion.div 
@@ -42,18 +42,18 @@ export default function Notification({autoHide}) {
               animate={{opacity: 1, scale: 1}}
               exit={{opacity: 0, scale: 0.95}}
               whileHover={{scale:1.05, backgroundColor: "#292929"}}
-              className="relative w-full flex gap-2 bg-[#121212] items-center border-2 border-[#1f1f1f] px-3 py-2 rounded-xl" key={notif.id}
+              className="overflow-hidden relative w-full flex gap-2 bg-[#121212] items-center border-2 border-[#1f1f1f] px-3 py-2 rounded-xl" key={notif.id}
             >
               <div id="icon" className="min-w-10 min-h-10 flex justify-center items-center text-black bg-white rounded-lg">
                 <VideoIcon />
               </div>
 
-              <div className="w-full">
+              <div className="w-full overflow-hidden">
                 <div id="title">
                   {notif.title}
                 </div>
 
-                <div id="message" className="text-[12px]">
+                <div id="message" className="text-[12px] text-nowrap w-full overflow-hidden">
                   {notif.message}
                 </div>
 

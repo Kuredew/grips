@@ -66,7 +66,7 @@ export const runDownloadTask = async (options, onProgress = () => {}) => {
     console.log(`[${runDownloadTask.name}] got url info: ${JSON.stringify(infoObj, {}, 2)}`)
   } catch (e) {
     console.warn(`[${runDownloadTask.name}] error getting url info: ${e}`)
-    onProgress({ log: `${e}` })
+    onProgress({ ...progressObj, log: `${e}` })
     throw e
   }
 

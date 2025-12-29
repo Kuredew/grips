@@ -5,10 +5,12 @@ const responseSchema = z.object({
   status: z.string(),
   description: z.string(),
   log: z.string(),
-  info: z.object({
-    title: z.string(),
-    url: z.url()
-  })
+  info: z.array(
+    z.object({
+      title: z.string(),
+      url: z.string()
+    })
+  ).nullable()
 })
 
 const optionsSchema = z.object({
@@ -66,9 +68,11 @@ export const extractUrlInfo = async (options, responseHandler) => {
       if (done) break
 
       const chunkJsonString = decoder.decode(value)
-      const jsonObj = JSON.parse(chunkJsonString)
+      const fixedJsonString = chunkJsonString.replace(/}{/g, '},{')
+      const jsonList = JSON.parse(`[${fixedJsonString}]`)
 
-      const validatedResponse = validateResponse(jsonObj)
+      const validatedResponse = validateResponse(jsonList[jsonList.length - 1])
+      console.log(validatedResponse)
 
       responseHandler(validatedResponse)
       lastResponseObj = validatedResponse
@@ -76,6 +80,11 @@ export const extractUrlInfo = async (options, responseHandler) => {
 
     console.log(`[${extractUrlInfo.name}] stream finished`)
     console.log(`[${extractUrlInfo.name}] request finished that have options: ${optionsString}`)
+    
+    if (lastResponseObj.status === "ERROR") {
+      throw new Error(lastResponseObj.log)
+    }
+
     return lastResponseObj
   } catch (error) {
     console.warn(`[${extractUrlInfo.name}] error occured! : ${error}`)

@@ -22,10 +22,10 @@ const (
 )
 
 type Response struct {
-	Status      responseStatus
-	Description string
-	Log         string
-	Info        downloader.URLInfo
+	Status      responseStatus       `json:"status"`
+	Description string               `json:"description"`
+	Log         string               `json:"log"`
+	Info        []downloader.URLInfo `json:"info"`
 }
 
 func (h *DownloadHandler) respondStream(w http.ResponseWriter, payload Response, flush bool) {
@@ -54,45 +54,50 @@ func (h *DownloadHandler) respond(w http.ResponseWriter, code int, payload Respo
 	w.Write(response)
 }
 
-func (h *DownloadHandler) HandleGetInfo(w http.ResponseWriter, r *http.Request) {
-	h.Log.Info("Started getinfo handler")
+// func (h *DownloadHandler) HandleGetInfo(w http.ResponseWriter, r *http.Request) {
+// 	h.Log.Info("Started getinfo handler")
 
-	url := r.URL.Query().Get("url")
-	if url == "" {
-		h.Log.Error("Rejected request because URL is empty")
-		return
-	}
+// 	url := r.URL.Query().Get("url")
+// 	if url == "" {
+// 		h.Log.Error("Rejected request because URL is empty")
+// 		return
+// 	}
 
-	URLInfo, err := h.Worker.GetTitle(url)
-	if err != nil {
-		payload := Response{
-			Status:      ERROR,
-			Description: err.Error(),
-		}
-		h.respond(w, http.StatusInternalServerError, payload)
-		h.Log.Error("Error getting title from worker")
-		return
-	}
+// 	URLInfo, err := h.Worker.GetTitle(url)
+// 	if err != nil {
+// 		payload := Response{
+// 			Status:      ERROR,
+// 			Description: err.Error(),
+// 		}
+// 		h.respond(w, http.StatusInternalServerError, payload)
+// 		h.Log.Error("Error getting title from worker")
+// 		return
+// 	}
 
-	h.Log.Info("Completed without error")
-	payload := Response{
-		Info:        URLInfo,
-		Status:      COMPLETE,
-		Description: "yt-dlp completed the request",
-	}
-	h.respond(w, http.StatusOK, payload)
-}
+// 	h.Log.Info("Completed without error")
+// 	payload := Response{
+// 		Info:        URLInfo,
+// 		Status:      COMPLETE,
+// 		Description: "yt-dlp completed the request",
+// 	}
+// 	h.respond(w, http.StatusOK, payload)
+// }
 
 func (h *DownloadHandler) HandleExtract(w http.ResponseWriter, r *http.Request) {
-	var URLInfo downloader.URLInfo
+	var URLInfo []downloader.URLInfo
+	var options downloader.Options
 	var errWorker error
+	var lastLog string
 
 	h.Log.Info("Started extractVideo handler")
 
-	options := downloader.Options{
-		URL:        r.URL.Query().Get("url"),
-		Mode:       r.URL.Query().Get("mode"),
-		Resolution: r.URL.Query().Get("resolution"),
+	err := json.NewDecoder(r.Body).Decode(&options)
+	if err != nil {
+		h.Log.Error(err.Error())
+		h.respond(w, http.StatusBadRequest, Response{
+			Status:      ERROR,
+			Description: err.Error(),
+		})
 	}
 
 	// validate
@@ -120,6 +125,7 @@ func (h *DownloadHandler) HandleExtract(w http.ResponseWriter, r *http.Request) 
 		select {
 		case logLine, ok := <-logChan:
 			if ok {
+				lastLog = logLine
 				payload := Response{
 					Status:      WAIT,
 					Description: "waiting yt-dlp to complete the request.",
@@ -136,6 +142,7 @@ func (h *DownloadHandler) HandleExtract(w http.ResponseWriter, r *http.Request) 
 			}
 			if errWorker != nil {
 				payload.Status = ERROR
+				payload.Log = lastLog
 				payload.Description = errWorker.Error()
 				h.respondStream(w, payload, false)
 

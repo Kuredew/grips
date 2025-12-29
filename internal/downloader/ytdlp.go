@@ -15,14 +15,18 @@ type YtdlpDownloader struct {
 	BinaryPath string
 }
 
+type ModeOptions struct {
+	PreferredResolution string
+}
+
 type Options struct {
-	URL        string
-	Mode       string
-	Resolution string
+	URL    string
+	Mode   string
+	Option ModeOptions
 }
 
 func (o *Options) IsValid() bool {
-	return o.URL != "" && o.Mode != "" && o.Resolution != ""
+	return o.URL != "" && o.Mode != "" && o.Option != ModeOptions{}
 }
 
 type URLInfo struct {
@@ -50,14 +54,14 @@ func (ytdlp *YtdlpDownloader) GetTitle(url string) (URLInfo, error) {
 	return urlInfo, nil
 }
 
-func (ytdlp *YtdlpDownloader) Extract(options Options, logChan chan<- string) (URLInfo, error) {
-	var urlInfo URLInfo
+func (ytdlp *YtdlpDownloader) Extract(options Options, logChan chan<- string) ([]URLInfo, error) {
+	var urlInfo []URLInfo
 	var finalJsonString string
-	args := []string{"--print", `{"title": "%(title)s", "url": "%(urls)s" }`, "--cookies-from-browser", "firefox", "--js-runtimes", "node"}
+	args := []string{"--verbose", "--no-playlist", "--print", `{"title": "%(title)s", "url": "%(urls)s" }`, "--cookies-from-browser", "firefox", "--js-runtimes", "node"}
 
 	switch options.Mode {
 	case "video":
-		args = append(args, fmt.Sprintf("-S res:%v", options.Resolution))
+		args = append(args, fmt.Sprintf("-S res:%v", options.Option.PreferredResolution))
 	case "audio":
 		args = append(args, `-f "ba"`)
 	default:
@@ -123,8 +127,11 @@ func (ytdlp *YtdlpDownloader) Extract(options Options, logChan chan<- string) (U
 	}
 	ytdlp.Log.Info("Extract complete.")
 
-	ytdlp.Log.Infof("Unmarshalling json string from : \n%v", finalJsonString)
-	if err := json.Unmarshal([]byte(finalJsonString), &urlInfo); err != nil {
+	// fix if ytdlp return playlist
+	fixedJsonString := strings.ReplaceAll(finalJsonString, "}{", "},{")
+
+	ytdlp.Log.Infof("Unmarshalling json string from : \n%v", fixedJsonString)
+	if err := json.Unmarshal(fmt.Appendf(nil, "[%v]", fixedJsonString), &urlInfo); err != nil {
 		ytdlp.Log.Errorf("Error unmarshalling json : %v", err)
 		return urlInfo, err
 	}
