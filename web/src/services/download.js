@@ -49,11 +49,12 @@ export const fetchFile = async (fileUrl, onProgress = () => {}) => {
 
 
 export const runDownloadTask = async (options, onProgress = () => {}) => {
-  onProgress({ log: "getting ready..." })
   const progressObj = {
     log: "",
     progress: 0
   }
+
+  onProgress({ ...progressObj, log: "getting ready..." })
 
   try {
     console.log(`[${runDownloadTask.name}] requesting extract to api`)
