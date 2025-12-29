@@ -66,9 +66,10 @@ export const extractUrlInfo = async (options, responseHandler) => {
       if (done) break
 
       const chunkJsonString = decoder.decode(value)
-      const jsonObj = JSON.parse(chunkJsonString)
+      const fixedJsonString = chunkJsonString.replace(/}{/g, '},{')
+      const jsonList = JSON.parse(`[${fixedJsonString}]`)
 
-      const validatedResponse = validateResponse(jsonObj)
+      const validatedResponse = validateResponse(jsonList[jsonList.length - 1])
       console.log(validatedResponse)
 
       responseHandler(validatedResponse)
