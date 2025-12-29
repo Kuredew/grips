@@ -7,7 +7,7 @@ const responseSchema = z.object({
   log: z.string(),
   info: z.object({
     title: z.string(),
-    url: z.url()
+    url: z.string()
   })
 })
 
@@ -69,6 +69,7 @@ export const extractUrlInfo = async (options, responseHandler) => {
       const jsonObj = JSON.parse(chunkJsonString)
 
       const validatedResponse = validateResponse(jsonObj)
+      console.log(validatedResponse)
 
       responseHandler(validatedResponse)
       lastResponseObj = validatedResponse
@@ -76,6 +77,11 @@ export const extractUrlInfo = async (options, responseHandler) => {
 
     console.log(`[${extractUrlInfo.name}] stream finished`)
     console.log(`[${extractUrlInfo.name}] request finished that have options: ${optionsString}`)
+    
+    if (lastResponseObj.status === "ERROR") {
+      throw new Error(lastResponseObj.log)
+    }
+
     return lastResponseObj
   } catch (error) {
     console.warn(`[${extractUrlInfo.name}] error occured! : ${error}`)
