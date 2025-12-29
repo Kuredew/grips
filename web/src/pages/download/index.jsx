@@ -37,14 +37,19 @@ export default function DownloadPage() {
     setMediaUrl('')
 
     try {
-      await runDownloadTask(mediaUrl, (progress) => updateNotifFromId(notifId, {
+      await runDownloadTask({ 
+        url: mediaUrl, 
+        mode: settings.download.mode, 
+        option: { preferredResolution: settings.video.preferredResolution } 
+      }, (progress) => updateNotifFromId(notifId, {
         message: progress.log,
         progress: progress.progress,
       }))
     } catch (e) {
       updateNotifFromId(notifId, {
         title: `error downloading files`,
-        message: e.message
+        message: e.message,
+        canDelete: true
       })
     }
   }
