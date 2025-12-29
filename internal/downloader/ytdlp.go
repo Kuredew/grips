@@ -54,8 +54,8 @@ func (ytdlp *YtdlpDownloader) GetTitle(url string) (URLInfo, error) {
 	return urlInfo, nil
 }
 
-func (ytdlp *YtdlpDownloader) Extract(options Options, logChan chan<- string) (URLInfo, error) {
-	var urlInfo URLInfo
+func (ytdlp *YtdlpDownloader) Extract(options Options, logChan chan<- string) ([]URLInfo, error) {
+	var urlInfo []URLInfo
 	var finalJsonString string
 	args := []string{"--verbose", "--no-playlist", "--print", `{"title": "%(title)s", "url": "%(urls)s" }`, "--cookies-from-browser", "firefox", "--js-runtimes", "node"}
 
@@ -127,8 +127,11 @@ func (ytdlp *YtdlpDownloader) Extract(options Options, logChan chan<- string) (U
 	}
 	ytdlp.Log.Info("Extract complete.")
 
-	ytdlp.Log.Infof("Unmarshalling json string from : \n%v", finalJsonString)
-	if err := json.Unmarshal([]byte(finalJsonString), &urlInfo); err != nil {
+	// fix if ytdlp return playlist
+	fixedJsonString := strings.ReplaceAll(finalJsonString, "}{", "},{")
+
+	ytdlp.Log.Infof("Unmarshalling json string from : \n%v", fixedJsonString)
+	if err := json.Unmarshal(fmt.Appendf(nil, "[%v]", fixedJsonString), &urlInfo); err != nil {
 		ytdlp.Log.Errorf("Error unmarshalling json : %v", err)
 		return urlInfo, err
 	}
