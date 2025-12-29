@@ -1,46 +1,72 @@
-// import { useFFmpeg } from "../store/useFfmpeg";
-import { useNotification } from "../store/useNotification";
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
-// import { useSetting } from "../store/useSetting";
+import { extractUrlInfo } from "./apiService";
 
-const getDownloadableUrl = async (url) => {
-  const requestUrl = `/api/extract?url=${url}&mode=video&resolution=720`
-
-  console.log('[getDownloadable] getting downlodable url to ' + requestUrl)
-
-  try {
-    const response = await fetch(requestUrl)
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder('utf-8');
-
-    let lastResponseObj
-    while (true) {
-      const { done, value } = await reader.read()
-      if (done) break
-
-      const chunkJsonString = decoder.decode(value)
-      const jsonObj = JSON.parse(chunkJsonString)
-      console.log(jsonObj)
-
-      lastResponseObj = jsonObj
-    } 
-
-    console.log('[getDownloadable] finished getting downloadable url')
-    return lastResponseObj
-  } catch (error) {
-    console.log('[getDownloadable] error getting downloadble url: ' + error)
-    return
+export const fetchFile = async (fileUrl, onProgress = () => {}) => {
+  console.log(`[${fetchFile.name}] fetching ${fileUrl}...`)
+  const progressObj = {
+    log: "",
+    progress: 0
   }
+
+  let chunksAll
+  try {
+    const response = await fetch(fileUrl);
+    const reader = response.body.getReader();
+    const contentLength = +response.headers.get('Content-Length');
+
+    let receivedLength = 0;
+    let chunks = []; 
+    
+    while(true) {
+      const {done, value} = await reader.read();
+      if (done) break;
+
+      chunks.push(value);
+      receivedLength += value.length;
+
+      const step = Math.round((receivedLength / contentLength) * 100);
+      onProgress({
+        ...progressObj,
+        progress: step,
+        log: `downloading (${step})`
+      })
+    }
+
+    chunksAll = new Uint8Array(receivedLength);
+    let position = 0;
+    for(let chunk of chunks) {
+      chunksAll.set(chunk, position);
+      position += chunk.length;
+    }
+  } catch (e) {
+    console.warn(`[${fetchFile.name}] error fetching ${fileUrl}: ${e}`)
+    throw e
+  }
+
+  onProgress({ ...progressObj, log: 'fetch completed.' })
+  console.log(`[${fetchFile.name}] fetch completed.`)
+  return chunksAll;
 }
 
-export const runDownloadTask = async (id, url) => {
-  const infoObj = await getDownloadableUrl(url)
-  if (!infoObj) {
-    useNotification.getState().updateNotifFromId(id, { title: 'error occured!', message: 'im sorry but we have technical problem here.', canDelete: true })
-    console.log('[download] error getting url info')
-    return
+
+export const runDownloadTask = async (options, onProgress = () => {}) => {
+  onProgress({ log: "getting ready..." })
+  const progressObj = {
+    log: "",
+    progress: 0
   }
 
-  console.log('[download] got url info:' + JSON.stringify(infoObj, {}, 2))
+  try {
+    console.log(`[${runDownloadTask.name}] requesting extract to api`)
+
+    const infoObj = await extractUrlInfo(options, (response) => {
+      onProgress({ ...progressObj, log: response.log })
+    })
+
+    console.log(`[${runDownloadTask.name}] got url info: ${JSON.stringify(infoObj, {}, 2)}`)
+  } catch (e) {
+    console.warn(`[${runDownloadTask.name}] error getting url info: ${e}`)
+    onProgress({ log: `${e}` })
+    throw e
+  }
+
 }
