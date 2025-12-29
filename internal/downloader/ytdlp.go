@@ -57,7 +57,7 @@ func (ytdlp *YtdlpDownloader) GetTitle(url string) (URLInfo, error) {
 func (ytdlp *YtdlpDownloader) Extract(options Options, logChan chan<- string) (URLInfo, error) {
 	var urlInfo URLInfo
 	var finalJsonString string
-	args := []string{"--print", `{"title": "%(title)s", "url": "%(urls)s" }`, "--cookies-from-browser", "firefox", "--js-runtimes", "node"}
+	args := []string{"--verbose", "--no-playlist", "--print", `{"title": "%(title)s", "url": "%(urls)s" }`, "--cookies-from-browser", "firefox", "--js-runtimes", "node"}
 
 	switch options.Mode {
 	case "video":
