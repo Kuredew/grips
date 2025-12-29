@@ -1,45 +1,50 @@
+import z from "zod"
 const API_URL = import.meta.env.VITE_API_URL
 
-const validateResponse = (jsonObj) => {
-  try {
-    return {
-      status: jsonObj.Status,
-      description: jsonObj.Description,
-      log: jsonObj.Log,
-      info: {
-        title: jsonObj.Info.title,
-        url: jsonObj.Info.url
-      }
-    }
-  } catch (e) {
-    console.warn(`[${validateResponse.name}] response is not valid: ${e}`)
-    throw e
-  }
-}
+const responseSchema = z.object({
+  status: z.string(),
+  description: z.string(),
+  log: z.string(),
+  info: z.object({
+    title: z.string(),
+    url: z.url()
+  })
+})
+
+const optionsSchema = z.object({
+  url: z.url(),
+  mode: z.string(),
+  option: z.object({
+    preferredResolution: z.string().default('')
+  })
+})
 
 const validateOptions = (options) => {
   try {
-    return {
-      url: options.url,
-      mode: options.mode,
-      option: {
-        preferredResolution: options.preferredResolution
-      }
-    }
+    return optionsSchema.parse(options)
   } catch (e) {
     console.warn(`[${validateOptions.name}] options is not valid: ${e}`)
-    throw e
+    throw new Error('options object is not valid')
+  }
+}
+
+const validateResponse = (responseObj) => {
+  try {
+    return responseSchema.parse(responseObj)
+  } catch (e) {
+    console.log(`[${validateResponse.name}] response is not valid: ${e}`)
+    throw new Error('response object is not valid')
   }
 }
 
 export const extractUrlInfo = async (options, responseHandler) => {
   const requestUrl = `${API_URL}/extract`
-  const validatedOptions = validateOptions(options)
-  const optionsString = JSON.stringify(validatedOptions, {}, 2)
-
-  console.log(`[${extractUrlInfo.name}] processing request that have options: ${optionsString}`)
 
   try {
+    const validatedOptions = validateOptions(options)
+    const optionsString = JSON.stringify(validatedOptions, {}, 2)
+    console.log(`[${extractUrlInfo.name}] processing request that have options: ${optionsString}`)
+
     const response = await fetch(requestUrl, {
       method: 'POST',
       headers: {
@@ -74,7 +79,7 @@ export const extractUrlInfo = async (options, responseHandler) => {
     return lastResponseObj
   } catch (error) {
     console.warn(`[${extractUrlInfo.name}] error occured! : ${error}`)
-    console.warn(`[${extractUrlInfo.name}] aborted request that have option: ${optionsString}`)
+    // console.warn(`[${extractUrlInfo.name}] aborted request that have option: ${optionsString}`)
 
     throw error
   }
