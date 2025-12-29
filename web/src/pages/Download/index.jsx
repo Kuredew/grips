@@ -7,12 +7,14 @@ import { useState } from "react"
 import { runDownloadTask } from "../../services/download"
 import { useSetting } from "../../store/useSetting"
 import { AVALAIBLE_SETTINGS } from "../../settings/registry"
+import { useFFmpeg } from "../../store/useFFmpeg"
 
 export default function DownloadPage() {
   const { addNotif, updateNotifFromId } = useNotification()
   const { settings, updateSetting } = useSetting()
   const [mediaUrl, setMediaUrl] = useState('')
   const { openWindow } = useWindow()
+  const { mergeMedia } = useFFmpeg()
   const avalaibleSettings = AVALAIBLE_SETTINGS['download']
   const downloadSettings = settings['download']
   const updateDownloadSetting = (subKey, value) => {
@@ -30,29 +32,75 @@ export default function DownloadPage() {
 
     console.log("[batch] batch created")
 
-    const notifId = addNotif("waiting", "getting ready...", types.PROGRESS, false)
+    const notifId = addNotif("getting url info", "waiting api response...", types.PROGRESS, false)
 
     console.log('[batch] notification created')
     console.log('[batch] starting download...')
     setMediaUrl('')
 
     try {
-      await runDownloadTask({ 
+      const playlistDataList = await runDownloadTask({ 
         url: mediaUrl, 
         mode: settings.download.mode, 
-        option: { preferredResolution: settings.video.preferredResolution } 
+        option: { preferredResolution: settings.video.preferredResolution.replace('p', '') } 
       }, (progress) => updateNotifFromId(notifId, {
-        message: progress.log,
-        progress: progress.progress,
+        title: progress.title ? progress.title : "getting url info",
+        message: progress.log ? progress.log : "waiting api response...",
+        progress: progress.progress ? progress.log : 0,
       }))
+
+      for (const fileList of playlistDataList) {
+        updateNotifFromId(notifId, { title: fileList.title, message: "processing..." })
+
+        switch (settings.download.mode) {
+          case 'video': {
+            const outputFileName = `${fileList.title}.mp4`
+
+            if (settings.video.mergeAudio) {
+              const outputData = await mergeMedia(notifId, fileList.fileDataList, outputFileName, settings.video.reEncodeVideo)
+              downloadFileData(outputData, outputFileName)
+            } else {
+              fileList.fileDataList.forEach((value, index) => {
+                const outputFileName = index === 0 ? `${fileList.title}.mp4` : `${fileList.title}.mp3`
+                downloadFileData(value, outputFileName)
+              })
+            }
+            break
+          }
+          case 'audio': {
+            const outputFileName = `${fileList.title}.mp3`
+
+            fileList.fileDataList.forEach((value) => {
+              downloadFileData(value, outputFileName)
+            })
+          }
+        }
+
+        updateNotifFromId(notifId, {
+          message: "download finished!!",
+          canDelete: true,
+        })
+      }
     } catch (e) {
       updateNotifFromId(notifId, {
         title: `error downloading files`,
         message: e.message,
         canDelete: true
       })
+      throw e
     }
   }
+
+  const downloadFileData = (fileData, filename) => {
+    const blobUrl = URL.createObjectURL(new Blob([fileData.buffer]))
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(blobUrl); 
+  };
 
   return (
     <>
