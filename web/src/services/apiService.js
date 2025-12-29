@@ -5,10 +5,12 @@ const responseSchema = z.object({
   status: z.string(),
   description: z.string(),
   log: z.string(),
-  info: z.object({
-    title: z.string(),
-    url: z.string()
-  })
+  info: z.array(
+    z.object({
+      title: z.string(),
+      url: z.string()
+    })
+  ).nullable()
 })
 
 const optionsSchema = z.object({
