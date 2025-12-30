@@ -24,7 +24,7 @@ export const fetchFile = async (fileUrl, onProgress = () => {}) => {
 
   while (true) {
     try {
-      onProgress({
+      onProgress({ 
         log: `${fetchFile.name}: fetching file...`
       })
 
@@ -89,19 +89,13 @@ export const fetchFile = async (fileUrl, onProgress = () => {}) => {
 
 
 export const runDownloadTask = async (options, onProgress = () => {}) => {
-  const progressObj = {
-    title: "",
-    log: "",
-    progress: 0
-  }
-
-  onProgress({ log: "getting ready..." })
+  onProgress({ title: `[${runDownloadTask.name}]`, log: `${runDownloadTask.name}: getting ready...` })
 
   try {
     console.log(`[${runDownloadTask.name}] requesting extract to api`)
 
-    const responseObj = await extractUrlInfo(options, (response) => {
-      onProgress({ log: `${runDownloadTask.name}: ${response.log}` })
+    const responseObj = await extractUrlInfo(options, (log) => {
+      onProgress({ title: `[${runDownloadTask.name}]`, log: `${runDownloadTask.name}: ${log}` })
     })
 
     console.log(`[${runDownloadTask.name}] got url info: ${JSON.stringify(responseObj, {}, 2)}`)
@@ -117,7 +111,10 @@ export const runDownloadTask = async (options, onProgress = () => {}) => {
       await sleep(5000)
 
       for (const url of urls) {
-        const fileData = await fetchFile(url, onProgress)
+        const fileData = await fetchFile(url, (progress) => {
+          onProgress({ title: urlInfo.title, progress: progress.progress, log: `${runDownloadTask.name}: ${progress.log}` })
+        })
+
         fileDataList.push(fileData)
       }
 
@@ -131,10 +128,10 @@ export const runDownloadTask = async (options, onProgress = () => {}) => {
     console.log(playlistDataList)
     return playlistDataListSchema.parse(playlistDataList)
   } catch (e) {
-    console.error(`[${runDownloadTask.name}] error getting url info: ${e.message}`)
+    console.error(`[${runDownloadTask.name}] ${e.message}`)
 
-    onProgress({ ...progressObj, log: `${e}` })
-    throw new Error(`${runDownloadTask.name}: error occured! ${e.message}`)
+    onProgress({ title: `[${runDownloadTask.name}]`, log: `${e}` })
+    throw new Error(`${runDownloadTask.name}: ${e.message}`)
   }
 
 }
