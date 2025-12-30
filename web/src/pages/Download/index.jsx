@@ -44,12 +44,15 @@ export default function DownloadPage() {
         mode: settings.download.mode, 
         option: { preferredResolution: settings.video.preferredResolution.replace('p', '') } 
       }, (progress) => updateNotifFromId(notifId, {
-        title: progress.title ? progress.title : "getting url info",
-        message: progress.log ? progress.log : "waiting api response...",
+        title: progress.title,
+        message: progress.log,
         progress: progress.progress ? progress.progress : 0,
       }))
 
       for (const fileList of playlistDataList) {
+        // add default filename if title is empty
+        fileList.title ? null : fileList.title = 'no-title'
+
         updateNotifFromId(notifId, { title: fileList.title, message: "processing..." })
 
         switch (settings.download.mode) {
@@ -87,7 +90,7 @@ export default function DownloadPage() {
         message: e.message,
         canDelete: true
       })
-      console.error(`[batch] error: ${e.message}`)
+      console.error(`[batch] ${e.message}`)
     }
   }
 
