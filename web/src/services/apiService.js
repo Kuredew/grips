@@ -39,7 +39,7 @@ const validateResponse = (responseObj) => {
   }
 }
 
-export const extractUrlInfo = async (options, responseHandler) => {
+export const extractUrlInfo = async (options, logHandler) => {
   const requestUrl = `${API_URL}/extract`
 
   try {
@@ -72,9 +72,9 @@ export const extractUrlInfo = async (options, responseHandler) => {
       const jsonList = JSON.parse(`[${fixedJsonString}]`)
 
       const validatedResponse = validateResponse(jsonList[jsonList.length - 1])
-      console.log(validatedResponse)
+      // console.log(validatedResponse)
 
-      responseHandler(validatedResponse)
+      logHandler(`${extractUrlInfo.name}: ${validatedResponse.log}`)
       lastResponseObj = validatedResponse
     } 
 
@@ -82,14 +82,14 @@ export const extractUrlInfo = async (options, responseHandler) => {
     console.log(`[${extractUrlInfo.name}] request finished that have options: ${optionsString}`)
     
     if (lastResponseObj.status === "ERROR") {
-      throw new Error(`[${extractUrlInfo.name}] api returned ERROR status at last response obj. last response: ${JSON.stringify(lastResponseObj, {}, 2)}`)
+      throw new Error(`api returned ERROR status at last response obj. last response: ${JSON.stringify(lastResponseObj, {}, 2)}`)
     }
 
     return lastResponseObj
   } catch (error) {
-    console.warn(`[${extractUrlInfo.name}] error occured! : ${error.message}`)
+    console.error(`[${extractUrlInfo.name}] ${error.message}`)
     // console.warn(`[${extractUrlInfo.name}] aborted request that have option: ${optionsString}`)
 
-    throw error
+    throw new Error(`${extractUrlInfo.name}: ${error.message}`)
   }
 }
