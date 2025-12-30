@@ -82,12 +82,12 @@ export const extractUrlInfo = async (options, responseHandler) => {
     console.log(`[${extractUrlInfo.name}] request finished that have options: ${optionsString}`)
     
     if (lastResponseObj.status === "ERROR") {
-      throw new Error(lastResponseObj.log)
+      throw new Error(`[${extractUrlInfo.name}] api returned ERROR status at last response obj. last response: ${JSON.stringify(lastResponseObj, {}, 2)}`)
     }
 
     return lastResponseObj
   } catch (error) {
-    console.warn(`[${extractUrlInfo.name}] error occured! : ${error}`)
+    console.warn(`[${extractUrlInfo.name}] error occured! : ${error.message}`)
     // console.warn(`[${extractUrlInfo.name}] aborted request that have option: ${optionsString}`)
 
     throw error
