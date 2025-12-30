@@ -16,6 +16,7 @@ import (
 
 var log = logrus.New()
 var CLIENT_ORIGIN = os.Getenv("CLIENT_ORIGIN")
+var PYTHON_PATH = os.Getenv("PYTHON_PATH")
 
 func Init() {
 	// set logger formatter
@@ -38,7 +39,7 @@ func Init() {
 
 	ytdlp := downloader.YtdlpDownloader{
 		Log:        log,
-		BinaryPath: "yt-dlp",
+		PythonPath: PYTHON_PATH,
 	}
 
 	h := handler.DownloadHandler{

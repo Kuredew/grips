@@ -12,7 +12,7 @@ import (
 
 type YtdlpDownloader struct {
 	Log        *logrus.Logger
-	BinaryPath string
+	PythonPath string
 }
 
 type ModeOptions struct {
@@ -39,7 +39,7 @@ func (ytdlp *YtdlpDownloader) GetTitle(url string) (URLInfo, error) {
 
 	ytdlp.Log.Info("Started.")
 
-	out, err := exec.Command(ytdlp.BinaryPath, "--get-title", url).Output()
+	out, err := exec.Command("python3", "-m", "yt-dlp", "--get-title", url).Output()
 	if err != nil {
 		return urlInfo, err
 	}
@@ -57,7 +57,7 @@ func (ytdlp *YtdlpDownloader) GetTitle(url string) (URLInfo, error) {
 func (ytdlp *YtdlpDownloader) Extract(options Options, logChan chan<- string) ([]URLInfo, error) {
 	var urlInfo []URLInfo
 	var finalJsonString string
-	args := []string{"--verbose", "--no-playlist", "--print", `{"title": "%(title)s", "url": "%(urls)s" }`, "--cookies-from-browser", "firefox", "--js-runtimes", "node"}
+	args := []string{"-m", "yt_dlp", "--verbose", "--no-playlist", "--print", `{"title": "%(title)s", "url": "%(urls)s" }`, "--cookies-from-browser", "firefox", "--js-runtimes", "node"}
 
 	switch options.Mode {
 	case "video":
@@ -71,7 +71,7 @@ func (ytdlp *YtdlpDownloader) Extract(options Options, logChan chan<- string) ([
 	}
 
 	args = append(args, options.URL)
-	cmd := exec.Command(ytdlp.BinaryPath, args...)
+	cmd := exec.Command(ytdlp.PythonPath, args...)
 
 	defer close(logChan)
 
