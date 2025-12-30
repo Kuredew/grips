@@ -1,7 +1,7 @@
 import z from "zod";
 import { extractUrlInfo } from "./apiService";
 import { sleep } from "../utils/sleep";
-const API_URL = import.meta.env.VITE_API_URL
+const PROXY_URL = import.meta.env.VITE_PROXY_URL
 
 const playlistDataListSchema = z.array(
   z.object({
@@ -14,47 +14,77 @@ const playlistDataListSchema = z.array(
 
 export const fetchFile = async (fileUrl, onProgress = () => {}) => {
   let chunksAll
-  try {
-    const requestUrl = `${API_URL}/proxy?url=${encodeURIComponent(fileUrl)}`
-    console.log(`[${fetchFile.name}] fetching ${requestUrl}...`)
+  let lastChunks = []
+  let receivedLength = 0
+  let maxRetries = 10
+  let currentRetries = 0
 
-    const response = await fetch(requestUrl);
-    const reader = response.body.getReader();
-    const contentLength = +response.headers.get('Content-Length');
-    console.log(`[${fetchFile.name}] content length is ${contentLength}`)
+  const requestUrl = PROXY_URL + encodeURIComponent(fileUrl)
+  console.log(`[${fetchFile.name}] fetching ${requestUrl}...`)
 
-    let receivedLength = 0;
-    let chunks = []; 
-    
-    while(true) {
-      const {done, value} = await reader.read();
-      if (done) break;
-
-      chunks.push(value);
-      receivedLength += value.length;
-
-      const step = Math.round((receivedLength / contentLength) * 100);
-      console.log(`[${fetchFile.name}] progress: ${step}%`)
+  while (true) {
+    try {
       onProgress({
-        progress: step,
-        log: `downloading (${step}%)`
+        log: `${fetchFile.name}: fetching file...`
       })
-    }
 
-    chunksAll = new Uint8Array(receivedLength);
-    let position = 0;
-    for(let chunk of chunks) {
-      chunksAll.set(chunk, position);
-      position += chunk.length;
+      let response = await fetch(requestUrl, { headers: {
+        'Range': `bytes=${receivedLength}-`
+      } });
+
+      if (!response.ok) throw new Error(`[${fetchFile.name}] response is not OK`)
+      if (!response.status === 206) {
+        console.log(`[${fetchFile.name}] url does not support continue!`)
+        lastChunks = []
+        receivedLength = 0
+      }
+
+      const reader = response.body.getReader();
+      const contentLength = +response.headers.get('Content-Length');
+      console.log(`[${fetchFile.name}] content length is ${contentLength}`)
+
+      while(true) {
+        const {done, value} = await reader.read();
+        if (done) break;
+
+        lastChunks.push(value);
+        receivedLength += value.length;
+
+        const step = Math.round((receivedLength / contentLength) * 100);
+        console.log(`[${fetchFile.name}] progress: ${step}%`)
+        onProgress({
+          progress: step,
+          log: `${fetchFile.name}: downloading (${step}%)`
+        })
+      }
+
+      chunksAll = new Uint8Array(receivedLength);
+      let position = 0;
+      for(let chunk of lastChunks) {
+        chunksAll.set(chunk, position);
+        position += chunk.length;
+      }
+
+      onProgress({ log: 'fetch completed.' })
+      console.log(`[${fetchFile.name}] fetch completed.`)
+      return chunksAll;
+    } catch (e) {
+      console.warn(`[${fetchFile.name}] error fetching ${requestUrl}: ${e.message}`)
+      console.warn(`[${fetchFile.name}] retrying in 2 sec...`)
+      onProgress({
+        log: `${fetchFile.name}: error occured, retrying in 2 sec...`
+      })
+
+      if (!(currentRetries <= maxRetries)) {
+        console.error(`[${fetchFile.name}] max retries exceeded! aborted download.`)
+        throw new Error(`${fetchFile.name}: max retries exceeded! download error : ${e.message}`)
+      }
+      await sleep(3000)
+
+      currentRetries += 1
+      console.log(`[${fetchFile.name}] retrying (${currentRetries}/${maxRetries})`)
     }
-  } catch (e) {
-    console.warn(`[${fetchFile.name}] error fetching ${fileUrl}: ${e}`)
-    throw e
   }
-
-  onProgress({ log: 'fetch completed.' })
-  console.log(`[${fetchFile.name}] fetch completed.`)
-  return chunksAll;
 }
 
 
@@ -71,7 +101,7 @@ export const runDownloadTask = async (options, onProgress = () => {}) => {
     console.log(`[${runDownloadTask.name}] requesting extract to api`)
 
     const responseObj = await extractUrlInfo(options, (response) => {
-      onProgress({ log: response.log })
+      onProgress({ log: `${runDownloadTask.name}: ${response.log}` })
     })
 
     console.log(`[${runDownloadTask.name}] got url info: ${JSON.stringify(responseObj, {}, 2)}`)
@@ -83,7 +113,7 @@ export const runDownloadTask = async (options, onProgress = () => {}) => {
       const urls = urlInfo.url.split(" | ")
       const fileDataList = []
 
-      onProgress({ title: urlInfo.title, log: "cooldown 5 sec before download..."})
+      onProgress({ title: urlInfo.title, log: `${runDownloadTask.name}: cooldown 5 sec before download...`})
       await sleep(5000)
 
       for (const url of urls) {
@@ -101,9 +131,10 @@ export const runDownloadTask = async (options, onProgress = () => {}) => {
     console.log(playlistDataList)
     return playlistDataListSchema.parse(playlistDataList)
   } catch (e) {
-    console.warn(`[${runDownloadTask.name}] error getting url info: ${e}`)
+    console.error(`[${runDownloadTask.name}] error getting url info: ${e.message}`)
+
     onProgress({ ...progressObj, log: `${e}` })
-    throw e
+    throw new Error(`${runDownloadTask.name}: error occured! ${e.message}`)
   }
 
 }
