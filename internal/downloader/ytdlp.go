@@ -61,9 +61,9 @@ func (ytdlp *YtdlpDownloader) Extract(options Options, logChan chan<- string) ([
 
 	switch options.Mode {
 	case "video":
-		args = append(args, fmt.Sprintf("-S res:%v", options.Option.PreferredResolution))
+		args = append(args, "-S", fmt.Sprintf("res:%v", options.Option.PreferredResolution))
 	case "audio":
-		args = append(args, `-f "ba"`)
+		args = append(args, "-f", "ba")
 	default:
 		errorStr := fmt.Errorf("Uncompatible mode : %v", options.Mode)
 		ytdlp.Log.Error(errorStr)

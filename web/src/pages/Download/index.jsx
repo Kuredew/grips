@@ -46,7 +46,7 @@ export default function DownloadPage() {
       }, (progress) => updateNotifFromId(notifId, {
         title: progress.title ? progress.title : "getting url info",
         message: progress.log ? progress.log : "waiting api response...",
-        progress: progress.progress ? progress.log : 0,
+        progress: progress.progress ? progress.progress : 0,
       }))
 
       for (const fileList of playlistDataList) {
@@ -87,7 +87,7 @@ export default function DownloadPage() {
         message: e.message,
         canDelete: true
       })
-      throw e
+      console.error(`[batch] error: ${e.message}`)
     }
   }
 
