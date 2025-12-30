@@ -6,7 +6,7 @@ export default function Loading() {
 
   return (
     <AnimatePresence>
-      {loaded && (
+      {!loaded && (
         <motion.div 
           initial={{opacity: 0, scale: 0.95}}
           animate={{opacity: 1, scale: 1}}
@@ -96,7 +96,7 @@ export default function Loading() {
             >
             grips
             </div>
-            <div className="fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[100px] lg:translate-y-[200px] flex items-center justify-center flex-col lg:gap-5">
+            <div className="fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[100px] lg:translate-y-[200px] flex items-center justify-center flex-col gap-3 lg:gap-5">
             <div className="text-sm lg:text-lg">loading ffmpeg</div>
             <div class='flex items-center justify-center loader w-20 h-20 scale-60 sm:scale-80'>
               <div class='circle'></div>
