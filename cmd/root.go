@@ -3,16 +3,19 @@ package cmd
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"path"
 	"runtime"
 	"strings"
 
 	"github.com/Kuredew/grips/api/handler"
 	"github.com/Kuredew/grips/internal/downloader"
+	"github.com/rs/cors"
 	"github.com/sirupsen/logrus"
 )
 
 var log = logrus.New()
+var CLIENT_ORIGIN = os.Getenv("CLIENT_ORIGIN")
 
 func Init() {
 	// set logger formatter
@@ -47,10 +50,21 @@ func Init() {
 	}
 
 	log.Info("App Started.")
+	mux := http.NewServeMux()
 
 	// http.HandleFunc("/getinfo", h.HandleGetInfo)
-	http.HandleFunc("/extract", h.HandleExtract)
-	http.HandleFunc("/proxy", p.RequestHandler)
+	mux.HandleFunc("/extract", h.HandleExtract)
+	mux.HandleFunc("/proxy", p.RequestHandler)
 
-	http.ListenAndServe(":8000", nil)
+	// handle cors
+	handler := cors.New(cors.Options{
+		AllowedOrigins:   []string{CLIENT_ORIGIN},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Authorization", "Content-Type", "Range"},
+		AllowCredentials: true,
+		Debug:            true,
+	}).Handler(mux)
+	log.Info(fmt.Sprintf("CORS AllowedOrigin: %v", CLIENT_ORIGIN))
+
+	http.ListenAndServe(":8000", handler)
 }
