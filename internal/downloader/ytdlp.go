@@ -2,6 +2,7 @@ package downloader
 
 import (
 	"bufio"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -12,9 +13,9 @@ import (
 )
 
 type YtdlpDownloader struct {
-	Log            *logrus.Logger
-	BinaryPath     string
-	CookiesTxtPath string
+	Log           *logrus.Logger
+	BinaryPath    string
+	CookiesBase64 string
 }
 
 type ModeOptions struct {
@@ -37,13 +38,13 @@ type URLInfo struct {
 }
 
 func (ytdlp *YtdlpDownloader) PrepareCookies() (string, error) {
-	src := ytdlp.CookiesTxtPath
+	cookiesBase64 := ytdlp.CookiesBase64
 
 	ytdlp.Log.Infof("Preparing cookies")
 
-	ytdlp.Log.Info("reading cookies...")
+	ytdlp.Log.Info("decode cookies base64...")
 	// read cookies
-	input, err := os.ReadFile(src)
+	input, err := base64.StdEncoding.DecodeString(cookiesBase64)
 	if err != nil {
 		return "", err
 	}
@@ -55,7 +56,7 @@ func (ytdlp *YtdlpDownloader) PrepareCookies() (string, error) {
 		return "", fmt.Errorf("error occured while creating temp file: %v", err)
 	}
 
-	ytdlp.Log.Info("writing cookies to temp file...")
+	ytdlp.Log.Info("writing decoded cookies to temp file...")
 	// write cookies to temp file
 	if _, err := tmpFile.Write(input); err != nil {
 		return "", fmt.Errorf("error occured while writing to temp file: %v", err)
