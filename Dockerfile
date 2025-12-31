@@ -4,7 +4,7 @@ FROM golang:1.21-bullseye
 RUN apt-get update && apt-get install -y \
     curl \
     unzip \
-    ffmpeg \
+    ffmpeg
 
 # 2. install Deno 
 RUN curl -L https://github.com/denoland/deno/releases/latest/download/deno-x86_64-unknown-linux-gnu.zip -o deno.zip \

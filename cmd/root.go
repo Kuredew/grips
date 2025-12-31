@@ -17,7 +17,7 @@ import (
 var log = logrus.New()
 var CLIENT_ORIGIN = os.Getenv("CLIENT_ORIGIN")
 var YT_DLP_BINARY_PATH = os.Getenv("YT_DLP_BINARY_PATH")
-var COOKIES_TXT_PATH = os.Getenv("COOKIES_TXT_PATH")
+var COOKIES_BASE64 = os.Getenv("COOKIES_BASE64")
 
 func Init() {
 	// set logger formatter
@@ -39,9 +39,9 @@ func Init() {
 	log.SetReportCaller(true)
 
 	ytdlp := downloader.YtdlpDownloader{
-		Log:            log,
-		BinaryPath:     YT_DLP_BINARY_PATH,
-		CookiesTxtPath: COOKIES_TXT_PATH,
+		Log:           log,
+		BinaryPath:    YT_DLP_BINARY_PATH,
+		CookiesBase64: COOKIES_BASE64,
 	}
 
 	h := handler.DownloadHandler{
