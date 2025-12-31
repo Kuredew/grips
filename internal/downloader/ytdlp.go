@@ -4,7 +4,9 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"os"
 	"os/exec"
+	"path"
 	"strings"
 
 	"github.com/sirupsen/logrus"
@@ -14,6 +16,7 @@ type YtdlpDownloader struct {
 	Log            *logrus.Logger
 	BinaryPath     string
 	CookiesTxtPath string
+	TempFolderPath string
 }
 
 type ModeOptions struct {
@@ -33,6 +36,25 @@ func (o *Options) IsValid() bool {
 type URLInfo struct {
 	Title string `json:"title"`
 	URL   string `json:"url"`
+}
+
+func (ytdlp *YtdlpDownloader) PrepareCookies() (string, error) {
+	src := ytdlp.CookiesTxtPath
+	dest := path.Join(ytdlp.TempFolderPath, "cookies.txt")
+
+	// read cookies
+	input, err := os.ReadFile(src)
+	if err != nil {
+		return "", err
+	}
+
+	// write cookies to temp folder
+	err = os.WriteFile(dest, input, 0644)
+	if err != nil {
+		return "", err
+	}
+
+	return dest, nil
 }
 
 func (ytdlp *YtdlpDownloader) GetTitle(url string) (URLInfo, error) {
@@ -58,7 +80,14 @@ func (ytdlp *YtdlpDownloader) GetTitle(url string) (URLInfo, error) {
 func (ytdlp *YtdlpDownloader) Extract(options Options, logChan chan<- string) ([]URLInfo, error) {
 	var urlInfo []URLInfo
 	var finalJsonString string
-	args := []string{"-vU", "--no-playlist", "--cookies", ytdlp.CookiesTxtPath, "--print", `{"title": "%(title)s", "url": "%(urls)s" }`}
+
+	// prepare cookies first
+	cookiesTxtPath, err := ytdlp.PrepareCookies()
+	if err != nil {
+		return urlInfo, err
+	}
+
+	args := []string{"-vU", "--no-playlist", "--cookies", cookiesTxtPath, "--print", `{"title": "%(title)s", "url": "%(urls)s" }`}
 
 	switch options.Mode {
 	case "video":
