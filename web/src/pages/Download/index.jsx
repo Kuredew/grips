@@ -8,6 +8,7 @@ import { runDownloadTask } from "../../services/download"
 import { useSetting } from "../../store/useSetting"
 import { AVALAIBLE_SETTINGS } from "../../settings/registry"
 import { useFFmpeg } from "../../store/useFFmpeg"
+import filenamify from "filenamify"
 
 export default function DownloadPage() {
   const { addNotif, updateNotifFromId } = useNotification()
@@ -51,7 +52,7 @@ export default function DownloadPage() {
 
       for (const fileList of playlistDataList) {
         // add default filename if title is empty
-        fileList.title ? null : fileList.title = 'no-title'
+        fileList.title ? fileList.title = filenamify(fileList.title) : fileList.title = 'no-title'
 
         updateNotifFromId(notifId, { title: fileList.title, message: "processing..." })
 
