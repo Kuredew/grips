@@ -73,7 +73,7 @@ func (ytdlp *YtdlpDownloader) PrepareCookies() (string, error) {
 func (ytdlp *YtdlpDownloader) Extract(options Options, logChan chan<- string) ([]URLInfo, error) {
 	var urlInfo []URLInfo
 	var finalJsonString string
-	sortString := "proto:!m3u8"
+	sortString := "proto:https"
 
 	// prepare cookies first
 	cookiesTxtPath, err := ytdlp.PrepareCookies()
