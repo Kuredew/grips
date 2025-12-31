@@ -1,4 +1,4 @@
-FROM golang:1.21-bullseye
+FROM golang:1.25.5-bookworm
 
 # 1. install dependency
 RUN apt-get update && apt-get install -y \
