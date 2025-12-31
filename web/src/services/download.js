@@ -18,6 +18,7 @@ export const fetchFile = async (fileUrl, onProgress = () => {}) => {
   let receivedLength = 0
   let maxRetries = 10
   let currentRetries = 0
+  let contentLength
 
   const requestUrl = PROXY_URL + encodeURIComponent(fileUrl)
   console.log(`[${fetchFile.name}] fetching ${requestUrl}...`)
@@ -40,8 +41,11 @@ export const fetchFile = async (fileUrl, onProgress = () => {}) => {
       }
 
       const reader = response.body.getReader();
-      const contentLength = +response.headers.get('Content-Length');
-      console.log(`[${fetchFile.name}] content length is ${contentLength}`)
+
+      if (!contentLength) {
+        contentLength = +response.headers.get('Content-Length');
+        console.log(`[${fetchFile.name}] content length is ${contentLength}`)
+      }
 
       while(true) {
         const {done, value} = await reader.read();
