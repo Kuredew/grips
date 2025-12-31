@@ -11,8 +11,9 @@ import (
 )
 
 type YtdlpDownloader struct {
-	Log        *logrus.Logger
-	BinaryPath string
+	Log            *logrus.Logger
+	BinaryPath     string
+	CookiesTxtPath string
 }
 
 type ModeOptions struct {
@@ -57,7 +58,7 @@ func (ytdlp *YtdlpDownloader) GetTitle(url string) (URLInfo, error) {
 func (ytdlp *YtdlpDownloader) Extract(options Options, logChan chan<- string) ([]URLInfo, error) {
 	var urlInfo []URLInfo
 	var finalJsonString string
-	args := []string{"-vU", "--no-playlist", "--print", `{"title": "%(title)s", "url": "%(urls)s" }`}
+	args := []string{"-vU", "--no-playlist", "--cookies", ytdlp.CookiesTxtPath, "--print", `{"title": "%(title)s", "url": "%(urls)s" }`}
 
 	switch options.Mode {
 	case "video":
