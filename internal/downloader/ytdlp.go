@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"path"
 	"strings"
 
 	"github.com/sirupsen/logrus"
@@ -16,7 +15,6 @@ type YtdlpDownloader struct {
 	Log            *logrus.Logger
 	BinaryPath     string
 	CookiesTxtPath string
-	TempFolderPath string
 }
 
 type ModeOptions struct {
@@ -40,9 +38,8 @@ type URLInfo struct {
 
 func (ytdlp *YtdlpDownloader) PrepareCookies() (string, error) {
 	src := ytdlp.CookiesTxtPath
-	dest := path.Join(ytdlp.TempFolderPath, "cookies.txt")
 
-	ytdlp.Log.Infof("Preparing cookies to %v", dest)
+	ytdlp.Log.Infof("Preparing cookies")
 
 	ytdlp.Log.Info("reading cookies...")
 	// read cookies
@@ -70,27 +67,7 @@ func (ytdlp *YtdlpDownloader) PrepareCookies() (string, error) {
 	ytdlp.Log.Info("done!")
 	ytdlp.Log.Infof("Cookies ready!")
 
-	return dest, nil
-}
-
-func (ytdlp *YtdlpDownloader) GetTitle(url string) (URLInfo, error) {
-	var urlInfo URLInfo
-
-	ytdlp.Log.Info("Started.")
-
-	out, err := exec.Command("python3", "-m", "yt-dlp", "--get-title", url).Output()
-	if err != nil {
-		return urlInfo, err
-	}
-
-	// remove newline
-	title := strings.TrimSpace(string(out))
-
-	urlInfo = URLInfo{
-		Title: title,
-	}
-	ytdlp.Log.Info("Got title")
-	return urlInfo, nil
+	return tmpFile.Name(), nil
 }
 
 func (ytdlp *YtdlpDownloader) Extract(options Options, logChan chan<- string) ([]URLInfo, error) {
