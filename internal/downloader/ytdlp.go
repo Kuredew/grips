@@ -73,6 +73,7 @@ func (ytdlp *YtdlpDownloader) PrepareCookies() (string, error) {
 func (ytdlp *YtdlpDownloader) Extract(options Options, logChan chan<- string) ([]URLInfo, error) {
 	var urlInfo []URLInfo
 	var finalJsonString string
+	sortString := "proto:!m3u8"
 
 	// prepare cookies first
 	cookiesTxtPath, err := ytdlp.PrepareCookies()
@@ -84,7 +85,7 @@ func (ytdlp *YtdlpDownloader) Extract(options Options, logChan chan<- string) ([
 
 	switch options.Mode {
 	case "video":
-		args = append(args, "-S", fmt.Sprintf("res:%v", options.Option.PreferredResolution))
+		sortString += fmt.Sprintf(",res:%v", options.Option.PreferredResolution)
 	case "audio":
 		args = append(args, "-f", "ba")
 	default:
@@ -93,7 +94,7 @@ func (ytdlp *YtdlpDownloader) Extract(options Options, logChan chan<- string) ([
 		return urlInfo, errorStr
 	}
 
-	args = append(args, options.URL)
+	args = append(args, "-S", sortString, options.URL)
 	cmd := exec.Command(ytdlp.BinaryPath, args...)
 
 	defer close(logChan)
