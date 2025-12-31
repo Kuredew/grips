@@ -72,7 +72,7 @@ export const extractUrlInfo = async (options, logHandler) => {
       const jsonList = JSON.parse(`[${fixedJsonString}]`)
 
       const validatedResponse = validateResponse(jsonList[jsonList.length - 1])
-      // console.log(validatedResponse)
+      console.log(validatedResponse)
 
       logHandler(`${extractUrlInfo.name}: ${validatedResponse.log}`)
       lastResponseObj = validatedResponse
