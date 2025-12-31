@@ -42,6 +42,8 @@ func (ytdlp *YtdlpDownloader) PrepareCookies() (string, error) {
 	src := ytdlp.CookiesTxtPath
 	dest := path.Join(ytdlp.TempFolderPath, "cookies.txt")
 
+	ytdlp.Log.Infof("Preparing cookies to %v", dest)
+
 	// read cookies
 	input, err := os.ReadFile(src)
 	if err != nil {
@@ -53,6 +55,8 @@ func (ytdlp *YtdlpDownloader) PrepareCookies() (string, error) {
 	if err != nil {
 		return "", err
 	}
+
+	ytdlp.Log.Infof("Cookies ready!")
 
 	return dest, nil
 }
