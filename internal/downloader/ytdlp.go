@@ -44,18 +44,30 @@ func (ytdlp *YtdlpDownloader) PrepareCookies() (string, error) {
 
 	ytdlp.Log.Infof("Preparing cookies to %v", dest)
 
+	ytdlp.Log.Info("reading cookies...")
 	// read cookies
 	input, err := os.ReadFile(src)
 	if err != nil {
 		return "", err
 	}
 
-	// write cookies to temp folder
-	err = os.WriteFile(dest, input, 0644)
+	ytdlp.Log.Info("making temp file...")
+	// make temp file
+	tmpFile, err := os.CreateTemp("", "yt-cookies-*.txt")
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("error occured while creating temp file: %v", err)
 	}
 
+	ytdlp.Log.Info("writing cookies to temp file...")
+	// write cookies to temp file
+	if _, err := tmpFile.Write(input); err != nil {
+		return "", fmt.Errorf("error occured while writing to temp file: %v", err)
+	}
+
+	ytdlp.Log.Infof("closing temp file...")
+	defer tmpFile.Close()
+
+	ytdlp.Log.Info("done!")
 	ytdlp.Log.Infof("Cookies ready!")
 
 	return dest, nil
