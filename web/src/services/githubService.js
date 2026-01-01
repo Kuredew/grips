@@ -2,7 +2,7 @@ const GITHUB_REPO_API_URL = "https://api.github.com/repos/Kuredew/grips"
 
 export const getLatestReleaseInfo = async () => {
   try {
-    const response = await fetch(GITHUB_REPO_API_URL) 
+    const response = await fetch(GITHUB_REPO_API_URL + "/releases/latest") 
 
     if (!response.ok) {
       throw new Error("github response isn't ok")
