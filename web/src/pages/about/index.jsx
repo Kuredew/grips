@@ -1,9 +1,11 @@
 import Markdown from "react-markdown"
 import frame from "../../assets/frame.png"
+import { useVersion } from "../../store/useVersion"
 
 export default function AboutPage() {
+  const { version } = useVersion()
   const about = `
-  ### v1.0.0
+  ### ${version}
 
   # about grips 
 
