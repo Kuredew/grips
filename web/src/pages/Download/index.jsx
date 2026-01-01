@@ -1,7 +1,6 @@
-import { motion } from "motion/react"
+import { AnimatePresence, motion } from "motion/react"
 import { useNotification } from "../../store/useNotification"
 import { types } from "../../store/useNotification"
-import DownloadIcon from "../../components/icons/DownloadIcon"
 import { useWindow } from "../../store/useWindow"
 import { useState } from "react"
 import { runDownloadTask } from "../../services/download"
@@ -9,13 +8,15 @@ import { useSetting } from "../../store/useSetting"
 import { AVALAIBLE_SETTINGS } from "../../settings/registry"
 import { useFFmpeg } from "../../store/useFFmpeg"
 import filenamify from "filenamify"
+import DownIcon from "../../components/icons/DownIcon"
+import Spinner from "../../components/icons/Spinner"
 
 export default function DownloadPage() {
-  const { addNotif, updateNotifFromId } = useNotification()
+  const { notifs, addNotif, updateNotifFromId } = useNotification()
   const { settings, updateSetting } = useSetting()
   const [mediaUrl, setMediaUrl] = useState('')
   const { openWindow } = useWindow()
-  const { mergeMedia } = useFFmpeg()
+  const { loaded, mergeMedia } = useFFmpeg()
   const avalaibleSettings = AVALAIBLE_SETTINGS['download']
   const downloadSettings = settings['download']
   const updateDownloadSetting = (subKey, value) => {
@@ -116,7 +117,20 @@ export default function DownloadPage() {
       id="notifIcon" 
       className="absolute top-0 mt-30 p-2 border-2 border-[#1f1f1f] rounded-full scale-90 cursor-pointer"
     >
-      <DownloadIcon />
+      <AnimatePresence>
+      {notifs.length > 0 && (
+        <motion.div 
+          initial={{opacity:0}}
+          animate={{opacity:1}}
+          exit={{opacity:0}}
+          className="absolute top-0 right-0 rounded-full"
+        >
+          {notifs.length}
+        </motion.div>
+      )}
+      </AnimatePresence>
+      <DownIcon />
+
     </motion.div>
 
     <div className="text-3xl mb-5">
@@ -124,10 +138,24 @@ export default function DownloadPage() {
     </div>
 
     <div>
-      <motion.div whileTap={{borderColor: "#ffffff"}} id="form" className="flex gap-3 border-2 border-[#1f1f1f] py-2 px-3 rounded-t-xl w-[500px] max-w-[90dvw]">
-        <input value={mediaUrl} className="w-full outline-0 border-0 text-sm" placeholder="paste the url here yaps" type="text" onChange={(e) => setMediaUrl(e.target.value)} />
-
+      <motion.div whileTap={{borderColor: "#ffffff"}} id="form" className="flex items-center justify-center gap-3 px-3 border-2 border-[#1f1f1f] rounded-t-xl w-[500px] h-[40px] overflow-hidden max-w-[90dvw]">
+        <AnimatePresence mode="popLayout">
+        { !loaded && (
+          <motion.div
+            initial={{opacity:0, scale:0}}
+            animate={{opacity:1, scale:1}}
+            exit={{opacity:0, scale:0}}
+            key={"loading"}
+          >
+          <Spinner size={"20px"} color={"#7e7e7e"} />
+          </motion.div>
+        )}
+        <motion.input 
+            key={"input"}
+            value={mediaUrl} layout className="flex-1 outline-0 border-0 text-sm h-full" placeholder="paste the url here yaps" type="text" onChange={(e) => setMediaUrl(e.target.value)} />
+        </AnimatePresence>
       </motion.div> 
+
       <div className="flex justify-between">
         <div className="flex border-2 border-[#1f1f1f] rounded-b-xl overflow-hidden">
         {avalaibleSettings['mode'].choices.map((choice) => (
