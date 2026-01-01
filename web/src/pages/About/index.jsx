@@ -25,7 +25,7 @@ export default function AboutPage() {
   `
   return (
     <>
-    <div className="w-full h-[99dvh] p-10 overflow-y-auto bg-blue-800 ">
+    <div className="w-full h-[99dvh] p-10 overflow-y-auto scrollbar bg-blue-800 ">
       <div className="prose prose-sm prose-invert text-white pb-50">
         <Markdown children={about}/>
         <img src={frame} alt="" />
