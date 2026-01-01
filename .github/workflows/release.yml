@@ -1,0 +1,21 @@
+name: Release
+
+on: workflow_dispatch
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permission: 
+      contents: write 
+      issues: write 
+      pull-requests: write 
+      id-token: write 
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Semantic Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: 
+          npx semantic-release
