@@ -4,14 +4,19 @@ import PagesManager from "./components/PagesManager"
 import NotificationManager from "./components/NotificationManager"
 import { useFFmpeg } from "./store/useFFmpeg"
 import { useEffect } from "react"
-import Loading from "./components/Loading"
+import { MotionConfig } from "motion/react"
+import { useSetting } from "./store/useSetting"
+import { useVersion } from "./store/useVersion"
 
 function App() {
-  const { loaded, loadFFmpeg } = useFFmpeg()
+  const { loadFFmpeg } = useFFmpeg()
+  const { loadVersion } = useVersion()
+  const { settings } = useSetting()
 
   useEffect(() => {
     const load = async () => {
-      await loadFFmpeg()
+      loadFFmpeg()
+      loadVersion()
     }
 
     load()
@@ -19,19 +24,17 @@ function App() {
 
   return (
   <div className="overflow-hidden h-screen w-screen">
-    <Loading />
-    
-    {loaded && (
-      <>
-      <NotificationManager />
+    <>
+    <MotionConfig reducedMotion={`${settings['appearance']['reduceMotion'] ? "always" : "never"}`}>
+    <NotificationManager />
 
-      <WindowManager />
+    <WindowManager />
 
-      <PagesManager />
+    <PagesManager />
 
-      <Bar />
-      </>
-    )}
+    <Bar />
+    </MotionConfig>
+    </>
   </div>
   )
 }

@@ -34,7 +34,7 @@ export const fetchFile = async (fileUrl, onProgress = () => {}) => {
       } });
 
       if (!response.ok) throw new Error(`[${fetchFile.name}] response is not OK`)
-      if (!response.status === 206) {
+      if (!(response.status === 206)) {
         console.log(`[${fetchFile.name}] url does not support continue!`)
         lastChunks = []
         receivedLength = 0

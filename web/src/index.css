@@ -1,11 +1,12 @@
 @import 'tailwindcss';
 @plugin "@tailwindcss/typography";
 @plugin "tailwind-scrollbar";
+@plugin "tailwind-scrollbar-hide";
 
 html, body {
   font-family: 'IBM Plex Mono';
   background-color: black;
-  color: white;
+  color: rgb(236, 236, 236);
   overflow: hidden !important;
   position: fixed;
 }

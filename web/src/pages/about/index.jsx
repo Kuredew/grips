@@ -1,9 +1,11 @@
 import Markdown from "react-markdown"
 import frame from "../../assets/frame.png"
+import { useVersion } from "../../store/useVersion"
 
 export default function AboutPage() {
+  const { version } = useVersion()
   const about = `
-  ### v1.0.0
+  ### ${version}
 
   # about grips 
 
@@ -25,7 +27,7 @@ export default function AboutPage() {
   `
   return (
     <>
-    <div className="w-full h-[99dvh] p-10 overflow-y-auto bg-blue-800 ">
+    <div className="w-full h-[99dvh] p-10 overflow-y-auto scrollbar bg-blue-800 ">
       <div className="prose prose-sm prose-invert text-white pb-50">
         <Markdown children={about}/>
         <img src={frame} alt="" />

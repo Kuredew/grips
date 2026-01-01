@@ -19,7 +19,7 @@ export default function SettingsPage() {
       action: () => openWindow('videoSettings')
     },
     {
-      id: "audio", 
+      id: "audio (soon)", 
       icon: <AudioIcon/>, 
       action: () => openWindow('audioSettings')
     },
