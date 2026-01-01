@@ -1,6 +1,4 @@
 import ToggleSwitch from "./ToggleSwitch"
-import { motion } from "motion/react"
-import { AnimatePresence } from "motion/react"
 import { AVALAIBLE_SETTINGS, SETTINGS_TYPES } from "../settings/registry"
 import { useSetting } from "../store/useSetting"
 
@@ -23,34 +21,25 @@ export default function SettingsList({settingKey}) {
             <div>
               <p className="mb-1">{avalaibleSubSettings[subKey].name}</p>
 
-              <div className="flex bg-[#121212] border-2 border-[#1f1f1f] w-full py-1 justify-between items-center px-4 rounded-xl">
+              <div className="flex bg-[#121212] border-2 border-[#1f1f1f] w-full justify-between items-center rounded-xl overflow-auto scrollbar-hide">
                 {avalaibleSubSettings[subKey].choices.map(choice => (
-                  <div key={choice}>
-                    <AnimatePresence mode="wait">
-                      {settings[settingKey][subKey] == choice && (
-                        <motion.div 
-                          initial={{color: "#ffffff", backgroundColor: "#000000"}}
-                          animate={{color: "#000000", backgroundColor: "#ffffff"}}
-                          exit={{color: "#ffffff", backgroundColor: "#000000"}}
-                          // onClick={() => updateSetting(key, choice)} 
-                          className={`cursor-pointer p-1 px-3 rounded-lg`}
-                        >
-                          {choice}
-                        </motion.div>
-                      )}
-
-                      {settings[settingKey][subKey] != choice && (
-                        <motion.div 
-                          initial={{color: "#000000", backgroundColor: "#ffffff"}}
-                          animate={{color: "#ffffff", backgroundColor: "#000000"}}
-                          exit={{color: "#000000", backgroundColor: "#ffffff"}}
-                          onClick={() => updateSetting(settingKey, subKey, choice)} 
-                          className={`cursor-pointer p-1 px-3 rounded-lg`}
-                        >
-                          {choice}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                  <div key={choice} className="flex-1">
+                      <div 
+                        className={`
+                          flex 
+                          items-center 
+                          justify-center 
+                          text-sm 
+                          cursor-pointer 
+                          p-2 
+                          px-3 
+                          rounded-lg ${settings[settingKey][subKey] == choice ? "bg-[#e2e2e2] text-black" : "bg-black hover:bg-[#292929]"}
+                          transition-all
+                        `}
+                        onClick={() => updateSetting(settingKey, subKey, choice)}
+                      >
+                        {choice}
+                      </div>
                   </div>
                 ))}
               </div>
