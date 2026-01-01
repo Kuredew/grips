@@ -2,10 +2,10 @@ import { useState } from "react"
 import { useNotification } from "../store/useNotification"
 import { types } from "../store/useNotification"
 import CloseIcon from "./icons/CloseIcon"
-import VideoIcon from "./icons/VideoIcon"
 import { AnimatePresence, motion } from "motion/react"
 import { useEffect } from "react"
 import { useFFmpeg } from "../store/useFFmpeg"
+import DownloadIcon from "./icons/DownloadIcon"
 
 export default function Notification({autoHide}) {
  const { notifs, deleteNotifFromId, updateNotifFromId } = useNotification()
@@ -53,7 +53,7 @@ export default function Notification({autoHide}) {
               className="overflow-hidden relative w-full flex gap-2 bg-[#121212] items-center border-2 border-[#1f1f1f] px-3 py-2 rounded-xl" key={notif.id}
             >
               <div id="icon" className="min-w-10 min-h-10 flex justify-center items-center text-black bg-white rounded-lg">
-                <VideoIcon />
+                <DownloadIcon />
               </div>
 
               <div className="w-full overflow-hidden">
