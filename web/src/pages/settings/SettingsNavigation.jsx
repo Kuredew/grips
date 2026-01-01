@@ -2,7 +2,7 @@ import { motion } from "motion/react"
 
 export default function Sidebar({menus}) {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col rounded-xl overflow-hidden border-[#1F1F1F] border-2">
       {menus.map((item) => (
         <motion.button
         key={item.id}
@@ -14,11 +14,8 @@ export default function Sidebar({menus}) {
           flex 
           gap-5
           items-center 
-          border-2 
-          border-[#1F1F1F]
+          
           cursor-pointer
-          ${item.id == "appearance" ? "rounded-t-xl" : ""}
-          ${item.id == "audio" ? "rounded-b-xl" : ""}
           `
         }
         initial={{backgroundColor: "#121212"}}
