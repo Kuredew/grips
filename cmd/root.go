@@ -10,14 +10,12 @@ import (
 
 	"github.com/Kuredew/grips/api/handler"
 	"github.com/Kuredew/grips/internal/downloader"
+	"github.com/joho/godotenv"
 	"github.com/rs/cors"
 	"github.com/sirupsen/logrus"
 )
 
 var log = logrus.New()
-var CLIENT_ORIGIN = os.Getenv("CLIENT_ORIGIN")
-var YT_DLP_BINARY_PATH = os.Getenv("YT_DLP_BINARY_PATH")
-var COOKIES_BASE64 = os.Getenv("COOKIES_BASE64")
 
 func Init() {
 	// set logger formatter
@@ -37,6 +35,15 @@ func Init() {
 	})
 	// set report caller
 	log.SetReportCaller(true)
+
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	CLIENT_ORIGIN := os.Getenv("CLIENT_ORIGIN")
+	YT_DLP_BINARY_PATH := os.Getenv("YT_DLP_BINARY_PATH")
+	COOKIES_BASE64 := os.Getenv("COOKIES_BASE64")
 
 	ytdlp := downloader.YtdlpDownloader{
 		Log:           log,
