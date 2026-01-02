@@ -1,3 +1,23 @@
+# [1.1.0](https://github.com/Kuredew/grips/compare/v1.0.0...v1.1.0) (2026-01-02)
+
+
+### Bug Fixes
+
+* API crash if .env is not present ([3c3f376](https://github.com/Kuredew/grips/commit/3c3f376f1647b9d5506c63ca68ca0accee31a556))
+* Download error because urls doesnt separate ([9b0d0bc](https://github.com/Kuredew/grips/commit/9b0d0bc47a5bd4b4257061f635fbbb7f65d4fd53))
+* githubService function always return undefined ([763f9b7](https://github.com/Kuredew/grips/commit/763f9b79fb0fda069270813c95dc14c32c230883))
+* Json unmarshall error because title sometimes returned invalid json string ([3d0c4bf](https://github.com/Kuredew/grips/commit/3d0c4bf8be65055c9d84063f792445cbe454ae90))
+* Weird black bar on about page ([7737eed](https://github.com/Kuredew/grips/commit/7737eed369cf6fa83fcbddc95d82646374e34755))
+* Window overflow on mobile browser ([8f6e356](https://github.com/Kuredew/grips/commit/8f6e356144eca2a382363092a4069e09664706eb))
+
+
+### Features
+
+* Add announcement and contribute info in about page ([9496ccd](https://github.com/Kuredew/grips/commit/9496ccd9e49fb5827280ff44eefdfcaac352e69b))
+* Add ffmpeg loading information while hovered loading element ([3ffd755](https://github.com/Kuredew/grips/commit/3ffd75543a6441c9ec9787c555ed26f13cfdb177))
+* Add resourceService to get grips resource ([3e2b6b5](https://github.com/Kuredew/grips/commit/3e2b6b5e7d79f2df266cdef2928a7cb46d3e19aa))
+* Add useResource hooks to get grips resource ([b11a4de](https://github.com/Kuredew/grips/commit/b11a4debe29f257123b9c226d82f71e9e064f4d9))
+
 # 1.0.0 (2026-01-01)
 
 
