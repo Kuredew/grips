@@ -141,7 +141,7 @@ export default function DownloadPage() {
     <div>
       <motion.div whileTap={{borderColor: "#ffffff"}} id="form" className="flex items-center justify-center gap-3 px-3 border-2 border-[#1f1f1f] rounded-t-xl w-[500px] h-[40px] overflow-hidden max-w-[90dvw]">
         <AnimatePresence mode="popLayout">
-        { loaded && (
+        { !loaded && (
           <motion.div
             initial={{opacity:0, scale:0}}
             animate={{opacity:1, scale:1}}
