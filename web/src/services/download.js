@@ -108,7 +108,7 @@ export const runDownloadTask = async (options, onProgress = () => {}) => {
     const playlistDataList = []
 
     for (const urlInfo of urlInfoList) {
-      const urls = urlInfo.url.split(" | ")
+      const urls = urlInfo.url.split("\n")
       const fileDataList = []
 
       onProgress({ title: urlInfo.title, log: `${runDownloadTask.name}: cooldown 5 sec before download...`})
