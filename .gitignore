@@ -1,2 +1,5 @@
 # ignore cookies.txt
 *cookies.txt
+
+# ignore .env
+*.env

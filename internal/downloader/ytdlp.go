@@ -82,7 +82,7 @@ func (ytdlp *YtdlpDownloader) Extract(options Options, logChan chan<- string) ([
 		return urlInfo, err
 	}
 
-	args := []string{"-vU", "--no-playlist", "--cookies", cookiesTxtPath, "--print", `{"title": "%(title)s", "url": "%(urls)s" }`}
+	args := []string{"-vU", "--no-playlist", "--cookies", cookiesTxtPath, "--print", `{"title": %(title)j, "url": %(urls)j }`}
 
 	switch options.Mode {
 	case "video":
