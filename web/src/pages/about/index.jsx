@@ -1,25 +1,23 @@
 import Markdown from "react-markdown"
 import frame from "../../assets/frame.png"
-import { useVersion } from "../../store/useVersion"
+import { useResource } from "../../store/useResource"
 
 export default function AboutPage() {
-  const { version } = useVersion()
+  const { announcementMd } = useResource()
   const about = `
-  ### ${version}
-
-  # about grips 
-
-  hello griperss!!!
+  # about grips
 
   grips is here to help you save the videos you like from the web. now you no longer need to download a client or downloader.
 
   open this website, paste the URL, and download!
 
-  most videos from the internet are WebM. Sometimes editing applications like AfterEffect won't import them. That's why grips also offers conversion, powered by ffmpeg WASM.
+  grips created by kureichi(Kuredew)
 
-  that's it, thanks for reading.
+  have a problem, feature suggestion, or want to contribute? just let me know in the [grips repository](https://github.com/Kuredew/grips).
 
-  oh yeah, almost forgot. grips is heavily relies on [yt-dlp](https://github.com/yt-dlp/yt-dlp) and ib from [cobalt](https://cobalt.tools)
+  # announcement
+  
+  ${announcementMd}
   `
 
   const footer = `
@@ -27,7 +25,7 @@ export default function AboutPage() {
   `
   return (
     <>
-    <div className="w-full h-[99dvh] p-10 overflow-y-auto scrollbar bg-blue-800 ">
+    <div className="w-full h-dvh p-10 overflow-y-auto scrollbar">
       <div className="prose prose-sm prose-invert text-white pb-50">
         <Markdown children={about}/>
         <img src={frame} alt="" />

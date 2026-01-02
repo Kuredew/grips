@@ -6,17 +6,17 @@ import { useFFmpeg } from "./store/useFFmpeg"
 import { useEffect } from "react"
 import { MotionConfig } from "motion/react"
 import { useSetting } from "./store/useSetting"
-import { useVersion } from "./store/useVersion"
+import { useResource } from "./store/useResource"
 
 function App() {
   const { loadFFmpeg } = useFFmpeg()
-  const { loadVersion } = useVersion()
+  const { loadResource } = useResource()
   const { settings } = useSetting()
 
   useEffect(() => {
     const load = async () => {
       loadFFmpeg()
-      loadVersion()
+      loadResource()
     }
 
     load()

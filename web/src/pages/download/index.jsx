@@ -17,6 +17,7 @@ export default function DownloadPage() {
   const [mediaUrl, setMediaUrl] = useState('')
   const { openWindow } = useWindow()
   const { loaded, mergeMedia } = useFFmpeg()
+  const [hovered, setHovered] = useState(false)
   const avalaibleSettings = AVALAIBLE_SETTINGS['download']
   const downloadSettings = settings['download']
   const updateDownloadSetting = (subKey, value) => {
@@ -145,6 +146,8 @@ export default function DownloadPage() {
             initial={{opacity:0, scale:0}}
             animate={{opacity:1, scale:1}}
             exit={{opacity:0, scale:0}}
+            onHoverStart={() => setHovered(true)}
+            onHoverEnd={() => setHovered(false)}
             key={"loading"}
           >
           <Spinner size={"20px"} color={"#7e7e7e"} />
@@ -172,6 +175,18 @@ export default function DownloadPage() {
           start!
         </motion.div>
       </div>
+      <AnimatePresence>
+      { hovered && (
+        <motion.div
+          initial={{opacity:0, scale:0}}
+          animate={{opacity:1, scale:1}}
+          exit={{opacity:0, scale:0}}
+          className="text-sm absolute text-[#7e7e7e] mt-4"
+        >
+          please wait till ffmpeg loaded okay?
+        </motion.div>
+      )}
+      </AnimatePresence>
     </div>
     </>
   )

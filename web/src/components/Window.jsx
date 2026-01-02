@@ -24,7 +24,7 @@ export default function Window({title, close, children})  {
     }, []); // Run only once after initial render
 
   return (
-    <Rnd ref={rndRef} default={{x:0, y:0, width: "600px" }} maxWidth={'90vw'} className="z-900" dragHandleClassName="handle">
+    <Rnd ref={rndRef} default={{x:0, y:0, width: "600px", height: "90dvh" }} maxWidth={'90dvw'} maxHeight={'90dvh'} className="z-900" dragHandleClassName="handle">
       <motion.div
         initial={{opacity: 0, scaleY: 0.95}}
         animate={{opacity: 1, scaleY: 1}}
