@@ -68,14 +68,9 @@ const videoSettings: SettingType[] = [
   {
     id: "video-container",
     type: "radio",
-    title: "Choose MP4 container",
+    title: "Choose video container",
     description: "Choose container for video file, like .mp4, .mkv etc",
     radioContent: [
-      {
-        id: "default",
-        field: "Default",
-        value: "default",
-      },
       {
         id: "mp4",
         field: "MP4",
@@ -97,19 +92,19 @@ const videoSettings: SettingType[] = [
         value: "mov",
       },
     ],
-    defaultValue: "default",
+    defaultValue: "mp4",
   },
   {
     id: "video-codec",
     type: "radio",
-    title: "Choose MP4 codec (beta)",
+    title: "Choose video codec (beta)",
     description:
-      "Choose codec for video file, this will slow the process in potato hardware",
+      "Choose codec for video file, this will slow the process in potato hardware. Select disable to turn off the encoding process",
     radioContent: [
       {
-        id: "default",
-        field: "Default",
-        value: "default",
+        id: "disable",
+        field: "Disable",
+        value: "disable",
       },
       {
         id: "h264",
@@ -132,7 +127,7 @@ const videoSettings: SettingType[] = [
         value: "vp9",
       },
     ],
-    defaultValue: "default",
+    defaultValue: "disable",
   },
   {
     id: "notify-noaudio-switch",
@@ -148,14 +143,9 @@ const audioSettings: SettingType[] = [
   {
     id: "audio-container",
     type: "radio",
-    title: "Choose MP3 container",
+    title: "Choose audio container (beta)",
     description: "Choose container for audio file, like .mp3, .aac etc",
     radioContent: [
-      {
-        id: "default",
-        field: "Default",
-        value: "default",
-      },
       {
         id: "mp3",
         field: "MP3",
@@ -176,8 +166,13 @@ const audioSettings: SettingType[] = [
         field: "FLAC",
         value: "flac",
       },
+      {
+        id: "opus",
+        field: "OPUS",
+        value: "opus",
+      },
     ],
-    defaultValue: "default",
+    defaultValue: "mp3",
   },
 ];
 
@@ -199,6 +194,18 @@ export const settingsManifest: SettingsCategoryType[] = [
   },
 ];
 
+const searchSetting = (id: string): SettingType | null => {
+  let setting: SettingType | null = null;
+
+  settingsManifest.forEach((category) => {
+    category.settings.forEach((settings) => {
+      if (settings.id === id) setting = settings;
+    });
+  });
+
+  return setting;
+};
+
 type settingStoreProps = {
   settingsValues: Record<string, string | boolean>;
   loadStorage: () => void;
@@ -219,9 +226,26 @@ export const useSettingStore = create<settingStoreProps>((set) => ({
     const settingsValues = JSON.parse(
       localStorage.getItem("settingsValues") ?? "{}",
     );
-    set(() => ({
-      settingsValues: { ...defaultSettingsValues, ...settingsValues },
-    }));
+    set(() => {
+      Object.keys(settingsValues).forEach((key) => {
+        const setting = searchSetting(key);
+        const value = settingsValues[key];
+
+        if (!setting) return;
+        if (setting.type === "radio" && setting.radioContent) {
+          let avalaible = false;
+          setting.radioContent.forEach((radioContent) => {
+            if (radioContent.value === value) avalaible = true;
+          });
+
+          if (!avalaible) settingsValues[key] = setting.defaultValue;
+        }
+      });
+
+      return {
+        settingsValues: { ...defaultSettingsValues, ...settingsValues },
+      };
+    });
 
     console.log("[settings] Settings loaded");
   },
