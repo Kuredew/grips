@@ -231,17 +231,9 @@ export const useQueueStore = create<useQueueProps>((set, get) => ({
       const outputBuffers = await Promise.all(
         playlistBuffers.map(async (mediaBuffersObj, index) => {
           let ext: string = mediaBuffersObj.ext;
-          if (
-            mode === "video" &&
-            options?.videoContainer &&
-            options.videoContainer !== "default"
-          )
+          if (mode === "video" && options?.videoContainer)
             ext = options.videoContainer;
-          if (
-            mode === "audio" &&
-            options?.audioContainer &&
-            options.audioContainer !== "default"
-          )
+          if (mode === "audio" && options?.audioContainer)
             ext = options.audioContainer;
 
           const processID = nanoid();
@@ -253,21 +245,19 @@ export const useQueueStore = create<useQueueProps>((set, get) => ({
           });
 
           console.log(`[queue_${id}] Added encode job with pid ${processID}`);
-          const outputBuffer = await merge(
+
+          const outputFileData = await merge(
             id,
             processID,
             ext,
             mediaBuffersObj.mediaBuffers,
             {
-              enabled: mode === "video",
-              vCodec:
-                options?.videoCodec && options.videoCodec !== "default"
-                  ? options.videoCodec
-                  : "copy",
-              aCodec: "copy",
+              enabled: mode === "video" && options?.videoCodec !== "disable",
+              vCodec: options?.videoCodec,
             },
           );
-          const cleanBuffer = new Uint8Array(outputBuffer as Uint8Array);
+
+          const cleanBuffer = new Uint8Array(outputFileData as Uint8Array);
 
           return {
             buffer: cleanBuffer,
@@ -294,7 +284,7 @@ export const useQueueStore = create<useQueueProps>((set, get) => ({
           status: "failed",
           message: `Please try again or report this to repository issue (${e})`,
           data: {
-            name: "Extract failed",
+            name: "Process failed",
           },
         });
       }

@@ -12,7 +12,6 @@ type FFmpegJob = {
 type CodecOpts = {
   enabled: boolean;
   vCodec?: string;
-  aCodec?: string;
 };
 
 type useFFmpegProps = {
@@ -106,11 +105,13 @@ export const useFFmpegStore = create<useFFmpegProps>((set, get) => ({
       ffmpegArgs.push("-i", mediaRef);
     }
 
-    const outputRef = `${nanoid()}.${outputExt}`;
-    if (codecOpts.enabled) {
-      if (codecOpts.vCodec) ffmpegArgs.push("-c:v", codecOpts.vCodec);
-      if (codecOpts.aCodec) ffmpegArgs.push("-c:a", codecOpts.aCodec);
-    }
+    const outputId = nanoid();
+    const outputRef = `${outputId}.${outputExt}`;
+
+    const vCodec =
+      codecOpts.enabled && codecOpts.vCodec ? codecOpts.vCodec : "copy";
+
+    ffmpegArgs.push("-c:v", vCodec);
 
     ffmpegArgs.push(outputRef);
     await addJob({ queueID, processID, args: ffmpegArgs });
@@ -119,7 +120,7 @@ export const useFFmpegStore = create<useFFmpegProps>((set, get) => ({
   addJob: (job) => {
     const { ffmpeg } = get();
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       set((s) => ({
         jobs: s.jobs.then(async () => {
           console.log(`[job] Executing ffmpeg with params: ${job.args}`);
@@ -130,8 +131,16 @@ export const useFFmpegStore = create<useFFmpegProps>((set, get) => ({
               args: job.args,
             },
           });
-          await ffmpeg.exec(job.args);
-          resolve();
+          try {
+            await ffmpeg.exec(job.args);
+            resolve();
+          } catch (e) {
+            if (e instanceof Error) {
+              console.error(`[job] Error: ${e.message}`);
+
+              reject(e);
+            }
+          }
         }),
       }));
     });
