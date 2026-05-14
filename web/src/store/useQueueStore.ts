@@ -8,6 +8,7 @@ import { downloadBufferFile, formatBytes, sleep } from "@/lib/utils";
 import { useFFmpegStore } from "@/store/useFfmpegStore";
 import { nanoid } from "nanoid";
 import { create } from "zustand";
+import { toast } from "sonner";
 
 type Progress = {
   processID: string;
@@ -176,10 +177,7 @@ export const useQueueStore = create<useQueueProps>((set, get) => ({
         });
         const urlList = info.url.split("<separator>");
 
-        setQueue(id, {
-          message: `Downloading Buffer (${urlList.length} buffer/s)...`,
-        });
-
+        toast.info(`queue (${id}) downloading ${urlList.length} buffer`);
         const mediaBuffers: ArrayBuffer[] = await Promise.all(
           urlList.map(async (url) => {
             const processID = nanoid();
@@ -276,6 +274,7 @@ export const useQueueStore = create<useQueueProps>((set, get) => ({
         status: "completed",
         message: `Process completed.`,
       });
+      toast.success(`queue (${id}) completed!`);
 
       outputBuffers.forEach((outputBuffer) => {
         downloadBufferFile(outputBuffer.buffer, outputBuffer.fileName);
@@ -283,6 +282,7 @@ export const useQueueStore = create<useQueueProps>((set, get) => ({
     } catch (e) {
       if (e instanceof Error) {
         console.error(`[queue_${id}] ` + e.message);
+        toast.error(`queue (${id}) failed!`);
 
         setQueue(id, {
           status: "failed",

@@ -30,6 +30,17 @@ const DownloadSection = () => {
   const { addQueue, setProgressFromQueue } = useQueueStore();
 
   const handleAdd = () => {
+    const urlRegex =
+      /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+    const validate = urlRegex.test(url);
+
+    if (!validate) {
+      toast.error("URL is not valid!", {
+        description: "Please enter valid url",
+      });
+      return;
+    }
+
     const requestOpts: ApiRequest = {
       url,
       mode,
@@ -61,7 +72,7 @@ const DownloadSection = () => {
 
     addQueue(requestOpts, queueOpts);
 
-    toast("URL added to your queue", { position: "top-center" });
+    toast.success("URL added to your queue");
     setUrl("");
   };
 
