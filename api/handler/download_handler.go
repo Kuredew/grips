@@ -28,54 +28,32 @@ type Response struct {
 	Info        []downloader.URLInfo `json:"info"`
 }
 
-func (h *DownloadHandler) respondStream(w http.ResponseWriter, payload Response, flush bool) {
-	flusher, ok := w.(http.Flusher)
-	if !ok {
-		payload.Status = ERROR
-		payload.Description = "Streaming is not supported by server"
-		h.Log.Error("Streaming is not supported!")
-	}
-
-	response, _ := json.Marshal(payload)
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(response)
-
-	if flush {
-		flusher.Flush()
-	}
-}
-
-func (h *DownloadHandler) respond(w http.ResponseWriter, code int, payload Response) {
-	response, _ := json.Marshal(payload)
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(code)
-	w.Write(response)
-}
-
 func (h *DownloadHandler) HandleExtract(w http.ResponseWriter, r *http.Request) {
 	var URLInfo []downloader.URLInfo
 	var options downloader.Options
 	var errWorker error
 	var lastLog string
 
-	h.Log.Info("Started extractVideo handler")
+	encoder := json.NewEncoder(w)
+	flusher, _ := w.(http.Flusher)
+	w.Header().Set("Content-Type", "application/json")
 
+	h.Log.Info("Started extractVideo handler")
 	err := json.NewDecoder(r.Body).Decode(&options)
 	if err != nil {
 		h.Log.Error(err.Error())
-		h.respond(w, http.StatusBadRequest, Response{
+		encoder.Encode(Response{
 			Status:      ERROR,
 			Description: err.Error(),
 		})
+		return
 	}
 
 	// validate
 	if !options.IsValid() {
 		errorStr := "Rejected request because some url parameter is not valid"
 		h.Log.Error(errorStr)
-		h.respond(w, http.StatusBadRequest, Response{
+		encoder.Encode(Response{
 			Status:      ERROR,
 			Description: errorStr,
 		})
@@ -103,7 +81,8 @@ func (h *DownloadHandler) HandleExtract(w http.ResponseWriter, r *http.Request) 
 					Log:         logLine,
 				}
 
-				h.respondStream(w, payload, true)
+				encoder.Encode(payload)
+				flusher.Flush()
 			}
 		case <-done:
 			payload := Response{
@@ -111,17 +90,19 @@ func (h *DownloadHandler) HandleExtract(w http.ResponseWriter, r *http.Request) 
 				Status:      COMPLETE,
 				Description: "yt-dlp completed the request",
 			}
+
 			if errWorker != nil {
-				payload.Status = ERROR
-				payload.Log = lastLog
-				payload.Description = errWorker.Error()
-				h.respondStream(w, payload, false)
+				encoder.Encode(Response{
+					Status:      ERROR,
+					Log:         lastLog,
+					Description: errWorker.Error(),
+				})
 
 				h.Log.Errorf("Completed with yt-dlp error: %v", errWorker.Error())
 				return
 			}
 
-			h.respondStream(w, payload, false)
+			encoder.Encode(payload)
 			h.Log.Info("Completed without error")
 
 			// dont forget to return hehe.

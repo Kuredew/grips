@@ -34,6 +34,7 @@ func (o *Options) IsValid() bool {
 
 type URLInfo struct {
 	Title string `json:"title"`
+	Ext   string `json:"ext"`
 	URL   string `json:"url"`
 }
 
@@ -82,7 +83,7 @@ func (ytdlp *YtdlpDownloader) Extract(options Options, logChan chan<- string) ([
 		return urlInfo, err
 	}
 
-	args := []string{"-vU", "--no-playlist", "--cookies", cookiesTxtPath, "--print", `{"title": %(title)j, "url": %(urls)j }`}
+	args := []string{"-vU", "--no-playlist", "--cookies", cookiesTxtPath, "--print", `{"title": %(title)j, "ext": %(ext)j, "url": %(urls)j }`}
 
 	switch options.Mode {
 	case "video":
@@ -127,7 +128,7 @@ func (ytdlp *YtdlpDownloader) Extract(options Options, logChan chan<- string) ([
 			logChan <- m
 
 			if strings.HasPrefix(m, "{") {
-				finalJsonString += m
+				finalJsonString += strings.ReplaceAll(m, "\\n", "<separator>")
 				ytdlp.Log.Info("Appended string that have prefix '{'")
 			}
 			if strings.HasPrefix(m, "https") {
