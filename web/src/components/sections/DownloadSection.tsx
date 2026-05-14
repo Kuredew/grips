@@ -33,15 +33,15 @@ const DownloadSection = () => {
     const requestOpts: ApiRequest = {
       url,
       mode,
+      option: {
+        preferredResolution: settingsValues[
+          "preferred-video-quality"
+        ] as string,
+      },
     };
     let queueOpts: QueueOptions;
 
     if (mode === "video") {
-      requestOpts["option"] = {
-        preferredResolution: settingsValues[
-          "preferred-video-quality"
-        ] as string,
-      };
       const videoCodec = settingsValues["video-codec"] as string;
       const videoContainer = settingsValues["video-container"] as string;
 
@@ -51,15 +51,11 @@ const DownloadSection = () => {
       };
     } else {
       const audioContainer = settingsValues["audio-container"] as string;
+      const encodeAudio = settingsValues["encode-audio"] as boolean;
 
       queueOpts = {
         audioContainer,
-      };
-
-      requestOpts["option"] = {
-        preferredResolution: settingsValues[
-          "preferred-video-quality"
-        ] as string,
+        encodeAudio,
       };
     }
 
