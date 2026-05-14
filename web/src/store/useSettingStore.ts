@@ -141,6 +141,14 @@ const videoSettings: SettingType[] = [
 
 const audioSettings: SettingType[] = [
   {
+    id: "disable-encode-audio",
+    type: "switch",
+    title: "Disable encode audio",
+    description:
+      "Grips will directly download the audio file and skipped the audio encode processing",
+    defaultValue: false,
+  },
+  {
     id: "audio-container",
     type: "radio",
     title: "Choose audio container (beta)",

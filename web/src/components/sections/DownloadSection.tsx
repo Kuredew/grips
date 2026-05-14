@@ -30,18 +30,29 @@ const DownloadSection = () => {
   const { addQueue, setProgressFromQueue } = useQueueStore();
 
   const handleAdd = () => {
+    const urlRegex =
+      /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+    const validate = urlRegex.test(url);
+
+    if (!validate) {
+      toast.error("URL is not valid!", {
+        description: "Please enter valid url",
+      });
+      return;
+    }
+
     const requestOpts: ApiRequest = {
       url,
       mode,
+      option: {
+        preferredResolution: settingsValues[
+          "preferred-video-quality"
+        ] as string,
+      },
     };
     let queueOpts: QueueOptions;
 
     if (mode === "video") {
-      requestOpts["option"] = {
-        preferredResolution: settingsValues[
-          "preferred-video-quality"
-        ] as string,
-      };
       const videoCodec = settingsValues["video-codec"] as string;
       const videoContainer = settingsValues["video-container"] as string;
 
@@ -51,21 +62,17 @@ const DownloadSection = () => {
       };
     } else {
       const audioContainer = settingsValues["audio-container"] as string;
+      const encodeAudio = settingsValues["encode-audio"] as boolean;
 
       queueOpts = {
         audioContainer,
-      };
-
-      requestOpts["option"] = {
-        preferredResolution: settingsValues[
-          "preferred-video-quality"
-        ] as string,
+        encodeAudio,
       };
     }
 
     addQueue(requestOpts, queueOpts);
 
-    toast("URL added to your queue", { position: "top-center" });
+    toast.success("URL added to your queue");
     setUrl("");
   };
 

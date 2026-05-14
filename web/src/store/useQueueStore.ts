@@ -8,6 +8,7 @@ import { downloadBufferFile, formatBytes, sleep } from "@/lib/utils";
 import { useFFmpegStore } from "@/store/useFfmpegStore";
 import { nanoid } from "nanoid";
 import { create } from "zustand";
+import { toast } from "sonner";
 
 type Progress = {
   processID: string;
@@ -32,6 +33,7 @@ export type QueueOptions = {
   videoContainer?: string;
   videoCodec?: string;
   audioContainer?: string;
+  encodeAudio?: boolean;
 };
 
 type useQueueProps = {
@@ -175,10 +177,7 @@ export const useQueueStore = create<useQueueProps>((set, get) => ({
         });
         const urlList = info.url.split("<separator>");
 
-        setQueue(id, {
-          message: `Downloading Buffer (${urlList.length} buffer/s)...`,
-        });
-
+        toast.info(`queue (${id}) downloading ${urlList.length} buffer`);
         const mediaBuffers: ArrayBuffer[] = await Promise.all(
           urlList.map(async (url) => {
             const processID = nanoid();
@@ -236,26 +235,29 @@ export const useQueueStore = create<useQueueProps>((set, get) => ({
           if (mode === "audio" && options?.audioContainer)
             ext = options.audioContainer;
 
-          const processID = nanoid();
+          let outputFileData;
+          if (mode === "video" || options?.encodeAudio) {
+            const processID = nanoid();
+            console.log(`[queue_${id}] Added encode job with pid ${processID}`);
+            addProgressToQueue(id, {
+              processID,
+              message: `Encoding ${ext} container (${index + 1}/${playlistBuffers.length})`,
+              progress: 0,
+            });
 
-          addProgressToQueue(id, {
-            processID,
-            message: `Encoding ${ext} container (${index + 1}/${playlistBuffers.length})`,
-            progress: 0,
-          });
-
-          console.log(`[queue_${id}] Added encode job with pid ${processID}`);
-
-          const outputFileData = await merge(
-            id,
-            processID,
-            ext,
-            mediaBuffersObj.mediaBuffers,
-            {
-              enabled: mode === "video" && options?.videoCodec !== "disable",
-              vCodec: options?.videoCodec,
-            },
-          );
+            outputFileData = await merge(
+              id,
+              processID,
+              ext,
+              mediaBuffersObj.mediaBuffers,
+              {
+                enabled: mode === "video" && options?.videoCodec !== "disable",
+                vCodec: options?.videoCodec,
+              },
+            );
+          } else {
+            outputFileData = mediaBuffersObj.mediaBuffers.pop();
+          }
 
           const cleanBuffer = new Uint8Array(outputFileData as Uint8Array);
 
@@ -272,6 +274,7 @@ export const useQueueStore = create<useQueueProps>((set, get) => ({
         status: "completed",
         message: `Process completed.`,
       });
+      toast.success(`queue (${id}) completed!`);
 
       outputBuffers.forEach((outputBuffer) => {
         downloadBufferFile(outputBuffer.buffer, outputBuffer.fileName);
@@ -279,6 +282,7 @@ export const useQueueStore = create<useQueueProps>((set, get) => ({
     } catch (e) {
       if (e instanceof Error) {
         console.error(`[queue_${id}] ` + e.message);
+        toast.error(`queue (${id}) failed!`);
 
         setQueue(id, {
           status: "failed",
