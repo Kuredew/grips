@@ -30,8 +30,7 @@ const DownloadSection = () => {
   const { addQueue, setProgressFromQueue } = useQueueStore();
 
   const handleAdd = () => {
-    const urlRegex =
-      /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+    const urlRegex = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/\S*)?$/;
     const validate = urlRegex.test(url);
 
     if (!validate) {
