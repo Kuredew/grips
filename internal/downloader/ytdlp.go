@@ -13,9 +13,9 @@ import (
 )
 
 type YtdlpDownloader struct {
-	Log           *logrus.Logger
-	BinaryPath    string
-	CookiesBase64 string
+	Log		           *logrus.Logger
+	BinaryPath    		string
+	CookiesBase64URL 	string
 }
 
 type ModeOptions struct {
@@ -39,26 +39,27 @@ type URLInfo struct {
 }
 
 func (ytdlp *YtdlpDownloader) PrepareCookies() (string, error) {
-	cookiesBase64 := ytdlp.CookiesBase64
+	cookiesURL := ytdlp.CookiesBase64URL
 
 	ytdlp.Log.Infof("Preparing cookies")
 
 	ytdlp.Log.Info("decode cookies base64...")
-	// read cookies
-	input, err := base64.StdEncoding.DecodeString(cookiesBase64)
+	base64String, err := ytdlp.ReadTextFromURL(cookiesURL)
+	if err != nil {
+		return "", err
+	}
+	input, err := base64.StdEncoding.DecodeString(base64String)
 	if err != nil {
 		return "", err
 	}
 
 	ytdlp.Log.Info("making temp file...")
-	// make temp file
 	tmpFile, err := os.CreateTemp("", "yt-cookies-*.txt")
 	if err != nil {
 		return "", fmt.Errorf("error occured while creating temp file: %v", err)
 	}
 
 	ytdlp.Log.Info("writing decoded cookies to temp file...")
-	// write cookies to temp file
 	if _, err := tmpFile.Write(input); err != nil {
 		return "", fmt.Errorf("error occured while writing to temp file: %v", err)
 	}
@@ -162,5 +163,12 @@ func (ytdlp *YtdlpDownloader) Extract(options Options, logChan chan<- string) ([
 		return urlInfo, err
 	}
 	ytdlp.Log.Info("Operation completed.")
+
+	if err := os.Remove(cookiesTxtPath); err != nil {
+		ytdlp.Log.Errorf("Error deleting cookies file: %v", err.Error())
+	} else {
+		ytdlp.Log.Info("Cookies temp deleted")
+	}
+
 	return urlInfo, nil
 }

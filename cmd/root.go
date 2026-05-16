@@ -43,12 +43,12 @@ func Init() {
 
 	CLIENT_ORIGIN := os.Getenv("CLIENT_ORIGIN")
 	YT_DLP_BINARY_PATH := os.Getenv("YT_DLP_BINARY_PATH")
-	COOKIES_BASE64 := os.Getenv("COOKIES_BASE64")
+	COOKIES_BASE64_URL := os.Getenv("COOKIES_BASE64_URL")
 
 	ytdlp := downloader.YtdlpDownloader{
 		Log:           log,
 		BinaryPath:    YT_DLP_BINARY_PATH,
-		CookiesBase64: COOKIES_BASE64,
+		CookiesBase64URL: COOKIES_BASE64_URL,
 	}
 
 	h := handler.DownloadHandler{
