@@ -45,6 +45,8 @@ func (d *Downloader) StartDownload(ctx context.Context, downloadID, url, format,
 
 	go func() {
 		defer func() {
+			time.Sleep(5 * time.Second)
+
 			<-d.sem
 			delete(d.activeDownloads, downloadID)
 			close(progressChan)
@@ -57,14 +59,11 @@ func (d *Downloader) StartDownload(ctx context.Context, downloadID, url, format,
 		tmpFile := filepath.Join(d.tmpPath, downloadID+"."+ext)
 		finalFile := filepath.Join(d.storagePath, downloadID+"."+ext)
 
-		progressChan <- model.ProgressEventData{Percent: 0, Speed: "starting", ETA: "calculating"}
-
 		err := d.ytdlp.Download(ctx, url, format, quality, tmpFile, audioOnly, progressChan)
 		if err != nil {
 			progressChan <- model.ProgressEventData{
-				Percent: -1,
-				Speed:   "error",
-				ETA:     err.Error(),
+				Log:   err.Error(),
+				Error: true,
 			}
 			os.Remove(tmpFile)
 			return
@@ -72,24 +71,18 @@ func (d *Downloader) StartDownload(ctx context.Context, downloadID, url, format,
 
 		if err := os.Rename(tmpFile, finalFile); err != nil {
 			progressChan <- model.ProgressEventData{
-				Percent: -1,
-				Speed:   "error",
-				ETA:     "failed to move file: " + err.Error(),
+				Log:   "failed to move file: " + err.Error(),
+				Error: true,
 			}
 			return
 		}
 
-		info, _ := os.Stat(finalFile)
-
 		progressChan <- model.ProgressEventData{
-			Percent:    100,
-			Speed:      "done",
-			ETA:        "0",
-			Downloaded: info.Size(),
-			Total:      info.Size(),
+			Error: false,
+			Done:  true,
 		}
 
-		time.Sleep(100 * time.Millisecond)
+		time.Sleep(100 * time.Second)
 	}()
 
 	return progressChan, nil
@@ -131,4 +124,3 @@ func (d *Downloader) CleanupOldFiles(maxAge time.Duration) error {
 	}
 	return nil
 }
-

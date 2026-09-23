@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io"
 	"os/exec"
-	"strconv"
 	"strings"
 	"time"
 
@@ -135,12 +134,6 @@ func (y *YTDLP) Download(ctx context.Context, url, format, quality, outputPath s
 		return fmt.Errorf("yt-dlp download failed: %w", err)
 	}
 
-	progressChan <- model.ProgressEventData{
-		Percent: 100,
-		Speed:   "0",
-		ETA:     "0",
-	}
-
 	return nil
 }
 
@@ -167,26 +160,9 @@ func (y *YTDLP) readProgress(reader io.Reader, progressChan chan<- model.Progres
 	scanner := bufio.NewScanner(reader)
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
-		if !strings.HasPrefix(line, "download:") {
-			continue
-		}
-		parts := strings.Split(strings.TrimPrefix(line, "download:"), "|")
-		if len(parts) < 5 {
-			continue
-		}
-
-		percentStr := strings.TrimSuffix(parts[0], "%")
-		percent, _ := strconv.ParseFloat(percentStr, 64)
-
-		downloaded, _ := strconv.ParseInt(parts[3], 10, 64)
-		total, _ := strconv.ParseInt(parts[4], 10, 64)
 
 		progressChan <- model.ProgressEventData{
-			Percent:    percent,
-			Speed:      parts[1],
-			ETA:        parts[2],
-			Downloaded: downloaded,
-			Total:      total,
+			Log: line,
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -54,7 +55,9 @@ func (h *DownloadHandler) handleDownload(w http.ResponseWriter, r *http.Request,
 
 	downloadID := uuid.New().String()[:8]
 
-	_, err := h.downloader.StartDownload(r.Context(), downloadID, url, format, quality, audioOnly)
+	detachedCtx := context.WithoutCancel(r.Context())
+
+	_, err := h.downloader.StartDownload(detachedCtx, downloadID, url, format, quality, audioOnly)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusServiceUnavailable)
 		return
@@ -108,11 +111,7 @@ func (h *StreamHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Connection", "keep-alive")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
-	flusher, ok := w.(http.Flusher)
-	if !ok {
-		http.Error(w, "Streaming unsupported", http.StatusInternalServerError)
-		return
-	}
+	flusher := http.NewResponseController(w)
 
 	ctx := r.Context()
 	progressChan, _ := h.downloader.GetProgressChannel(downloadID)
@@ -127,10 +126,10 @@ func (h *StreamHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			}
 
 			event := model.StreamEvent{}
-			if progress.Percent < 0 {
+			if progress.Error {
 				event.Event = "error"
-				event.Data = model.ErrorEventData{Message: progress.ETA}
-			} else if progress.Percent >= 100 && progress.Speed == "done" {
+				event.Data = model.ErrorEventData{Message: progress.Log}
+			} else if progress.Done {
 				event.Event = "done"
 				ext := "mp4"
 				if h.downloader.FileExists(downloadID, "mp3") {
@@ -179,4 +178,3 @@ func (h *StreamHandler) sendDoneEvent(w http.ResponseWriter, downloadID, ext str
 	data, _ := json.Marshal(event)
 	fmt.Fprintf(w, "data: %s\n\n", data)
 }
-

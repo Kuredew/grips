@@ -44,17 +44,15 @@ type StreamEvent struct {
 }
 
 type DoneEventData struct {
-	FileURL string `json:"file_url"`
+	FileURL  string `json:"file_url"`
 	FileName string `json:"file_name"`
 	FileSize int64  `json:"file_size"`
 }
 
 type ProgressEventData struct {
-	Percent    float64 `json:"percent"`
-	Speed      string  `json:"speed"`
-	ETA        string  `json:"eta"`
-	Downloaded int64   `json:"downloaded"`
-	Total      int64   `json:"total"`
+	Log   string `json:"log"`
+	Error bool   `json:"error"`
+	Done  bool   `json:"done"`
 }
 
 type ErrorEventData struct {
