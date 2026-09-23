@@ -1,3 +1,17 @@
+# [1.2.0](https://github.com/Kuredew/grips/compare/v1.1.0...v1.2.0) (2026-09-23)
+
+
+### Bug Fixes
+
+* Encode audio error because ext file is not valid ([ffdce1c](https://github.com/Kuredew/grips/commit/ffdce1c815c2b0948c35a2576c935f8d968ff2a2))
+* url validation not working properly ([7fc8de4](https://github.com/Kuredew/grips/commit/7fc8de4f2f1ac9e5720b7534fb26fe67c0b7f677))
+* urls separator not working ([370da99](https://github.com/Kuredew/grips/commit/370da991fb9e39be388f7a768c31572631f98193))
+
+
+### Features
+
+* add disable audio encode toggle ([abdf8f8](https://github.com/Kuredew/grips/commit/abdf8f8d72de322942ee19b0a36eac47e12b7b7c))
+
 # [1.1.0](https://github.com/Kuredew/grips/compare/v1.0.0...v1.1.0) (2026-01-02)
 
 
