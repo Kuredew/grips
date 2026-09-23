@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"os"
 	"os/exec"
 	"strings"
 	"time"
@@ -90,15 +91,16 @@ func (y *YTDLP) GetInfo(ctx context.Context, url string) (*model.VideoInfo, erro
 	}, nil
 }
 
-func (y *YTDLP) Download(ctx context.Context, url, format, quality, outputPath string, audioOnly bool, progressChan chan<- model.ProgressEventData) error {
+func (y *YTDLP) Download(ctx context.Context, url, format, quality, outputPath string, audioOnly bool, progressChan chan<- model.ProgressEventData) (string, error) {
 	ctx, cancel := context.WithTimeout(ctx, y.timeout)
 	defer cancel()
 
 	args := []string{
 		"--no-playlist",
 		"--newline",
-		"--progress-template", "download:%(progress._percent_str)s|%(progress._speed_str)s|%(progress._eta_str)s|%(progress._downloaded_bytes)s|%(progress._total_bytes)s",
+		"--progress",
 		"-o", outputPath,
+		"--print", "after_move:filepath",
 	}
 
 	if audioOnly {
@@ -116,25 +118,26 @@ func (y *YTDLP) Download(ctx context.Context, url, format, quality, outputPath s
 
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		return fmt.Errorf("stdout pipe failed: %w", err)
+		return "", fmt.Errorf("stdout pipe failed: %w", err)
 	}
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
-		return fmt.Errorf("stderr pipe failed: %w", err)
+		return "", fmt.Errorf("stderr pipe failed: %w", err)
 	}
 
 	if err := cmd.Start(); err != nil {
-		return fmt.Errorf("yt-dlp start failed: %w", err)
+		return "", fmt.Errorf("yt-dlp start failed: %w", err)
 	}
 
-	go y.readProgress(stdout, progressChan)
-	go y.readProgress(stderr, progressChan)
+	filePath := ""
+	go y.readProgress(stdout, progressChan, &filePath)
+	go y.readProgress(stderr, progressChan, &filePath)
 
 	if err := cmd.Wait(); err != nil {
-		return fmt.Errorf("yt-dlp download failed: %w", err)
+		return "", fmt.Errorf("yt-dlp download failed: %w", err)
 	}
 
-	return nil
+	return filePath, nil
 }
 
 func (y *YTDLP) qualityToFormat(quality string) string {
@@ -156,13 +159,18 @@ func (y *YTDLP) qualityToFormat(quality string) string {
 	}
 }
 
-func (y *YTDLP) readProgress(reader io.Reader, progressChan chan<- model.ProgressEventData) {
+func (y *YTDLP) readProgress(reader io.Reader, progressChan chan<- model.ProgressEventData, filePath *string) {
 	scanner := bufio.NewScanner(reader)
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
 
-		progressChan <- model.ProgressEventData{
-			Log: line,
+		_, err := os.Stat(line)
+		if err != nil {
+			progressChan <- model.ProgressEventData{
+				Log: line,
+			}
+		} else {
+			*filePath = line
 		}
 	}
 }

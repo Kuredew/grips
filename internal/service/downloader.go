@@ -59,7 +59,11 @@ func (d *Downloader) StartDownload(ctx context.Context, downloadID, url, format,
 		tmpFile := filepath.Join(d.tmpPath, downloadID+"."+ext)
 		finalFile := filepath.Join(d.storagePath, downloadID+"."+ext)
 
-		err := d.ytdlp.Download(ctx, url, format, quality, tmpFile, audioOnly, progressChan)
+		progressChan <- model.ProgressEventData{
+			Log: "[Download Started]",
+		}
+
+		downloadedFile, err := d.ytdlp.Download(ctx, url, format, quality, tmpFile, audioOnly, progressChan)
 		if err != nil {
 			progressChan <- model.ProgressEventData{
 				Log:   err.Error(),
@@ -69,7 +73,7 @@ func (d *Downloader) StartDownload(ctx context.Context, downloadID, url, format,
 			return
 		}
 
-		if err := os.Rename(tmpFile, finalFile); err != nil {
+		if err := os.Rename(downloadedFile, finalFile); err != nil {
 			progressChan <- model.ProgressEventData{
 				Log:   "failed to move file: " + err.Error(),
 				Error: true,
