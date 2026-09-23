@@ -14,6 +14,10 @@
 {@render children()}
 
 <style>
+	:global(html) {
+		overflow-x: hidden;
+	}
+
 	:global(body) {
 		color: white;
 		background-color: black;
