@@ -1,9 +1,13 @@
 import { PUBLIC_API_BASE_URL } from '$env/static/public';
 import type { StreamEvent } from '$lib/types/types';
 
-export const getVideoUrl = async (url: string, output: (streamEvent: StreamEvent) => void) => {
+export const getVideoUrl = async (
+	url: string,
+	mediaType: 'video' | 'audio',
+	output: (streamEvent: StreamEvent) => void
+) => {
 	try {
-		let res = await fetch(`${PUBLIC_API_BASE_URL}/download/audio?url=${url}`);
+		let res = await fetch(`${PUBLIC_API_BASE_URL}/download/${mediaType}?url=${url}`);
 
 		if (!res.ok || !res.body) {
 			throw new Error('Error occured while getting download ID');

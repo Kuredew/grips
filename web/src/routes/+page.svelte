@@ -7,7 +7,7 @@
 	import { onMount } from 'svelte';
 
 	let inputFocus = $state(false);
-	let mediaType = $state('video');
+	let mediaType: 'video' | 'audio' = $state('video');
 	let url = $state('');
 	let running = $state(false);
 	let done = $state(false);
@@ -36,7 +36,7 @@
 			videoInfo = await getVideoInfo(url);
 			addLog('info', 'Success, downloading media...');
 
-			file_url = await downloadMedia(url, (msg) => {
+			file_url = await downloadMedia(url, mediaType, (msg) => {
 				addLog('info', msg);
 			});
 
@@ -83,8 +83,8 @@
 		});
 	});
 
-	const avalaibleQuality = ['best', 'worst', '1080p', '720p', '480p', '360p'];
-	let quality = $state('best');
+	// const avalaibleQuality = ['best', 'worst', '1080p', '720p', '480p', '360p'];
+	// let quality = $state('best');
 </script>
 
 <div class="h-dvh w-full">
@@ -174,7 +174,7 @@
 						>
 					</div>
 
-					{#if mediaType == 'disable'}
+					<!-- {#if mediaType == 'disable'}
 						<div class="flex w-full gap-2">
 							{#each avalaibleQuality as qlty (qlty)}
 								<Button
@@ -183,7 +183,7 @@
 								>
 							{/each}
 						</div>
-					{/if}
+					{/if} -->
 				</div>
 			</div>
 		</div>

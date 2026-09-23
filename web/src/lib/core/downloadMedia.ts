@@ -1,11 +1,15 @@
 import { getVideoUrl } from '$lib/api/getVideoUrl';
 import type { DoneEventData, ErrorEventData, ProgressEventData } from '$lib/types/types';
 
-export const downloadMedia = async (url: string, outputLogFunc: (msg: string) => void) => {
+export const downloadMedia = async (
+	url: string,
+	mediaType: 'video' | 'audio',
+	outputLogFunc: (msg: string) => void
+) => {
 	try {
 		let file_url = '';
 
-		await getVideoUrl(url, (output) => {
+		await getVideoUrl(url, mediaType, (output) => {
 			let data;
 
 			switch (output.event) {
