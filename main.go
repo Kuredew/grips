@@ -44,10 +44,10 @@ func main() {
 
 	mux := http.NewServeMux()
 
-	mux.Handle("/info", middleware.LoggingMiddleware(infoRateLimiter.Middleware(infoHandler)))
-	mux.Handle("/download/", middleware.LoggingMiddleware(rateLimiter.Middleware(downloadHandler)))
-	mux.Handle("/stream/", streamHandler)
-	mux.Handle("/storage/", middleware.LoggingMiddleware(http.StripPrefix("/storage/", http.FileServer(http.Dir(storagePath)))))
+	mux.Handle("/info", middleware.EnableCORS(middleware.LoggingMiddleware(infoRateLimiter.Middleware(infoHandler))))
+	mux.Handle("/download/", middleware.EnableCORS(middleware.LoggingMiddleware(rateLimiter.Middleware(downloadHandler))))
+	mux.Handle("/stream/", middleware.EnableCORS(streamHandler))
+	mux.Handle("/storage/", middleware.EnableCORS(middleware.LoggingMiddleware(http.StripPrefix("/storage/", http.FileServer(http.Dir(storagePath))))))
 
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
