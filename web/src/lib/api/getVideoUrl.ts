@@ -37,7 +37,7 @@ export const getVideoUrl = async (url: string, output: (streamEvent: StreamEvent
 				lines.forEach((line) => {
 					if (!line) return;
 
-					let jsonString = line.slice(5);
+					const jsonString = line.slice(5);
 
 					const parsedData = JSON.parse(jsonString) as StreamEvent;
 					output(parsedData);
@@ -45,6 +45,6 @@ export const getVideoUrl = async (url: string, output: (streamEvent: StreamEvent
 			}
 		}
 	} catch (e) {
-		throw new Error('getVideoUrl: ' + e);
+		throw new Error('getVideoUrl: ' + e, { cause: e });
 	}
 };
