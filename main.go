@@ -46,7 +46,7 @@ func main() {
 
 	mux.Handle("/info", middleware.LoggingMiddleware(infoRateLimiter.Middleware(infoHandler)))
 	mux.Handle("/download/", middleware.LoggingMiddleware(rateLimiter.Middleware(downloadHandler)))
-	mux.Handle("/stream/", middleware.LoggingMiddleware(streamHandler))
+	mux.Handle("/stream/", streamHandler)
 	mux.Handle("/storage/", middleware.LoggingMiddleware(http.StripPrefix("/storage/", http.FileServer(http.Dir(storagePath)))))
 
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
@@ -112,4 +112,3 @@ func getEnvInt(key string, defaultValue int) int {
 	}
 	return defaultValue
 }
-
