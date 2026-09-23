@@ -55,7 +55,7 @@ func (y *YTDLP) GetInfo(ctx context.Context, url string) (*model.VideoInfo, erro
 	ctx, cancel := context.WithTimeout(ctx, y.timeout)
 	defer cancel()
 
-	cmd := exec.CommandContext(ctx, y.binaryPath, "--dump-json", "--no-playlist", url)
+	cmd := exec.CommandContext(ctx, y.binaryPath, "--dump-json", "--no-playlist", "--quiet", "--no-warnings", url)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return nil, fmt.Errorf("yt-dlp get info failed: %w, output: %s", err, string(output))
@@ -190,4 +190,3 @@ func (y *YTDLP) readProgress(reader io.Reader, progressChan chan<- model.Progres
 		}
 	}
 }
-
