@@ -4,11 +4,14 @@
 	import type { VideoInfo } from '$lib/types/types';
 	import Button from '../components/button/Button.svelte';
 	import Container from '../components/container/Container.svelte';
+	import { onMount } from 'svelte';
 
 	let inputFocus = $state(false);
 	let mediaType = $state('video');
 	let url = $state('');
-	let disabled = $state(false);
+	let running = $state(false);
+	let done = $state(false);
+
 	let error = $state(false);
 	let input: null | HTMLInputElement = $state(null);
 	let logDiv: null | HTMLDivElement = $state(null);
@@ -16,36 +19,36 @@
 	let file_url = $state('');
 
 	let videoInfo: null | VideoInfo = $state(null);
-	let isGettingVideoInfo = $state(false);
 
-	$effect(() => {
-		if (url == '' || isGettingVideoInfo) return;
-		disabled = true;
-		error = false;
-
-		const getInfo = async () => {
-			try {
-				addLog('info', 'Getting video info from url: ' + url);
-				isGettingVideoInfo = true;
-
-				videoInfo = await getVideoInfo(url);
-
-				addLog('info', 'Success, downloading media...');
-
-				file_url = await downloadMedia(url, (msg) => {
-					addLog('info', msg);
-				});
-
-				addLog('info', 'Success! Please click the download button above to download the media.');
-			} catch (e) {
-				addLog('error', 'getInfo: ' + e);
-				error = true;
-			} finally {
-				disabled = false;
+	async function startJob() {
+		try {
+			if (input) {
+				input.value = '';
 			}
-		};
-		getInfo();
-	});
+
+			// Prepare
+			running = true;
+			error = false;
+
+			addLog('info', 'Job started.');
+
+			addLog('info', 'Getting video info from url: ' + url);
+			videoInfo = await getVideoInfo(url);
+			addLog('info', 'Success, downloading media...');
+
+			file_url = await downloadMedia(url, (msg) => {
+				addLog('info', msg);
+			});
+
+			addLog('info', 'Success! Please click the download button above to download the media.');
+		} catch (e) {
+			addLog('error', 'job: ' + e);
+			error = true;
+		} finally {
+			running = false;
+			done = true;
+		}
+	}
 
 	$effect(() => {
 		if (logs) {
@@ -70,6 +73,16 @@
 		}
 	};
 
+	onMount(() => {
+		if (!input) return;
+		input.addEventListener('keypress', (event) => {
+			if (event.key == 'Enter') {
+				event.preventDefault();
+				startJob();
+			}
+		});
+	});
+
 	const avalaibleQuality = ['best', 'worst', '1080p', '720p', '480p', '360p'];
 	let quality = $state('best');
 </script>
@@ -85,24 +98,24 @@
 
 				<div class="flex w-full flex-col gap-2">
 					<!-- log -->
-					{#if url !== ''}
+					{#if running || done}
 						<div class="flex h-[40dvh] flex-col gap-2">
 							{#if videoInfo}
 								<div class="flex w-full gap-2">
 									<div class="h-30 w-30 shrink-0 overflow-hidden rounded-xl bg-neutral-500">
-										<img src={videoInfo?.thumbnail} alt="" class="h-full w-full object-cover" />
+										<img src={videoInfo.thumbnail} alt="" class="h-full w-full object-cover" />
 									</div>
 									<div class="flex h-full w-full flex-col justify-between gap-2 overflow-hidden">
 										<!-- title -->
 										<div class="flex w-full flex-col gap-2">
 											<p class="overflow-hidden text-nowrap">
-												{videoInfo?.title || ''}
+												{videoInfo.title || ''}
 											</p>
 
 											<!-- uploader -->
 											{#if videoInfo}
 												<p class="text-sm text-neutral-400">
-													{videoInfo?.uploader} | {videoInfo?.view_count} views
+													{videoInfo.uploader} | {videoInfo.view_count} views
 												</p>
 											{/if}
 										</div>
@@ -132,13 +145,14 @@
 					>
 						<p>></p>
 						<input
+							bind:value={url}
 							bind:this={input}
 							type="text"
 							class="flex-1 outline-none"
 							placeholder="paste your media url here and press Enter."
 							onfocusin={() => (inputFocus = true)}
 							onfocusout={() => (inputFocus = false)}
-							{disabled}
+							disabled={running}
 						/>
 					</div>
 
@@ -155,17 +169,8 @@
 							>
 						</div>
 
-						<Button
-							onclick={() => {
-								if (input) {
-									url = input.value;
-									addLog('info', 'Job started');
-									input.value = '';
-								}
-							}}
-							class="justify-end"
-							{disabled}
-							variant="primary">[enter]</Button
+						<Button onclick={startJob} class="justify-end" disabled={running} variant="primary"
+							>[enter]</Button
 						>
 					</div>
 
