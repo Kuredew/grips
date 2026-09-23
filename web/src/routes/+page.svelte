@@ -9,6 +9,7 @@
 	let mediaType = $state('video');
 	let url = $state('');
 	let disabled = $state(false);
+	let error = $state(false);
 	let input: null | HTMLInputElement = $state(null);
 	let logDiv: null | HTMLDivElement = $state(null);
 	let logs = $state('');
@@ -17,20 +18,10 @@
 	let videoInfo: null | VideoInfo = $state(null);
 	let isGettingVideoInfo = $state(false);
 
-	function downloadFromUrl(fileUrl: string, fileName?: string) {
-		const link = document.createElement('a');
-
-		link.href = fileUrl;
-		link.download = fileName || 'download';
-
-		document.body.appendChild(link);
-		link.click();
-		document.body.removeChild(link);
-	}
-
 	$effect(() => {
 		if (url == '' || isGettingVideoInfo) return;
 		disabled = true;
+		error = false;
 
 		const getInfo = async () => {
 			try {
@@ -45,15 +36,24 @@
 					addLog('info', msg);
 				});
 
-				addLog('info', 'Success!');
+				addLog('info', 'Success! Please click the download button above to download the media.');
 			} catch (e) {
 				addLog('error', 'getInfo: ' + e);
-
+				error = true;
+			} finally {
 				disabled = false;
-				return null;
 			}
 		};
 		getInfo();
+	});
+
+	$effect(() => {
+		if (logs) {
+			if (logDiv) {
+				console.log('ScrolledDown');
+				logDiv.scrollTop = logDiv.scrollHeight;
+			}
+		}
 	});
 
 	const addLog = (level: 'info' | 'error' | 'debug', msg: string) => {
@@ -67,10 +67,6 @@
 			case 'debug':
 				logs += `[ DEBG ] ${msg}\n`;
 				break;
-		}
-
-		if (logDiv) {
-			logDiv.scrollTop = logDiv.scrollHeight;
 		}
 	};
 
@@ -91,32 +87,33 @@
 					<!-- log -->
 					{#if url !== ''}
 						<div class="flex h-[40dvh] flex-col gap-2">
-							<div class="flex w-full gap-2">
-								<div class="h-30 w-30 shrink-0 overflow-hidden rounded-xl bg-neutral-500">
-									{#if videoInfo}
+							{#if videoInfo}
+								<div class="flex w-full gap-2">
+									<div class="h-30 w-30 shrink-0 overflow-hidden rounded-xl bg-neutral-500">
 										<img src={videoInfo?.thumbnail} alt="" class="h-full w-full object-cover" />
-									{/if}
-								</div>
-								<div class="flex h-full w-full flex-col justify-between gap-2 overflow-hidden">
-									<!-- title -->
-									<div class="flex w-full flex-col gap-2">
-										<p class="overflow-hidden text-nowrap">
-											{videoInfo?.title || ''}
-										</p>
-
-										<!-- uploader -->
-										{#if videoInfo}
-											<p class="text-sm text-neutral-400">
-												{videoInfo?.uploader} | {videoInfo?.view_count} views
-											</p>
-										{/if}
 									</div>
+									<div class="flex h-full w-full flex-col justify-between gap-2 overflow-hidden">
+										<!-- title -->
+										<div class="flex w-full flex-col gap-2">
+											<p class="overflow-hidden text-nowrap">
+												{videoInfo?.title || ''}
+											</p>
 
-									<a class="w-fit" href={file_url}
-										><Button variant="primary" disabled={file_url == ''}>download</Button></a
-									>
+											<!-- uploader -->
+											{#if videoInfo}
+												<p class="text-sm text-neutral-400">
+													{videoInfo?.uploader} | {videoInfo?.view_count} views
+												</p>
+											{/if}
+										</div>
+
+										<!-- eslint-disable-next-line -->
+										<a class="w-fit" href={file_url}
+											><Button variant="primary" disabled={file_url == ''}>download</Button></a
+										>
+									</div>
 								</div>
-							</div>
+							{/if}
 
 							<!-- log -->
 							<div class="flex min-h-0 flex-1 rounded-xl bg-neutral-900 px-6 py-4">
@@ -131,7 +128,7 @@
 					{/if}
 
 					<div
-						class={`flex w-full items-center justify-center gap-2 rounded-xl border-2 border-neutral-800 p-4 transition-all outline-none ${inputFocus ? '!border-neutral-400' : ''}`}
+						class={`flex w-full items-center justify-center gap-2 rounded-xl border-2 p-4 transition-all outline-none ${error ? 'border-red-900' : 'border-neutral-800 '} ${inputFocus ? 'border-neutral-400!' : ''}`}
 					>
 						<p>></p>
 						<input
@@ -174,7 +171,7 @@
 
 					{#if mediaType == 'disable'}
 						<div class="flex w-full gap-2">
-							{#each avalaibleQuality as qlty}
+							{#each avalaibleQuality as qlty (qlty)}
 								<Button
 									onclick={() => (quality = qlty)}
 									variant={qlty == quality ? 'primary' : 'secondary'}>{qlty}</Button
