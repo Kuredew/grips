@@ -43,6 +43,10 @@
 			addLog('info', 'Success! Please click the download button above to download the media.');
 		} catch (e) {
 			addLog('error', 'job: ' + e);
+			addLog(
+				'error',
+				'An error occurred, please make sure the URL is correct and please try again or wait a while if the failure continues to occur.'
+			);
 			error = true;
 		} finally {
 			running = false;
