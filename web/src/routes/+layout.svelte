@@ -10,7 +10,10 @@
 	let { children } = $props();
 </script>
 
-<svelte:head><link rel="icon" href={favicon} /></svelte:head>
+<svelte:head>
+	<link rel="icon" href={favicon} />
+	<link rel="stylesheet" href="/satoshi/css/satoshi.css" />
+</svelte:head>
 {@render children()}
 
 <style>
@@ -21,6 +24,6 @@
 	:global(body) {
 		color: white;
 		background-color: black;
-		font-family: 'IBM Plex Mono';
+		font-family: 'Satoshi';
 	}
 </style>
