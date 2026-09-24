@@ -41,3 +41,15 @@ export interface StreamEvent {
 	event: string;
 	data: EventData;
 }
+
+export type MediaType = 'video' | 'audio';
+
+export type StatusQueue = 'processing' | 'completed' | 'failed';
+
+export interface Queue {
+	id: string;
+	status: StatusQueue;
+	percent: number;
+	log: string[];
+	file_url: string | null;
+}
