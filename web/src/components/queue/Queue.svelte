@@ -2,7 +2,7 @@
 	import { queueManager } from '$lib/queue.svelte';
 	import Button from '../button/Button.svelte';
 
-	let clicked = $state(false);
+	let clicked = $state(true);
 </script>
 
 <div class="fixed top-0 right-0 flex h-80 w-130 flex-col items-end gap-2 p-2">
@@ -30,10 +30,11 @@
 	</Button>
 
 	<div
-		class="flex min-h-0 w-full flex-1 rounded-3xl border-2 border-neutral-800 px-6 py-4 transition-all {!clicked
-			? 'scale-0'
-			: 'scale-100'}"
+		class="flex min-h-0 w-full flex-1 flex-col gap-2 rounded-3xl border-2 border-neutral-800 bg-neutral-900 px-6 py-4 transition-all {!clicked
+			? 'scale-0 opacity-0'
+			: 'scale-100 opacity-100'}"
 	>
-		<p class="text-xl font-medium">Download Queue</p>
+		<p class="font-medium">download queue</p>
+		<div class="flex max-h-full flex-1 flex-col gap-1 overflow-y-auto"></div>
 	</div>
 </div>

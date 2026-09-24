@@ -22,8 +22,8 @@
 	}
 
 	:global(body) {
-		color: white;
+		color: var(--color-white);
 		background-color: black;
-		font-family: 'Satoshi';
+		font-family: 'ibm plex mono';
 	}
 </style>

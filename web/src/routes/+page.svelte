@@ -38,7 +38,7 @@
 		<div class="flex w-full flex-col items-center justify-center">
 			<div class="flex w-200 max-w-full flex-col items-center justify-center gap-10">
 				<div class="flex w-full flex-col items-center justify-center">
-					<h1 class="text-4xl font-medium">Own your favorite media without worry.</h1>
+					<h1 class="font-medium">own your favorite media without worry.</h1>
 				</div>
 
 				<div class="flex w-full flex-col gap-2">
@@ -64,8 +64,8 @@
 							bind:value={url}
 							bind:this={input}
 							type="text"
-							class="flex-1 outline-none"
-							placeholder="Paste your media url here and press Enter."
+							class="flex-1 text-sm outline-none"
+							placeholder="paste your media url here and press enter."
 							onfocusin={() => (inputFocus = true)}
 							onfocusout={() => (inputFocus = false)}
 							disabled={running}
@@ -76,15 +76,15 @@
 						<div class="flex items-center rounded-full bg-white/10 px-1 py-1">
 							<Button
 								onclick={() => (mediaType = 'video')}
-								variant={mediaType == 'video' ? 'primary' : 'secondary'}>Video</Button
+								variant={mediaType == 'video' ? 'primary' : 'secondary'}>video</Button
 							>
 							<Button
 								onclick={() => (mediaType = 'audio')}
-								variant={mediaType == 'audio' ? 'primary' : 'secondary'}>Audio</Button
+								variant={mediaType == 'audio' ? 'primary' : 'secondary'}>audio</Button
 							>
 						</div>
 						<Button onclick={sendToQueue} class="justify-end" disabled={running} variant="primary"
-							>Download</Button
+							>add queue</Button
 						>
 					</div>
 				</div>
