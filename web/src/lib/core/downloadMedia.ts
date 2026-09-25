@@ -1,4 +1,5 @@
 import { getVideoUrl } from '$lib/api/getVideoUrl';
+import { settings } from '$lib/settings.svelte';
 import type { DoneEventData, ErrorEventData, MediaType, ProgressEventData } from '$lib/types/types';
 
 export const downloadMedia = async (
@@ -9,7 +10,7 @@ export const downloadMedia = async (
 	try {
 		let file_url = '';
 
-		await getVideoUrl(url, mediaType, (output) => {
+		await getVideoUrl(url, mediaType, settings.data.mediaQuality, (output) => {
 			let data;
 
 			switch (output.event) {

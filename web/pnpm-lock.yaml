@@ -11,6 +11,9 @@ importers:
       '@fontsource/ibm-plex-mono':
         specifier: ^5.3.0
         version: 5.3.0
+      '@friendofsvelte/state':
+        specifier: ^0.2.0
+        version: 0.2.0(svelte@5.57.1(@typescript-eslint/types@8.70.1))
     devDependencies:
       '@eslint/js':
         specifier: ^10.0.1
@@ -119,6 +122,11 @@ packages:
 
   '@fontsource/ibm-plex-mono@5.3.0':
     resolution: {integrity: sha512-eTgnZjZEGk1QtD3ZstF+Vclo2HLAni8YMy34/DxllwZvyz1lR/1RF/xTiAquOBO7MvqBx8D2Ig2WCPMVfdZu7Q==}
+
+  '@friendofsvelte/state@0.2.0':
+    resolution: {integrity: sha512-d9BQpyBINfO0uUG2SwNUckrSWsXPQauE6xp/TXL2lUuVla4WIFInEDu5mf6LL2xEiBthX0mJ02w9JNm9iAYH1Q==}
+    peerDependencies:
+      svelte: ^5.0.0
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
@@ -1308,6 +1316,10 @@ snapshots:
       levn: 0.4.1
 
   '@fontsource/ibm-plex-mono@5.3.0': {}
+
+  '@friendofsvelte/state@0.2.0(svelte@5.57.1(@typescript-eslint/types@8.70.1))':
+    dependencies:
+      svelte: 5.57.1(@typescript-eslint/types@8.70.1)
 
   '@humanfs/core@0.19.2':
     dependencies:

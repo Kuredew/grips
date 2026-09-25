@@ -58,3 +58,21 @@ export interface Queue {
 	log: string[];
 	file_url: string | null;
 }
+
+export type Quality = 'best' | 'worst' | '1080p' | '720p' | '480p' | '360p' | string;
+
+export type AppSettingType = 'select' | 'checkbox';
+
+export type SettingKey = 'mediaQuality';
+
+export interface AppSetting {
+	key: SettingKey;
+	label: string;
+	group: string;
+	description: string;
+	type: AppSettingType;
+	options?: {
+		label: string;
+		value: string;
+	}[];
+}

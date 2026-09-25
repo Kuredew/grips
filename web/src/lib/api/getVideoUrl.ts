@@ -1,16 +1,21 @@
 import { PUBLIC_API_BASE_URL } from '$env/static/public';
-import type { StreamEvent } from '$lib/types/types';
+import type { Quality, StreamEvent } from '$lib/types/types';
 
 export const getVideoUrl = async (
 	url: string,
 	mediaType: 'video' | 'audio',
+	quality: Quality,
 	output: (streamEvent: StreamEvent) => void
 ) => {
 	try {
-		let res = await fetch(`${PUBLIC_API_BASE_URL}/download/${mediaType}?url=${url}`);
+		const params = new URLSearchParams();
+		params.append('url', url);
+		params.append('quality', quality);
+
+		let res = await fetch(`${PUBLIC_API_BASE_URL}/download/${mediaType}?${params.toString()}`);
 
 		if (!res.ok || !res.body) {
-			throw new Error('Error occured while getting download ID');
+			throw new Error(`Response is not ok: ${res.status}`);
 		}
 
 		const resJSON = await res.json();

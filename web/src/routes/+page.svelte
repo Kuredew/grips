@@ -4,17 +4,19 @@
 	import Container from '../components/container/Container.svelte';
 	import { onMount } from 'svelte';
 	import { queueManager } from '$lib/queue.svelte';
-	import QueueWindow from '../components/queue/QueueWindow.svelte';
 	import VideoIcon from '../components/logo/VideoIcon.svelte';
 	import AudioIcon from '../components/logo/AudioIcon.svelte';
 	import QueueIcon from '../components/logo/QueueIcon.svelte';
+	import PageComponent from '../components/page/PageComponent.svelte';
+	import SparkleIcon from '../components/logo/SparkleIcon.svelte';
+	import RadioWrapper from '../components/radio/RadioWrapper.svelte';
+	import RadioButton from '../components/radio/RadioButton.svelte';
 
 	let inputFocus = $state(false);
 	let mediaType: MediaType = $state('video');
 	let url = $state('');
 	let running = $state(false);
 
-	let error = $state(false);
 	let input: null | HTMLInputElement = $state(null);
 
 	const sendToQueue = () => {
@@ -34,85 +36,139 @@
 	});
 </script>
 
-<QueueWindow />
+<Container>
+	<PageComponent title="home">
+		<div id="home-wrapper">
+			<div id="home-title">
+				<h1 id="home-title-content">own your favorite media without worry.</h1>
+			</div>
 
-<div class="h-dvh w-full">
-	<Container>
-		<div class="flex w-full flex-col items-center justify-center">
-			<div class="flex w-200 max-w-full flex-col items-center justify-center gap-10">
-				<div class="flex w-full flex-col items-center justify-center">
-					<h1 class="cursor-default font-medium">own your favorite media without worry.</h1>
+			<div id="form-wrapper" class="flex w-full flex-col gap-2">
+				<div
+					id="input-wrapper"
+					style="--border-color: {inputFocus
+						? 'var(--color-neutral-400)'
+						: 'var(--color-neutral-800)'}"
+				>
+					<SparkleIcon />
+					<input
+						bind:value={url}
+						bind:this={input}
+						type="text"
+						id="input"
+						placeholder="paste your media url here and press enter."
+						onfocusin={() => (inputFocus = true)}
+						onfocusout={() => (inputFocus = false)}
+						disabled={running}
+					/>
 				</div>
-
-				<div class="flex w-full flex-col gap-2">
-					<div
-						class={`flex w-full items-center justify-center gap-2 rounded-3xl border-2 p-4 transition-all outline-none ${error ? 'border-red-900' : 'border-neutral-800 '} ${inputFocus ? 'border-neutral-400!' : ''}`}
+				<!-- type and quality selection -->
+				<div id="button-wrapper">
+					<RadioWrapper>
+						<RadioButton
+							onclick={() => (mediaType = 'video')}
+							active={mediaType == 'video'}
+							class="button-home"
+						>
+							<VideoIcon />
+							video
+						</RadioButton>
+						<RadioButton
+							onclick={() => (mediaType = 'audio')}
+							active={mediaType == 'audio'}
+							class="button-home"
+						>
+							<AudioIcon />
+							audio
+						</RadioButton>
+					</RadioWrapper>
+					<Button onclick={sendToQueue} class="button-home" disabled={running} variant="primary">
+						<QueueIcon />
+						add queue</Button
 					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="20"
-							height="20"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							class="lucide lucide-sparkles preview-icon"
-							><path
-								d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"
-							/><path d="M20 2v4" /><path d="M22 4h-4" /><circle cx="4" cy="20" r="2" /></svg
-						>
-						<input
-							bind:value={url}
-							bind:this={input}
-							type="text"
-							class="flex-1 text-sm outline-none"
-							placeholder="paste your media url here and press enter."
-							onfocusin={() => (inputFocus = true)}
-							onfocusout={() => (inputFocus = false)}
-							disabled={running}
-						/>
-					</div>
-					<!-- type and quality selection -->
-					<div class="flex w-full flex-col justify-between gap-1 md:flex-row">
-						<div class="flex items-center rounded-full bg-white/10 px-1 py-1">
-							<Button
-								onclick={() => (mediaType = 'video')}
-								variant={mediaType == 'video' ? 'primary' : 'secondary'}
-								class="flex w-full items-center justify-center gap-2"
-							>
-								<VideoIcon />
-								video</Button
-							>
-							<Button
-								onclick={() => (mediaType = 'audio')}
-								variant={mediaType == 'audio' ? 'primary' : 'secondary'}
-								class="flex w-full items-center justify-center gap-2"
-							>
-								<AudioIcon />
-								audio</Button
-							>
-						</div>
-						<Button
-							onclick={sendToQueue}
-							class="flex w-full items-center justify-center gap-2"
-							disabled={running}
-							variant="primary"
-						>
-							<QueueIcon />
-							add queue</Button
-						>
-					</div>
-				</div>
-				<div class="flex w-full justify-center">
-					<p class="cursor-default text-sm text-neutral-400">
-						inspired by <a href="https://cobalt.tools"
-							><span class="font-medium underline">cobalt.tools</span></a
-						>, but this one uses the yt-dlp tool
-					</p>
 				</div>
 			</div>
+			<div id="note-wrapper">
+				<p id="note-content">
+					inspired by <a href="https://cobalt.tools"><span id="note-link">cobalt.tools</span></a>,
+					but this one uses the yt-dlp tool
+				</p>
+			</div>
 		</div>
-	</Container>
-</div>
+	</PageComponent>
+</Container>
+
+<style>
+	#home-wrapper {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		height: 100%;
+		align-items: center;
+		justify-content: center;
+		gap: 40px;
+	}
+
+	#home-title {
+		display: flex;
+		width: 100%;
+		justify-content: center;
+	}
+
+	#home-title-content {
+		font-weight: 500;
+		cursor: default;
+	}
+
+	#input-wrapper {
+		display: flex;
+		width: 100%;
+		align-items: center;
+		justify-content: center;
+		gap: 14px;
+		border-radius: 20px;
+		border: solid 2px;
+		border-color: var(--border-color);
+		padding: 20px;
+		outline: none;
+	}
+
+	#input {
+		flex: 1;
+		font-size: 16px;
+		outline: none;
+	}
+
+	#button-wrapper {
+		display: flex;
+		width: 100%;
+		flex-direction: column;
+		justify-content: space-between;
+		gap: 4px;
+	}
+
+	:global(.button-home) {
+		display: flex;
+		width: 100%;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+	}
+
+	#note-wrapper {
+		display: flex;
+		width: 100%;
+		justify-content: center;
+	}
+
+	#note-content {
+		cursor: default;
+		font-size: 14px;
+		color: var(--color-neutral-400);
+	}
+
+	#note-link {
+		font-weight: 500;
+		text-decoration: underline;
+	}
+</style>

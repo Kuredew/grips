@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { queueManager } from '$lib/queue.svelte';
+	import { scale } from 'svelte/transition';
 	import Button from '../button/Button.svelte';
 	import Queue from './Queue.svelte';
 
@@ -9,7 +10,11 @@
 <div
 	class="fixed top-0 right-0 flex h-fit max-h-dvh w-130 max-w-dvw cursor-default flex-col items-end gap-2 p-2"
 >
-	<Button onclick={() => (clicked = !clicked)} variant="secondary" class="relative px-4! py-4!">
+	<Button
+		onclick={() => (clicked = !clicked)}
+		variant={clicked ? 'primary' : 'secondary'}
+		class="relative px-4! py-4!"
+	>
 		{#if queueManager.items.length > 0}
 			<div
 				class="absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-neutral-300 text-sm font-medium text-black"
@@ -32,21 +37,22 @@
 		>
 	</Button>
 
-	<div
-		class="flex w-full flex-1 flex-col gap-4 rounded-3xl border-2 border-neutral-800 bg-neutral-900 p-4 transition-all {!clicked
-			? 'scale-0 opacity-0'
-			: 'scale-100 opacity-100'}"
-	>
-		<p class="font-medium">download queue</p>
-		<div class="flex max-h-full flex-1 flex-col gap-4 overflow-hidden overflow-y-auto text-sm">
-			{#each queueManager.items as item (item.id)}
-				<Queue id={item.id} />
-			{/each}
-			{#if queueManager.items.length <= 0}
-				<div class="flex h-50 w-full items-center justify-center">
-					<div>there's nothing here, try downloading something.</div>
-				</div>
-			{/if}
+	{#if clicked}
+		<div
+			transition:scale={{ duration: 200 }}
+			class="flex w-full flex-1 flex-col gap-4 rounded-3xl border-2 border-neutral-800 bg-neutral-900 p-4 transition-all"
+		>
+			<p class="font-medium">download queue</p>
+			<div class="flex max-h-full flex-1 flex-col gap-4 overflow-hidden overflow-y-auto text-sm">
+				{#each queueManager.items as item (item.id)}
+					<Queue id={item.id} />
+				{/each}
+				{#if queueManager.items.length <= 0}
+					<div class="flex h-50 w-full items-center justify-center">
+						<div>there's nothing here, try downloading something.</div>
+					</div>
+				{/if}
+			</div>
 		</div>
-	</div>
+	{/if}
 </div>

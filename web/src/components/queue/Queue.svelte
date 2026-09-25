@@ -61,7 +61,9 @@
 				</div>
 			{:else}
 				<Loading size="0.25px" />
-				<p class="text-sm text-neutral-400">{item.status}... ({item.log.length} logs)</p>
+				<p class="text-sm text-nowrap text-neutral-400">
+					{item.log[item.log.length - 1] || item.status}... ({item.log.length} logs)
+				</p>
 			{/if}
 		</div>
 	</button>

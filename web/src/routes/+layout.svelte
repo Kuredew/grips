@@ -1,11 +1,9 @@
 <script lang="ts">
-	import '@fontsource/ibm-plex-mono';
-	import '@fontsource/ibm-plex-mono/500.css';
-	import '@fontsource/ibm-plex-mono/700.css';
-	import '@fontsource/ibm-plex-mono/400-italic.css';
-
 	import './layout.css';
+
 	import favicon from '$lib/assets/favicon.svg';
+	import QueueWindow from '../components/queue/QueueWindow.svelte';
+	import Bar from '../components/bar/Bar.svelte';
 
 	let { children } = $props();
 </script>
@@ -15,7 +13,11 @@
 	<link rel="stylesheet" href="/satoshi/css/satoshi.css" />
 	<title>grips</title>
 </svelte:head>
+
+<QueueWindow />
 {@render children()}
+
+<Bar />
 
 <style>
 	:global(html) {
