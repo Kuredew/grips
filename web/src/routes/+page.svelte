@@ -40,7 +40,7 @@
 	<PageComponent title="home">
 		<div id="home-wrapper">
 			<div id="home-title">
-				<h1 id="home-title-content">own your favorite media without worry.</h1>
+				<h1 id="home-title-content">own your favorite media.</h1>
 			</div>
 
 			<div id="form-wrapper" class="flex w-full flex-col gap-2">
