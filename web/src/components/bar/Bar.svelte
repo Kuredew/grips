@@ -27,7 +27,7 @@
 		bottom: 0;
 		display: flex;
 		justify-content: center;
-		gap: 18px;
+		gap: 14px;
 		width: 100dvw;
 		height: fit;
 		padding-block: 14px;

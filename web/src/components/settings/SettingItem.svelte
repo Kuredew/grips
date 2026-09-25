@@ -31,16 +31,17 @@
 		width: 100%;
 		display: flex;
 		flex-direction: column;
-		gap: 12px;
+		gap: 4px;
 	}
 
 	.setting-label {
-		font-size: 18px;
+		font-size: 14px;
 		font-weight: 500;
 	}
 
 	.setting-description {
 		color: var(--color-neutral-400);
+		font-size: 14px;
 	}
 
 	.setting-toggle {
