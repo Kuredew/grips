@@ -44,10 +44,15 @@ export interface StreamEvent {
 
 export type MediaType = 'video' | 'audio';
 
-export type StatusQueue = 'processing' | 'completed' | 'failed';
+export type StatusQueue = 'fetching' | 'processing' | 'downloading' | 'completed' | 'failed';
 
 export interface Queue {
 	id: string;
+	title: string | null;
+	fileName: string | null;
+	mediaType: MediaType | null;
+	mediaUrl: string | null;
+	mediaBlob: Blob | null;
 	status: StatusQueue;
 	percent: number;
 	log: string[];

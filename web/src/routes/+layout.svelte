@@ -13,6 +13,7 @@
 <svelte:head>
 	<link rel="icon" href={favicon} />
 	<link rel="stylesheet" href="/satoshi/css/satoshi.css" />
+	<title>grips</title>
 </svelte:head>
 {@render children()}
 

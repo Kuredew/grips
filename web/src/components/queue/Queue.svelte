@@ -1,40 +1,68 @@
 <script lang="ts">
 	import { queueManager } from '$lib/queue.svelte';
-	import Button from '../button/Button.svelte';
+	import { downloadBlob } from '$lib/util/downloadBlob';
+	import Loading from '../loader/Loading.svelte';
+	import AudioIcon from '../logo/AudioIcon.svelte';
+	import VideoIcon from '../logo/VideoIcon.svelte';
+	let hovered = $state(false);
 
-	let clicked = $state(true);
+	let { id }: { id: string } = $props();
+
+	const item = $derived(queueManager.getItem(id));
 </script>
 
-<div class="fixed top-0 right-0 flex h-80 w-130 flex-col items-end gap-2 p-2">
-	<Button onclick={() => (clicked = !clicked)} variant="secondary" class="relative px-4! py-4!">
-		{#if queueManager.items.length > 0}
-			<div
-				class="absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-neutral-300 text-sm font-medium text-black"
-			>
-				{queueManager.items.length}
-			</div>
-		{/if}
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			width="20"
-			height="20"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-			class="lucide lucide-arrow-down-to-line preview-icon"
-			><path d="M12 17V3" /><path d="m6 11 6 6 6-6" /><path d="M19 21H5" /></svg
-		>
-	</Button>
-
-	<div
-		class="flex min-h-0 w-full flex-1 flex-col gap-2 rounded-3xl border-2 border-neutral-800 bg-neutral-900 px-6 py-4 transition-all {!clicked
-			? 'scale-0 opacity-0'
-			: 'scale-100 opacity-100'}"
+{#if item}
+	<button
+		class="flex w-full cursor-pointer flex-col gap-2 overflow-hidden"
+		onmouseenter={() => (hovered = true)}
+		onmouseleave={() => (hovered = false)}
+		onclick={() => {
+			console.log('Triggering download');
+			if (item.mediaBlob !== null && item.fileName != null) {
+				console.log('Download triggered.');
+				downloadBlob(item.mediaBlob, item.fileName);
+			}
+		}}
 	>
-		<p class="font-medium">download queue</p>
-		<div class="flex max-h-full flex-1 flex-col gap-1 overflow-y-auto"></div>
-	</div>
-</div>
+		<div class="flex gap-2">
+			<div class="shrink-0">
+				{#if item.mediaType == 'video'}
+					<VideoIcon />
+				{:else if item.mediaType == 'audio'}
+					<AudioIcon />
+				{/if}
+			</div>
+			<p class="text-sm font-medium text-nowrap">
+				{item.fileName || item.mediaUrl}
+			</p>
+		</div>
+		<div class="h-1 w-full overflow-hidden rounded-full bg-neutral-700">
+			<div
+				class="h-full w-(--percent) transition-all {item.status == 'completed'
+					? 'bg-blue-400'
+					: 'bg-white'}"
+				style="--percent: {item.percent}%"
+			></div>
+		</div>
+		<div class="flex items-center gap-2">
+			{#if hovered && item.status == 'completed'}
+				<p class="text-sm text-neutral-400">click to download.</p>
+			{:else if item.status == 'completed'}
+				<p class="text-sm text-neutral-400">✓ done.</p>
+			{:else if item.status == 'failed'}
+				<p class="text-sm text-neutral-400">failed.</p>
+			{:else if item.status == 'downloading'}
+				<div class="flex w-full justify-between">
+					<div class="flex items-center gap-2">
+						<Loading size="0.25px" />
+						<p class="text-sm text-neutral-400">downloading...</p>
+					</div>
+					<p class="text-sm text-neutral-400">{item.percent}%</p>
+				</div>
+			{:else}
+				<Loading size="0.25px" />
+				<p class="text-sm text-neutral-400">{item.status}... ({item.log.length} logs)</p>
+			{/if}
+		</div>
+	</button>
+{/if}

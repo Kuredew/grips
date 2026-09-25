@@ -3,8 +3,11 @@
 	import Button from '../components/button/Button.svelte';
 	import Container from '../components/container/Container.svelte';
 	import { onMount } from 'svelte';
-	import Queue from '../components/queue/Queue.svelte';
 	import { queueManager } from '$lib/queue.svelte';
+	import QueueWindow from '../components/queue/QueueWindow.svelte';
+	import VideoIcon from '../components/logo/VideoIcon.svelte';
+	import AudioIcon from '../components/logo/AudioIcon.svelte';
+	import QueueIcon from '../components/logo/QueueIcon.svelte';
 
 	let inputFocus = $state(false);
 	let mediaType: MediaType = $state('video');
@@ -31,14 +34,14 @@
 	});
 </script>
 
-<Queue />
+<QueueWindow />
 
 <div class="h-dvh w-full">
 	<Container>
 		<div class="flex w-full flex-col items-center justify-center">
 			<div class="flex w-200 max-w-full flex-col items-center justify-center gap-10">
 				<div class="flex w-full flex-col items-center justify-center">
-					<h1 class="font-medium">own your favorite media without worry.</h1>
+					<h1 class="cursor-default font-medium">own your favorite media without worry.</h1>
 				</div>
 
 				<div class="flex w-full flex-col gap-2">
@@ -72,21 +75,42 @@
 						/>
 					</div>
 					<!-- type and quality selection -->
-					<div class="flex w-full justify-between gap-4">
+					<div class="flex w-full flex-col justify-between gap-1 md:flex-row">
 						<div class="flex items-center rounded-full bg-white/10 px-1 py-1">
 							<Button
 								onclick={() => (mediaType = 'video')}
-								variant={mediaType == 'video' ? 'primary' : 'secondary'}>video</Button
+								variant={mediaType == 'video' ? 'primary' : 'secondary'}
+								class="flex w-full items-center justify-center gap-2"
+							>
+								<VideoIcon />
+								video</Button
 							>
 							<Button
 								onclick={() => (mediaType = 'audio')}
-								variant={mediaType == 'audio' ? 'primary' : 'secondary'}>audio</Button
+								variant={mediaType == 'audio' ? 'primary' : 'secondary'}
+								class="flex w-full items-center justify-center gap-2"
+							>
+								<AudioIcon />
+								audio</Button
 							>
 						</div>
-						<Button onclick={sendToQueue} class="justify-end" disabled={running} variant="primary"
-							>add queue</Button
+						<Button
+							onclick={sendToQueue}
+							class="flex w-full items-center justify-center gap-2"
+							disabled={running}
+							variant="primary"
+						>
+							<QueueIcon />
+							add queue</Button
 						>
 					</div>
+				</div>
+				<div class="flex w-full justify-center">
+					<p class="cursor-default text-sm text-neutral-400">
+						inspired by <a href="https://cobalt.tools"
+							><span class="font-medium underline">cobalt.tools</span></a
+						>, but this one uses the yt-dlp tool
+					</p>
 				</div>
 			</div>
 		</div>
