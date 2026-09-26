@@ -1,15 +1,9 @@
-# grips
+## grips
 
-save videos from the web easily
+a media downloader with queue and quality selection features that runs directly in the browser.
 
-## about
+### why
 
-you no longer need to worry about downloading a client downloader just to download videos from the web. simply open grips in your browser, and it will download them for you.
+nowadays, there are many web-based media downloaders that use yt-dlp as their backend, but most of them have a poor layouts, they look messy, and there’s too much information crammed onto a single page. many also display ads or require users to sign up, and so on.
 
-grips relies heavily on [yt-dlp](https://github.com/yt-dlp/yt-dlp), so it can also be called a yt-dlp website like the others. But don't worry, grips has no ads, doesn't require you to download an app, doesn't pop up, and best of all, it's free.
-
-grips is heavily inspired by [cobalt.tools](https://github.com/imputnet/cobalt). of course, i made grips just for fun, but I will continue to strive to ensure this project is properly maintained.
-
-## license
-
-you should see unlicense.org
+so i created grips as a hobby, and as a way to experiment.

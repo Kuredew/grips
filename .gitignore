@@ -5,3 +5,5 @@
 *.env
 
 grips.exe
+storage
+tmp

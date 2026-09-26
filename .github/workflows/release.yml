@@ -1,29 +1,22 @@
-name: Release
+on:
+  push:
+    branches:
+      - main
 
-on: workflow_dispatch
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+name: release-please
 
 jobs:
-  release:
+  release-please:
     runs-on: ubuntu-latest
-    permissions: 
-      contents: write 
-      issues: write 
-      pull-requests: write 
-      id-token: write 
-
     steps:
-      - uses: actions/checkout@v4
+      - uses: googleapis/release-please-action@v4
         with:
-          fetch-depth: 0 
-          persist-credentials: true 
-
-      - name: Semantic Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          npx \
-          --package semantic-release \
-          --package @semantic-release/changelog \
-          --package @semantic-release/git \
-          --package @semantic-release/exec \
-          semantic-release
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # this is a built-in strategy in release-please, see "Action Inputs"
+          # for more options
+          release-type: go
