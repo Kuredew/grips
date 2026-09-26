@@ -1,4 +1,48 @@
-# [1.2.0](https://github.com/Kuredew/grips/compare/v1.1.0...v1.2.0) (2026-09-23)
+# Changelog
+
+## [2.0.0](https://github.com/Kuredew/grips/compare/v1.2.0...v2.0.0) (2026-09-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* setup minimal sveltekit project for creating a new grips web
+* delete the entire grips web source code to transition to the new web
+* refactor the entire grips api source code to transition to a new download method
+
+### Features
+
+* add cookies.txt file path to yt-dlp arguments to reduce errors related to cookies ([7c5f236](https://github.com/Kuredew/grips/commit/7c5f236f83e103dcc5e6d7c1234e59c0261b1c0d))
+* add cookies.txt file path to yt-dlp arguments to reduce errors related to cookies ([a8cad7a](https://github.com/Kuredew/grips/commit/a8cad7a48add2937705722ffa4b6d5b15008f3e0))
+* add cors middleware to entire web endpoint ([893d2ba](https://github.com/Kuredew/grips/commit/893d2baf2d8c7bad90f1a161007dbaea1e76182f))
+* add download queue logic to queue system ([6a92eb4](https://github.com/Kuredew/grips/commit/6a92eb48fd45d49fadb0e2bc1e3c49459d4b71de))
+* add fetch github api in page header to display the latest version and commit hash ([04355c4](https://github.com/Kuredew/grips/commit/04355c4610ad14db90eca8d14ba0d90903f70997))
+* add more detailed error log information if the job actually fails ([6096e68](https://github.com/Kuredew/grips/commit/6096e68abadd534c39be728e1f793ccb62d2abe5))
+* add page settings, a page navigation bar, and cleaned up all the ([d4fbeb3](https://github.com/Kuredew/grips/commit/d4fbeb39bc74acb813d6507dc178605183586b01))
+* add web download and get info functionality ([3bc1281](https://github.com/Kuredew/grips/commit/3bc1281281f7b3608e53f936d1fa77c9671585f3))
+* bind the mediatype state to getVideoUrl and downloadMedia func ([28ac6bb](https://github.com/Kuredew/grips/commit/28ac6bbb3cdd1398d38baba1ca91321d637ce346))
+* complete the queue feature so that it works perfectly ([19557ff](https://github.com/Kuredew/grips/commit/19557ff08fe172a0423a3b790088473fba425d3a))
+* refactor the entire grips api source code to transition to a new download method ([2b0112b](https://github.com/Kuredew/grips/commit/2b0112b536c0c0b53529a9b3ae62550b91dfcd07))
+* setup minimal sveltekit project for creating a new grips web ([9a56ffc](https://github.com/Kuredew/grips/commit/9a56ffc1542ac1131446d3a1c008bf335a52dad1))
+
+
+### Bug Fixes
+
+* add --cookies argument to the getinfo function in yt-dlp service ([f6d6a6f](https://github.com/Kuredew/grips/commit/f6d6a6fe3a796d756bfd40903629938cf8e5dc75))
+* add -print after_move:pathfile in yt-dlp argument to getting filepath after merge ([78030f7](https://github.com/Kuredew/grips/commit/78030f783a3cf48e57e585a2845b28d59e868f13))
+* change fatal to regular log in the error log when .env is not found ([b867f29](https://github.com/Kuredew/grips/commit/b867f2990b4a4a1880fbcfba3f74ea28947091cb))
+* context cancelled after /download endpoint finished ([7edfb5d](https://github.com/Kuredew/grips/commit/7edfb5d77e99ab05c69dcdd5bb7dceccecd91381))
+* disable error and warning yt-dlp output to prevent parsing yt-dlp output error ([9552b60](https://github.com/Kuredew/grips/commit/9552b608bdad4b8d14da8828d14cfd0603fbde31))
+* fix the incorrect css syntax in the border section that is causing a build error ([2cb514c](https://github.com/Kuredew/grips/commit/2cb514ca56b4e962c9f8f010350d4cf212cd5bdf))
+* fix the incorrect css syntax in the border section that is causing a build error ([f05262a](https://github.com/Kuredew/grips/commit/f05262a0c0bcfc570288eeb908dd491a73210a04))
+* remove and fix code syntax for eslint ([ac75b4a](https://github.com/Kuredew/grips/commit/ac75b4aa4854770874282b40241e3dc21bdaa131))
+* remove middleware in /stream endpoint so that the streams works properly ([dd68083](https://github.com/Kuredew/grips/commit/dd68083a38431c33daa0f5537599b8f60b28c7ab))
+
+
+### Code Refactoring
+
+* delete the entire grips web source code to transition to the new web ([0b78fa4](https://github.com/Kuredew/grips/commit/0b78fa4ddd63d6ebce52326a9ba3f690e25d6408))
+
+## [1.2.0](https://github.com/Kuredew/grips/compare/v1.1.0...v1.2.0) (2026-09-23)
 
 
 ### Bug Fixes
@@ -12,7 +56,7 @@
 
 * add disable audio encode toggle ([abdf8f8](https://github.com/Kuredew/grips/commit/abdf8f8d72de322942ee19b0a36eac47e12b7b7c))
 
-# [1.1.0](https://github.com/Kuredew/grips/compare/v1.0.0...v1.1.0) (2026-01-02)
+## [1.1.0](https://github.com/Kuredew/grips/compare/v1.0.0...v1.1.0) (2026-01-02)
 
 
 ### Bug Fixes
@@ -32,7 +76,7 @@
 * Add resourceService to get grips resource ([3e2b6b5](https://github.com/Kuredew/grips/commit/3e2b6b5e7d79f2df266cdef2928a7cb46d3e19aa))
 * Add useResource hooks to get grips resource ([b11a4de](https://github.com/Kuredew/grips/commit/b11a4debe29f257123b9c226d82f71e9e064f4d9))
 
-# 1.0.0 (2026-01-01)
+## 1.0.0 (2026-01-01)
 
 
 ### Bug Fixes
