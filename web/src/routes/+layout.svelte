@@ -1,7 +1,7 @@
 <script lang="ts">
 	import './layout.css';
 
-	import favicon from '$lib/assets/favicon.svg';
+	import favicon from '$lib/assets/grips-icon.png';
 	import QueueWindow from '../components/queue/QueueWindow.svelte';
 	import Bar from '../components/bar/Bar.svelte';
 
