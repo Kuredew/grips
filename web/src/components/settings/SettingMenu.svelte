@@ -22,8 +22,8 @@
 		flex-direction: column;
 		width: 100%;
 		border-radius: 10px;
-		border: 2px;
-		border-color: var(color-neutral-400);
+		border: solid 2px;
+		border-color: var(--color-neutral-800);
 		background-color: var(--color-neutral-900);
 		overflow: hidden;
 	}
