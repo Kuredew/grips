@@ -19,7 +19,7 @@ import (
 
 func main() {
 	if err := godotenv.Load(); err != nil {
-		log.Fatalf("Failed loading .env file: %v", err)
+		log.Printf("Failed loading .env file: %v", err)
 	}
 
 	cookiesUrl := getEnv("COOKIES_BASE64_URL", "")
