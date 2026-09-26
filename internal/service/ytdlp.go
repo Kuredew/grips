@@ -17,6 +17,7 @@ import (
 type YTDLP struct {
 	binaryPath string
 	timeout    time.Duration
+	cookies    *Cookies
 }
 
 type VideoInfoRaw struct {
@@ -38,7 +39,7 @@ type VideoInfoRaw struct {
 	} `json:"formats"`
 }
 
-func NewYTDLP(binaryPath string, timeout time.Duration) *YTDLP {
+func NewYTDLP(cookies *Cookies, binaryPath string, timeout time.Duration) *YTDLP {
 	if binaryPath == "" {
 		binaryPath = "yt-dlp"
 	}
@@ -48,6 +49,7 @@ func NewYTDLP(binaryPath string, timeout time.Duration) *YTDLP {
 	return &YTDLP{
 		binaryPath: binaryPath,
 		timeout:    timeout,
+		cookies:    cookies,
 	}
 }
 
@@ -96,6 +98,7 @@ func (y *YTDLP) Download(ctx context.Context, url, format, quality, outputPath s
 	defer cancel()
 
 	args := []string{
+		"--cookies", y.cookies.CookiesPath,
 		"--no-playlist",
 		"--newline",
 		"--progress",
