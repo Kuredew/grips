@@ -13,9 +13,16 @@ import (
 	"grips/internal/handler"
 	"grips/internal/middleware"
 	"grips/internal/service"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	if err := godotenv.Load(); err != nil {
+		log.Fatalf("Failed loading .env file: %v", err)
+	}
+
+	cookiesUrl := getEnv("COOKIES_BASE64_URL", "")
 	storagePath := getEnv("STORAGE_PATH", "./storage")
 	tmpPath := getEnv("TMP_PATH", "./tmp")
 	port := getEnv("PORT", "8080")
@@ -31,7 +38,13 @@ func main() {
 		log.Fatalf("Failed to create tmp dir: %v", err)
 	}
 
-	ytdlp := service.NewYTDLP(ytDlpBinary, ytDlpTimeout)
+	reader := service.NewReader()
+	cookies, err := service.NewCookies(cookiesUrl, reader)
+	if err != nil {
+		log.Fatalf("Failed loading cookies: %v", err)
+	}
+
+	ytdlp := service.NewYTDLP(cookies, ytDlpBinary, ytDlpTimeout)
 	downloader := service.NewDownloader(ytdlp, storagePath, tmpPath, maxConcurrent)
 	storage := service.NewStorage(storagePath, baseURL)
 
@@ -64,6 +77,7 @@ func main() {
 
 	go func() {
 		log.Printf("Server starting on port %s", port)
+		log.Printf("Cookies Path: %s", cookies.CookiesPath)
 		log.Printf("Storage: %s", storagePath)
 		log.Printf("Temp: %s", tmpPath)
 		log.Printf("Max concurrent downloads: %d", maxConcurrent)
