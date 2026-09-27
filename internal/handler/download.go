@@ -29,7 +29,7 @@ func (h *DownloadHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	path := strings.TrimPrefix(r.URL.Path, "/download/")
 
 	switch {
-	case path == "video" || path == "video/":
+	case path == "video" || path == "video/" || path == "auto" || path == "auto/":
 		h.handleDownload(w, r, false)
 	case path == "audio" || path == "audio/":
 		h.handleDownload(w, r, true)
@@ -131,16 +131,15 @@ func (h *StreamHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				event.Data = model.ErrorEventData{Message: progress.Log}
 			} else if progress.Done {
 				event.Event = "done"
-				ext := "mp4"
-				if h.downloader.FileExists(downloadID, "mp3") {
-					ext = "mp3"
-				}
+				ext := progress.FileExt
+
 				fileURL := h.storage.GetFileURL(downloadID, ext)
 				size, _, _ := h.storage.GetFileInfo(downloadID, ext)
 				event.Data = model.DoneEventData{
 					FileURL:  fileURL,
 					FileName: downloadID + "." + ext,
 					FileSize: size,
+					FileExt:  ext,
 				}
 			} else {
 				event.Event = "progress"

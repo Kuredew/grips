@@ -47,12 +47,14 @@ type DoneEventData struct {
 	FileURL  string `json:"file_url"`
 	FileName string `json:"file_name"`
 	FileSize int64  `json:"file_size"`
+	FileExt  string `json:"file_ext"`
 }
 
 type ProgressEventData struct {
-	Log   string `json:"log"`
-	Error bool   `json:"error"`
-	Done  bool   `json:"done"`
+	Log     string `json:"log"`
+	Error   bool   `json:"error"`
+	Done    bool   `json:"done"`
+	FileExt string `json:"file_ext"`
 }
 
 type ErrorEventData struct {

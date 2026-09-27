@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"grips/internal/model"
@@ -52,26 +53,23 @@ func (d *Downloader) StartDownload(ctx context.Context, downloadID, url, format,
 			close(progressChan)
 		}()
 
-		ext := "mp4"
-		if audioOnly {
-			ext = "mp3"
-		}
-		tmpFile := filepath.Join(d.tmpPath, downloadID+"."+ext)
-		finalFile := filepath.Join(d.storagePath, downloadID+"."+ext)
-
 		progressChan <- model.ProgressEventData{
 			Log: "[Download Started]",
 		}
 
-		downloadedFile, err := d.ytdlp.Download(ctx, url, format, quality, tmpFile, audioOnly, progressChan)
+		downloadedFile, err := d.ytdlp.Download(ctx, url, format, quality, downloadID, d.tmpPath, audioOnly, progressChan)
 		if err != nil {
 			progressChan <- model.ProgressEventData{
 				Log:   err.Error(),
 				Error: true,
 			}
-			os.Remove(tmpFile)
 			return
 		}
+		ext := strings.TrimPrefix(filepath.Ext(downloadedFile), ".")
+
+		finalFile := filepath.Join(d.storagePath, downloadID+"."+ext)
+
+		fmt.Printf("Moving file %s -> %s\n", downloadedFile, finalFile)
 
 		if err := os.Rename(downloadedFile, finalFile); err != nil {
 			progressChan <- model.ProgressEventData{
@@ -82,8 +80,9 @@ func (d *Downloader) StartDownload(ctx context.Context, downloadID, url, format,
 		}
 
 		progressChan <- model.ProgressEventData{
-			Error: false,
-			Done:  true,
+			Error:   false,
+			Done:    true,
+			FileExt: ext,
 		}
 
 		time.Sleep(100 * time.Second)
