@@ -77,3 +77,8 @@ export interface AppSetting {
 		value: string;
 	}[];
 }
+
+export interface VersionResponse {
+	commit: string;
+	version: string;
+}

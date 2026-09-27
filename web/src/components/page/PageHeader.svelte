@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { version } from '$lib/version';
-
 	let { title }: { title: string } = $props();
+	import { page } from '$app/state';
 
 	let versionText = $derived.by(() => {
-		if (!$version) return null;
+		const version = page.data.version;
+		if (!version) return null;
 
-		return `${$version.version}-${$version.commit}`;
+		return `${version.version}-${version.commit}`;
 	});
 </script>
 
