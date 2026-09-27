@@ -25,7 +25,7 @@ type VideoInfo struct {
 	ID          string        `json:"id"`
 	Title       string        `json:"title"`
 	Description string        `json:"description"`
-	Duration    int           `json:"duration"`
+	Duration    float64       `json:"duration"`
 	Thumbnail   string        `json:"thumbnail"`
 	Uploader    string        `json:"uploader"`
 	ViewCount   int64         `json:"view_count"`
