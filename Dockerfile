@@ -1,32 +1,37 @@
-FROM golang:1.25.5-bookworm
+FROM golang:1.27.1-bookworm AS builder
 
-# 1. install dependency
-RUN apt-get update && apt-get install -y \
-    curl \
-    unzip \
-    ffmpeg
-
-# 2. install Deno 
-RUN curl -L https://github.com/denoland/deno/releases/latest/download/deno-x86_64-unknown-linux-gnu.zip -o deno.zip \
-    && unzip deno.zip \
-    && chmod a+rx ./deno \
-    && mv ./deno /usr/local/bin/deno \
-    && rm deno.zip
-
-# 3. install yt-dlp 
-RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux -o ./yt-dlp \
-    && chmod a+rx ./yt-dlp \
-    && mv ./yt-dlp /usr/local/bin/yt-dlp
-
-# set working directory
 WORKDIR /app
 
-# 4. copy & build grips backend
+COPY go.mod go.sum ./
+RUN go mod download
+
 COPY . .
-RUN go build -o out main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o main .
 
-# expose grips backend port 
-EXPOSE 8000
+#==========================
+    
+FROM alpine:3.24.2
 
-# finally run grips backend
-CMD ["./out"]
+WORKDIR /app
+
+RUN apk add --no-cache \
+    ffmpeg \
+    ca-certificates \
+    curl \
+    gcompat \
+    libstdc++
+
+RUN curl -L https://github.com/denoland/deno/releases/latest/download/deno-x86_64-unknown-linux-gnu.zip -o deno.zip \
+    && unzip deno.zip -d /usr/local/bin \
+    && rm deno.zip \
+    && chmod +x /usr/local/bin/deno
+
+RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_musllinux -o /usr/local/bin/yt-dlp \
+    && chmod +x /usr/local/bin/yt-dlp
+
+
+COPY --from=builder /app/main .
+
+EXPOSE 8080
+
+CMD ["./main"]
