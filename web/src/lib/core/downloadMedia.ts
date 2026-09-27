@@ -6,9 +6,9 @@ export const downloadMedia = async (
 	url: string,
 	mediaType: MediaType,
 	outputLogFunc: (msg: string) => void
-) => {
+): Promise<null | DoneEventData> => {
 	try {
-		let file_url = '';
+		let doneEventData: null | DoneEventData = null;
 
 		await getVideoUrl(url, mediaType, settings.data.mediaQuality, (output) => {
 			let data;
@@ -19,7 +19,7 @@ export const downloadMedia = async (
 					throw new Error(data.message);
 				case 'done':
 					data = output.data as DoneEventData;
-					file_url = data.file_url;
+					doneEventData = data;
 					break;
 				case 'progress':
 					data = output.data as ProgressEventData;
@@ -27,7 +27,7 @@ export const downloadMedia = async (
 			}
 		});
 
-		return file_url;
+		return doneEventData;
 	} catch (e) {
 		throw new Error('downloadMedia: ' + e, { cause: e });
 	}

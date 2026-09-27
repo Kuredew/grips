@@ -37,18 +37,23 @@ class QueueManager {
 
 		try {
 			queue.status = 'processing';
-			const file_url = await downloadMedia(url, mediaType, (msg) => {
+			const doneData = await downloadMedia(url, mediaType, (msg) => {
 				queue.log.push(msg);
 			});
+			if (!doneData) {
+				throw new Error(
+					'an issue occurred while assigning the server to download media: the server did not send a done data at all'
+				);
+			}
 
-			queue.file_url = file_url;
+			queue.file_url = doneData.file_url;
 			queue.status = 'downloading';
 
-			const blob = await downloadFileWithProgress(file_url, (percent) => {
+			const blob = await downloadFileWithProgress(doneData.file_url, (percent) => {
 				queue.percent = percent;
 			});
 			queue.mediaBlob = blob;
-			const fileName = `${title}.${mediaType == 'video' ? 'mp4' : 'mp3'}`;
+			const fileName = title + '.' + doneData.file_ext;
 			queue.fileName = fileName;
 
 			downloadBlob(blob, fileName);

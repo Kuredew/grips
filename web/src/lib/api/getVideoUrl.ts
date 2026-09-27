@@ -1,9 +1,9 @@
 import { PUBLIC_API_BASE_URL } from '$env/static/public';
-import type { Quality, StreamEvent } from '$lib/types/types';
+import type { MediaType, Quality, StreamEvent } from '$lib/types/types';
 
 export const getVideoUrl = async (
 	url: string,
-	mediaType: 'video' | 'audio',
+	mediaType: MediaType,
 	quality: Quality,
 	output: (streamEvent: StreamEvent) => void
 ) => {

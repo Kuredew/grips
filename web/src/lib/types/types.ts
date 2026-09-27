@@ -23,6 +23,7 @@ export interface DoneEventData {
 	file_url: string;
 	file_name: string;
 	file_size: number;
+	file_ext: string;
 }
 
 export interface ProgressEventData {
@@ -42,7 +43,7 @@ export interface StreamEvent {
 	data: EventData;
 }
 
-export type MediaType = 'video' | 'audio';
+export type MediaType = 'auto' | 'video' | 'audio';
 
 export type StatusQueue = 'fetching' | 'processing' | 'downloading' | 'completed' | 'failed';
 
