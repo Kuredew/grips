@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"sync"
 	"time"
 
 	"grips/internal/model"
@@ -93,7 +94,7 @@ func (y *YTDLP) GetInfo(ctx context.Context, url string) (*model.VideoInfo, erro
 	}, nil
 }
 
-func (y *YTDLP) Download(ctx context.Context, url, format, quality, outputPath string, audioOnly bool, progressChan chan<- model.ProgressEventData) (string, error) {
+func (y *YTDLP) Download(ctx context.Context, url, format, quality, fileName string, outputDir string, audioOnly bool, progressChan chan<- model.ProgressEventData) (string, error) {
 	ctx, cancel := context.WithTimeout(ctx, y.timeout)
 	defer cancel()
 
@@ -102,7 +103,8 @@ func (y *YTDLP) Download(ctx context.Context, url, format, quality, outputPath s
 		"--no-playlist",
 		"--newline",
 		"--progress",
-		"-o", outputPath,
+		"--path", outputDir,
+		"--output", fileName + ".%(ext)s",
 		"--print", "after_move:filepath",
 	}
 
@@ -132,13 +134,26 @@ func (y *YTDLP) Download(ctx context.Context, url, format, quality, outputPath s
 		return "", fmt.Errorf("yt-dlp start failed: %w", err)
 	}
 
+	var mu sync.Mutex
+	var wg sync.WaitGroup
+
 	filePath := ""
-	go y.readProgress(stdout, progressChan, &filePath)
-	go y.readProgress(stderr, progressChan, &filePath)
+
+	wg.Add(2)
+	go func() {
+		y.readProgress(stdout, progressChan, &filePath, &mu)
+		wg.Done()
+	}()
+	go func() {
+		y.readProgress(stderr, progressChan, &filePath, &mu)
+		wg.Done()
+	}()
 
 	if err := cmd.Wait(); err != nil {
 		return "", fmt.Errorf("yt-dlp download failed: %w", err)
 	}
+
+	wg.Wait()
 
 	return filePath, nil
 }
@@ -162,18 +177,20 @@ func (y *YTDLP) qualityToFormat(quality string) string {
 	}
 }
 
-func (y *YTDLP) readProgress(reader io.Reader, progressChan chan<- model.ProgressEventData, filePath *string) {
+func (y *YTDLP) readProgress(reader io.Reader, progressChan chan<- model.ProgressEventData, filePath *string, mu *sync.Mutex) {
 	scanner := bufio.NewScanner(reader)
+
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
 
-		_, err := os.Stat(line)
-		if err != nil {
-			progressChan <- model.ProgressEventData{
-				Log: line,
-			}
-		} else {
+		progressChan <- model.ProgressEventData{
+			Log: line,
+		}
+
+		if _, err := os.Stat(line); err == nil {
+			mu.Lock()
 			*filePath = line
+			mu.Unlock()
 		}
 	}
 }

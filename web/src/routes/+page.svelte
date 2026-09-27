@@ -4,7 +4,6 @@
 	import Container from '../components/container/Container.svelte';
 	import { onMount } from 'svelte';
 	import { queueManager } from '$lib/queue.svelte';
-	import VideoIcon from '../components/logo/VideoIcon.svelte';
 	import AudioIcon from '../components/logo/AudioIcon.svelte';
 	import QueueIcon from '../components/logo/QueueIcon.svelte';
 	import PageComponent from '../components/page/PageComponent.svelte';
@@ -16,9 +15,10 @@
 	import Modal from '../components/modal/Modal.svelte';
 	import CopyIcon from '../components/logo/CopyIcon.svelte';
 	import CircleAlert from '../components/logo/CircleAlert.svelte';
+	import LinkIcon from '../components/logo/LinkIcon.svelte';
 
 	let inputFocus = $state(false);
-	let mediaType: MediaType = $state('video');
+	let mediaType: MediaType = $state('auto');
 	let url = $state('');
 	let loading = $state(false);
 	let error = $state('');
@@ -89,7 +89,7 @@
 						? 'var(--color-neutral-400)'
 						: 'var(--color-neutral-800)'}"
 				>
-					<SparkleIcon />
+					<LinkIcon />
 					<input
 						bind:value={url}
 						bind:this={input}
@@ -105,12 +105,12 @@
 				<div id="button-wrapper">
 					<RadioWrapper>
 						<RadioButton
-							onclick={() => (mediaType = 'video')}
-							active={mediaType == 'video'}
+							onclick={() => (mediaType = 'auto')}
+							active={mediaType == 'auto'}
 							class="button-home"
 						>
-							<VideoIcon />
-							video
+							<SparkleIcon />
+							auto
 						</RadioButton>
 						<RadioButton
 							onclick={() => (mediaType = 'audio')}
@@ -118,7 +118,7 @@
 							class="button-home"
 						>
 							<AudioIcon />
-							audio
+							audio only
 						</RadioButton>
 					</RadioWrapper>
 					<Button onclick={sendToQueue} class="button-home" disabled={loading} variant="primary">
