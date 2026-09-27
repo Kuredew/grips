@@ -1,12 +1,11 @@
 <script lang="ts">
-	let { size = '0.25px' }: { size?: string } = $props();
+	let { size = '0.25px', color = '#fff' }: { size?: string; color?: string } = $props();
 </script>
 
-<span class="loader" style="--size: {size}"></span>
+<span class="loader" style="--size: {size}; --color-1: {color}"></span>
 
 <style>
 	.loader {
-		--color-1: #fff;
 		width: calc(48 * var(--size));
 		height: calc(48 * var(--size));
 		border: calc(5 * var(--size)) solid var(--color-1);

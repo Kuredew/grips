@@ -1,4 +1,3 @@
-import { getVideoInfo } from './api/getVideoInfo';
 import { downloadFileWithProgress } from './core/downloadFile';
 import { downloadMedia } from './core/downloadMedia';
 import type { MediaType, Queue } from './types/types';
@@ -28,19 +27,15 @@ class QueueManager {
 		return this.#items.find((m) => m.id === id);
 	}
 
-	async startQueue(url: string, mediaType: MediaType) {
+	async startQueue(title: string, url: string, mediaType: MediaType) {
 		const queue = this.add();
 		if (!queue) throw new Error('Queue not created!');
 
+		queue.title = title;
 		queue.mediaUrl = url;
 		queue.mediaType = mediaType;
 
 		try {
-			queue.status = 'fetching';
-			const videoInfo = await getVideoInfo(url);
-
-			queue.title = videoInfo.title;
-
 			queue.status = 'processing';
 			const file_url = await downloadMedia(url, mediaType, (msg) => {
 				queue.log.push(msg);
@@ -53,7 +48,7 @@ class QueueManager {
 				queue.percent = percent;
 			});
 			queue.mediaBlob = blob;
-			const fileName = `${videoInfo.title}.${mediaType == 'video' ? 'mp4' : 'mp3'}`;
+			const fileName = `${title}.${mediaType == 'video' ? 'mp4' : 'mp3'}`;
 			queue.fileName = fileName;
 
 			downloadBlob(blob, fileName);
