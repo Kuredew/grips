@@ -28,5 +28,6 @@
 		color: var(--color-white);
 		background-color: black;
 		font-family: 'ibm plex mono';
+		font-weight: 500;
 	}
 </style>
