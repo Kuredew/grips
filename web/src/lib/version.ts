@@ -1,10 +1,6 @@
 import { browser } from '$app/environment';
 import { readable } from 'svelte/store';
-
-interface VersionResponse {
-	commit: string;
-	version: string;
-}
+import type { VersionResponse } from './types/types';
 
 export const version = readable<VersionResponse | undefined>(undefined, (set) => {
 	if (!browser) return;
