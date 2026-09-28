@@ -16,6 +16,11 @@
 	import CopyIcon from '../components/logo/CopyIcon.svelte';
 	import CircleAlert from '../components/logo/CircleAlert.svelte';
 	import LinkIcon from '../components/logo/LinkIcon.svelte';
+	import { checkHealth } from '$lib/api/checkHealth';
+
+	let ready = $state(false);
+	let inactiveBackend = $state(false);
+	let showInactiveBackendModal = $state(true);
 
 	let inputFocus = $state(false);
 	let mediaType: MediaType = $state('auto');
@@ -50,6 +55,10 @@
 		error = '';
 	};
 
+	const closeInactiveBackendModal = () => {
+		showInactiveBackendModal = false;
+	};
+
 	onMount(() => {
 		if (!input) return;
 		input.addEventListener('keypress', (event) => {
@@ -58,8 +67,32 @@
 				sendToQueue();
 			}
 		});
+		(async () => {
+			const response = await checkHealth();
+			if (!response) {
+				inactiveBackend = true;
+				return;
+			}
+
+			ready = response;
+		})();
 	});
 </script>
+
+<Modal show={inactiveBackend && showInactiveBackendModal} onclose={closeInactiveBackendModal}>
+	<div class="modal-content">
+		<CircleAlert />
+		<p class="text-modal">
+			the server is down, you won't be able to download anything right now. come back here once the
+			server is back up.
+		</p>
+		<div class="button-wrapper-modal">
+			<Button class="button-modal" onclick={closeInactiveBackendModal} variant="primary"
+				>okay</Button
+			>
+		</div>
+	</div>
+</Modal>
 
 <Modal show={error !== ''} onclose={clearError}>
 	<div class="modal-content">
@@ -96,7 +129,13 @@
 						? 'var(--color-neutral-400)'
 						: 'var(--color-neutral-800)'}"
 				>
-					<LinkIcon />
+					{#if inactiveBackend}
+						<CircleAlert size={20} />
+					{:else if ready}
+						<LinkIcon />
+					{:else}
+						<Loading />
+					{/if}
 					<input
 						bind:value={url}
 						bind:this={input}
@@ -105,7 +144,7 @@
 						placeholder="paste your media url here and press enter."
 						onfocusin={() => (inputFocus = true)}
 						onfocusout={() => (inputFocus = false)}
-						disabled={loading}
+						disabled={loading || inactiveBackend}
 					/>
 				</div>
 				<!-- type and quality selection -->
@@ -128,7 +167,12 @@
 							audio only
 						</RadioButton>
 					</RadioWrapper>
-					<Button onclick={sendToQueue} class="button-home" disabled={loading} variant="primary">
+					<Button
+						onclick={sendToQueue}
+						class="button-home"
+						disabled={loading || inactiveBackend}
+						variant="primary"
+					>
 						{#if loading}
 							<Loading color="#000" />
 							loading...
