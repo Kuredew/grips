@@ -27,18 +27,19 @@ class QueueManager {
 		return this.#items.find((m) => m.id === id);
 	}
 
+	setItem(queue: Queue, editValue: Partial<Queue>) {
+		Object.assign(queue, editValue);
+	}
+
 	async startQueue(title: string, url: string, mediaType: MediaType) {
 		const queue = this.add();
 		if (!queue) throw new Error('Queue not created!');
 
-		queue.title = title;
-		queue.mediaUrl = url;
-		queue.mediaType = mediaType;
+		this.setItem(queue, { title, mediaUrl: url, mediaType, status: 'processing' });
 
 		try {
-			queue.status = 'processing';
 			const doneData = await downloadMedia(url, mediaType, (msg) => {
-				queue.log.push(msg);
+				this.setItem(queue, { log: [...queue.log, msg] });
 			});
 			if (!doneData) {
 				throw new Error(
@@ -46,22 +47,18 @@ class QueueManager {
 				);
 			}
 
-			queue.file_url = doneData.file_url;
-			queue.status = 'downloading';
+			this.setItem(queue, { file_url: doneData.file_url, status: 'downloading' });
 
 			const blob = await downloadFileWithProgress(doneData.file_url, (percent) => {
 				queue.percent = percent;
 			});
-			queue.mediaBlob = blob;
 			const fileName = title + '.' + doneData.file_ext;
-			queue.fileName = fileName;
 
 			downloadBlob(blob, fileName);
 
-			queue.status = 'completed';
+			this.setItem(queue, { mediaBlob: blob, fileName: fileName, status: 'completed' });
 		} catch (e) {
-			queue.status = 'failed';
-			queue.log.push(String(e));
+			this.setItem(queue, { status: 'failed', log: [...queue.log, String(e)] });
 			console.error(e);
 		}
 	}
