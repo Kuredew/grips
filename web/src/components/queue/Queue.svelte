@@ -36,7 +36,7 @@
 				{/if}
 			</div>
 			<p class="text-sm font-medium text-nowrap">
-				{item.fileName || item.mediaUrl}
+				{item.fileName || item.title}
 			</p>
 		</div>
 		<div class="h-1 w-full overflow-hidden rounded-full bg-neutral-700">
