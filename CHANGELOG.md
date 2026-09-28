@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.1.0](https://github.com/Kuredew/grips/compare/v2.0.0...v2.1.0) (2026-09-28)
+
+
+### Features
+
+* add a click animation to the button component ([03d614d](https://github.com/Kuredew/grips/commit/03d614d07dce59b916ac3d675af15417ffcc1fc9))
+* add a modal dialog if the server doesn't response ([f3885b6](https://github.com/Kuredew/grips/commit/f3885b600804815f7fbc048fc817028fb532466b))
+* add click to copy error detail if queue is failed ([f6e7c04](https://github.com/Kuredew/grips/commit/f6e7c04d75007c924e93566e38a1b64333a5441f))
+* add file_ext to stream done event so frontend can use it ([2aa6978](https://github.com/Kuredew/grips/commit/2aa6978fc814465e5e37fb02500d2487f1e6d5d4))
+* add the auto mediaType to the download processing and integrate it into the UI so that user can select it ([e3c6a4b](https://github.com/Kuredew/grips/commit/e3c6a4b2c5e85ea5531f4017b1afaf015756b269))
+* change the url processing flow before downloading ([8e35461](https://github.com/Kuredew/grips/commit/8e35461832a2a1e65479453251d194747abf3453))
+* open the url and check the information first before adding it to the download queue ([6f65346](https://github.com/Kuredew/grips/commit/6f65346ec2cb676e90fee1c13ba348ced2a8b157))
+
+
+### Bug Fixes
+
+* change the duration type from int to float64 because yt-dlp most returns float values for duration ([75bc900](https://github.com/Kuredew/grips/commit/75bc900ef4beaa4d32284c55ae92619e0148ffe4))
+* replace the fetch to EventSource to read log stream ([f139dc5](https://github.com/Kuredew/grips/commit/f139dc5a81064ceaf7f5114d90ab4aac5fb9c82a))
+
 ## [2.0.0](https://github.com/Kuredew/grips/compare/v1.2.0...v2.0.0) (2026-09-26)
 
 
