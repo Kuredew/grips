@@ -58,7 +58,7 @@ class QueueManager {
 
 			this.setItem(queue, { mediaBlob: blob, fileName: fileName, status: 'completed' });
 		} catch (e) {
-			this.setItem(queue, { status: 'failed', log: [...queue.log, String(e)] });
+			this.setItem(queue, { status: 'failed', log: [...queue.log, String(e)], error: String(e) });
 			console.error(e);
 		}
 	}
@@ -75,6 +75,7 @@ class QueueManager {
 			status: 'fetching',
 			percent: 0,
 			log: [],
+			error: null,
 			file_url: null
 		});
 

@@ -57,6 +57,7 @@ export interface Queue {
 	status: StatusQueue;
 	percent: number;
 	log: string[];
+	error: string | null;
 	file_url: string | null;
 }
 

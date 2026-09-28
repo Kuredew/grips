@@ -4,9 +4,12 @@
 	import favicon from '$lib/assets/grips-icon.png';
 	import QueueWindow from '../components/queue/QueueWindow.svelte';
 	import Bar from '../components/bar/Bar.svelte';
+	import { SvelteToast } from '@zerodevx/svelte-toast';
 
 	let { children } = $props();
 </script>
+
+<SvelteToast />
 
 <svelte:head>
 	<link rel="icon" href={favicon} />

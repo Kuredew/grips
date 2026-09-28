@@ -17,6 +17,7 @@
 	import CircleAlert from '../components/logo/CircleAlert.svelte';
 	import LinkIcon from '../components/logo/LinkIcon.svelte';
 	import { checkHealth } from '$lib/api/checkHealth';
+	import { toast } from '@zerodevx/svelte-toast';
 
 	let ready = $state(false);
 	let inactiveBackend = $state(false);
@@ -49,6 +50,7 @@
 
 	const copyError = () => {
 		navigator.clipboard.writeText(error);
+		toast.push('error copied!');
 	};
 
 	const clearError = () => {

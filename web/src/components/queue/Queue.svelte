@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { queueManager } from '$lib/queue.svelte';
 	import { downloadBlob } from '$lib/util/downloadBlob';
+	import { toast } from '@zerodevx/svelte-toast';
 	import Loading from '../loader/Loading.svelte';
 	import AudioIcon from '../logo/AudioIcon.svelte';
 	import SparkleIcon from '../logo/SparkleIcon.svelte';
@@ -10,6 +11,23 @@
 	let { id }: { id: string } = $props();
 
 	const item = $derived(queueManager.getItem(id));
+
+	const onclick = () => {
+		if (!item) return;
+
+		if (item.status == 'failed' && item.error) {
+			navigator.clipboard.writeText(item.error);
+
+			toast.push('error copied!');
+			return;
+		}
+
+		console.log('Triggering download');
+		if (item.mediaBlob !== null && item.fileName != null) {
+			console.log('Download triggered.');
+			downloadBlob(item.mediaBlob, item.fileName);
+		}
+	};
 </script>
 
 {#if item}
@@ -17,13 +35,7 @@
 		class="flex w-full cursor-pointer flex-col gap-2 overflow-hidden"
 		onmouseenter={() => (hovered = true)}
 		onmouseleave={() => (hovered = false)}
-		onclick={() => {
-			console.log('Triggering download');
-			if (item.mediaBlob !== null && item.fileName != null) {
-				console.log('Download triggered.');
-				downloadBlob(item.mediaBlob, item.fileName);
-			}
-		}}
+		{onclick}
 	>
 		<div class="flex gap-2">
 			<div class="shrink-0">
@@ -53,7 +65,11 @@
 			{:else if item.status == 'completed'}
 				<p class="text-sm text-neutral-400">✓ done.</p>
 			{:else if item.status == 'failed'}
-				<p class="text-sm text-neutral-400">failed.</p>
+				{#if !hovered}
+					<p class="text-sm text-neutral-400">failed.</p>
+				{:else}
+					<p class="text-sm text-neutral-400">click to copy error detail.</p>
+				{/if}
 			{:else if item.status == 'downloading'}
 				<div class="flex w-full justify-between">
 					<div class="flex items-center gap-2">
