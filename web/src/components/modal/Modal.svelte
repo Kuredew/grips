@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { scale } from 'svelte/transition';
+	import { fade, scale } from 'svelte/transition';
 
 	interface ModalProps {
 		children: Snippet;
@@ -11,11 +11,19 @@
 </script>
 
 {#if show}
-	<button aria-label="close-modal" id="modal-background" class="backdrop-blur-sm" onclick={onclose}>
+	<button
+		transition:fade={{ duration: 200 }}
+		aria-label="close-modal"
+		id="modal-background"
+		class="backdrop-blur-sm"
+		onclick={onclose}
+	>
 	</button>
 
-	<div transition:scale={{ duration: 200 }} id="modal-content">
-		{@render children()}
+	<div id="modal-wrapper">
+		<div transition:scale={{ duration: 200 }} id="modal-content">
+			{@render children()}
+		</div>
 	</div>
 {/if}
 
@@ -30,18 +38,24 @@
 		z-index: 10;
 	}
 
-	#modal-content {
+	#modal-wrapper {
+		padding-inline: 18px;
 		width: 100dvw;
-		max-width: 25rem;
-		background-color: var(--color-neutral-900);
-		padding: 18px;
-		border: solid 2px;
-		border-color: var(--color-neutral-800);
-		border-radius: 18px;
+		max-width: 30rem;
+		display: flex;
 		position: fixed;
 		z-index: 20;
 		left: 50%;
 		top: 50%;
 		translate: -50% -50%;
+	}
+
+	#modal-content {
+		flex: 1;
+		background-color: var(--color-neutral-900);
+		padding: 18px;
+		border: solid 2px;
+		border-color: var(--color-neutral-800);
+		border-radius: 18px;
 	}
 </style>
