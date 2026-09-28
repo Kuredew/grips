@@ -64,7 +64,13 @@
 	<div class="modal-content">
 		<CircleAlert />
 		<p class="text-modal">
-			is the link correct? we encountered an error when trying to open it. please try again.
+			unable to process the link, please ensure it is
+			<a href="https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md"
+				><span class="link">supported by yt-dlp</span></a
+			>.
+			<a href="https://github.com/Kuredew/grips/issues/new"
+				><span class="link">open an issue</span></a
+			> if the problem persists.
 		</p>
 		<div class="button-wrapper-modal">
 			<Button class="button-modal" onclick={copyError} variant="secondary"
@@ -153,9 +159,14 @@
 
 	.text-modal {
 		color: var(--color-neutral-500);
-		font-size: 16px;
+		font-size: 14px;
 		font-weight: 500;
 		text-align: center;
+	}
+
+	.link {
+		text-decoration: underline;
+		font-weight: 600;
 	}
 
 	.button-wrapper-modal {
