@@ -26,17 +26,18 @@
 	let input: null | HTMLInputElement = $state(null);
 
 	const sendToQueue = async () => {
-		if (!input) return;
+		if (!input || !input.value) return;
 		loading = true;
 
 		try {
 			const videoInfo = await getVideoInfo(input.value);
 			queueManager.startQueue(videoInfo.title, input.value, mediaType);
+
+			input.value = '';
 		} catch (e) {
 			console.error(e);
 			error = String(e);
 		} finally {
-			input.value = '';
 			loading = false;
 		}
 	};
