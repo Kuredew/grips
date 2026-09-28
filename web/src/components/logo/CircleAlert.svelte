@@ -1,7 +1,11 @@
+<script lang="ts">
+	let { size = 40 }: { size?: number } = $props();
+</script>
+
 <svg
 	xmlns="http://www.w3.org/2000/svg"
-	width="40"
-	height="40"
+	width={size}
+	height={size}
 	viewBox="0 0 24 24"
 	fill="none"
 	stroke="currentColor"

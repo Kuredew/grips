@@ -48,6 +48,8 @@ func main() {
 	downloader := service.NewDownloader(ytdlp, storagePath, tmpPath, maxConcurrent)
 	storage := service.NewStorage(storagePath, baseURL)
 
+	healthHandler := handler.NewHealthHandler()
+
 	infoHandler := handler.NewInfoHandler(ytdlp)
 	downloadHandler := handler.NewDownloadHandler(downloader, storage)
 	streamHandler := handler.NewStreamHandler(downloader, storage)
@@ -62,10 +64,7 @@ func main() {
 	mux.Handle("/stream/", middleware.EnableCORS(streamHandler))
 	mux.Handle("/storage/", middleware.EnableCORS(middleware.LoggingMiddleware(http.StripPrefix("/storage/", http.FileServer(http.Dir(storagePath))))))
 
-	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("OK"))
-	})
+	mux.Handle("/health", middleware.EnableCORS(healthHandler))
 
 	server := &http.Server{
 		Addr:         ":" + port,
