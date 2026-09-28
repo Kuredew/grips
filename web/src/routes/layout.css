@@ -8,3 +8,10 @@
 @theme {
 	--color-white: #e7e7e7;
 }
+
+:root {
+    --toastContainerLeft: 2rem;
+    --toastBorderRadius: 14px;
+    --toastMsgPadding: 0px 14px;
+    --toastBackground: var(--color-neutral-900);
+}
