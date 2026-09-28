@@ -3,6 +3,7 @@
 	import { downloadBlob } from '$lib/util/downloadBlob';
 	import Loading from '../loader/Loading.svelte';
 	import AudioIcon from '../logo/AudioIcon.svelte';
+	import SparkleIcon from '../logo/SparkleIcon.svelte';
 	import VideoIcon from '../logo/VideoIcon.svelte';
 	let hovered = $state(false);
 
@@ -26,7 +27,9 @@
 	>
 		<div class="flex gap-2">
 			<div class="shrink-0">
-				{#if item.mediaType == 'video'}
+				{#if item.mediaType == 'auto'}
+					<SparkleIcon />
+				{:else if item.mediaType == 'video'}
 					<VideoIcon />
 				{:else if item.mediaType == 'audio'}
 					<AudioIcon />
