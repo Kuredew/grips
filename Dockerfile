@@ -31,7 +31,7 @@ RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_mus
 
 # Install Brainicism/bgutil-ytdlp-pot-provider plugin
 RUN curl -L https://github.com/Brainicism/bgutil-ytdlp-pot-provider/releases/download/2.0.0/bgutil-ytdlp-pot-provider.zip \
-    && unzip bgutil-ytdlp-pot-provider.zip -d ~/yt-dlp-plugins/bgutil-ytdlp-pot-provider \
+    && unzip bgutil-ytdlp-pot-provider.zip -d /etc/yt-dlp-plugins/bgutil-ytdlp-pot-provider \
     && rm bgutil-ytdlp-pot-provider.zip
 
 
