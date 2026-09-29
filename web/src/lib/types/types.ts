@@ -65,10 +65,8 @@ export type Quality = 'best' | 'worst' | '1080p' | '720p' | '480p' | '360p' | st
 
 export type AppSettingType = 'select' | 'checkbox';
 
-export type SettingKey = 'mediaQuality';
-
 export interface AppSetting {
-	key: SettingKey;
+	key: string;
 	label: string;
 	group: string;
 	description: string;
