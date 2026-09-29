@@ -2,7 +2,7 @@ const testBaseURL = 'http://localhost:8080';
 
 async function main() {
 	let res = await fetch(
-		`${testBaseURL}/download/audio?url=https://www.youtube.com/watch?v=pJ33e4xD3w4`
+		`${testBaseURL}/download/video?recodeVideo=true&quality=360&url=https://www.youtube.com/watch?v=pJ33e4xD3w4`
 	);
 
 	if (!res.ok || !res.body) {
