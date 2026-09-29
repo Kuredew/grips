@@ -56,6 +56,7 @@ func NewYTDLP(cookies *Cookies, bgutilBaseUrl string, binaryPath string, timeout
 			"--cookies", cookies.CookiesPath,
 			"--extractor-args", "youtube:player_client=web_creator",
 			"--extractor-args", "youtubepot-bgutilhttp:base_url=" + bgutilBaseUrl,
+			"--js-runtimes", "node",
 		},
 	}
 }
