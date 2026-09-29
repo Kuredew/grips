@@ -11,6 +11,7 @@ export const getVideoUrl = async (
 		const params = new URLSearchParams();
 		params.append('url', url);
 		params.append('quality', quality);
+		params.append('recodeVideo', 'true');
 
 		const res = await fetch(`${PUBLIC_API_BASE_URL}/download/${mediaType}?${params.toString()}`);
 
