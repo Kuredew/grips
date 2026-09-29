@@ -41,7 +41,7 @@ type VideoInfoRaw struct {
 	} `json:"formats"`
 }
 
-func NewYTDLP(cookies *Cookies, binaryPath string, timeout time.Duration) *YTDLP {
+func NewYTDLP(cookies *Cookies, bgutilBaseUrl string, binaryPath string, timeout time.Duration) *YTDLP {
 	if binaryPath == "" {
 		binaryPath = "yt-dlp"
 	}
@@ -54,7 +54,8 @@ func NewYTDLP(cookies *Cookies, binaryPath string, timeout time.Duration) *YTDLP
 		cookies:    cookies,
 		requiredArguments: []string{
 			"--cookies", cookies.CookiesPath,
-			"--extractor-args", "youtube:player_client=default,web_embedded",
+			"--extractor-args", "youtube:player_client=web_creator",
+			"--extractor-args", "youtubepot-bgutilhttp:base_url=" + bgutilBaseUrl,
 		},
 	}
 }
@@ -72,6 +73,8 @@ func (y *YTDLP) GetInfo(ctx context.Context, url string) (*model.VideoInfo, erro
 
 	args = append(args, y.requiredArguments...)
 	args = append(args, url)
+
+	fmt.Printf("running yt-dlp with arguments: %s\n", args)
 
 	cmd := exec.CommandContext(ctx, y.binaryPath, args...)
 	output, err := cmd.CombinedOutput()

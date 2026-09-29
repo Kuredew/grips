@@ -22,6 +22,8 @@ func main() {
 		log.Printf("Failed loading .env file: %v", err)
 	}
 
+	bgutilBaseUrl := getEnv("BGUTIL_BASE_URL", "")
+
 	cookiesUrl := getEnv("COOKIES_BASE64_URL", "")
 	storagePath := getEnv("STORAGE_PATH", "./storage")
 	tmpPath := getEnv("TMP_PATH", "./tmp")
@@ -44,7 +46,7 @@ func main() {
 		log.Fatalf("Failed loading cookies: %v", err)
 	}
 
-	ytdlp := service.NewYTDLP(cookies, ytDlpBinary, ytDlpTimeout)
+	ytdlp := service.NewYTDLP(cookies, bgutilBaseUrl, ytDlpBinary, ytDlpTimeout)
 	downloader := service.NewDownloader(ytdlp, storagePath, tmpPath, maxConcurrent)
 	storage := service.NewStorage(storagePath, baseURL)
 
@@ -77,6 +79,7 @@ func main() {
 	go func() {
 		log.Printf("Server starting on port %s", port)
 		log.Printf("Cookies Path: %s", cookies.CookiesPath)
+		log.Printf("BgUtil Base URL: %s", bgutilBaseUrl)
 		log.Printf("Storage: %s", storagePath)
 		log.Printf("Temp: %s", tmpPath)
 		log.Printf("Max concurrent downloads: %d", maxConcurrent)
