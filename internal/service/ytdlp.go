@@ -53,7 +53,6 @@ func NewYTDLP(cookies *Cookies, bgutilBaseUrl string, binaryPath string, timeout
 		timeout:    timeout,
 		cookies:    cookies,
 		requiredArguments: []string{
-		  "-v",
 			"--cookies", cookies.CookiesPath,
 			"--extractor-args", "youtube:player_client=web_creator",
 			"--extractor-args", "youtubepot-bgutilhttp:base_url=" + bgutilBaseUrl,
@@ -119,6 +118,7 @@ func (y *YTDLP) Download(ctx context.Context, url, format, quality, fileName str
 	defer cancel()
 
 	args := []string{
+	  "-v",
 		"--no-playlist",
 		"--newline",
 		"--progress",
