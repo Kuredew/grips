@@ -13,7 +13,7 @@
 </script>
 
 <button
-	class={`text h-fit w-fit cursor-pointer rounded-xl px-4 py-2 text-sm font-medium text-black transition-all active:scale-95 ${klass} ${variant == 'primary' ? 'bg-white hover:bg-white/80 disabled:bg-neutral-400!' : 'bg-transparent text-white hover:bg-neutral-800'}`}
+	class={`text h-fit w-fit cursor-pointer rounded-xl px-4 py-2 text-sm font-medium text-black transition-transform active:scale-98 ${klass} ${variant == 'primary' ? 'bg-white hover:bg-white/80 disabled:bg-neutral-400!' : 'bg-transparent text-white hover:bg-neutral-800'}`}
 	{...rest}
 >
 	{@render children()}
