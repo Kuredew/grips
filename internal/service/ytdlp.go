@@ -16,9 +16,10 @@ import (
 )
 
 type YTDLP struct {
-	binaryPath string
-	timeout    time.Duration
-	cookies    *Cookies
+	binaryPath        string
+	timeout           time.Duration
+	cookies           *Cookies
+	requiredArguments []string
 }
 
 type VideoInfoRaw struct {
@@ -51,6 +52,9 @@ func NewYTDLP(cookies *Cookies, binaryPath string, timeout time.Duration) *YTDLP
 		binaryPath: binaryPath,
 		timeout:    timeout,
 		cookies:    cookies,
+		requiredArguments: []string{
+			"--cookies", cookies.CookiesPath,
+		},
 	}
 }
 
@@ -58,7 +62,17 @@ func (y *YTDLP) GetInfo(ctx context.Context, url string) (*model.VideoInfo, erro
 	ctx, cancel := context.WithTimeout(ctx, y.timeout)
 	defer cancel()
 
-	cmd := exec.CommandContext(ctx, y.binaryPath, "--cookies", y.cookies.CookiesPath, "--dump-json", "--no-playlist", "--quiet", "--no-warnings", url)
+	args := []string{
+		"--dump-json",
+		"--no-playlist",
+		"--quiet",
+		"--no-warnings",
+	}
+
+	args = append(args, y.requiredArguments...)
+	args = append(args, url)
+
+	cmd := exec.CommandContext(ctx, y.binaryPath, args...)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return nil, fmt.Errorf("yt-dlp get info failed: %w, output: %s", err, string(output))
@@ -99,7 +113,6 @@ func (y *YTDLP) Download(ctx context.Context, url, format, quality, fileName str
 	defer cancel()
 
 	args := []string{
-		"--cookies", y.cookies.CookiesPath,
 		"--no-playlist",
 		"--newline",
 		"--progress",
@@ -117,6 +130,7 @@ func (y *YTDLP) Download(ctx context.Context, url, format, quality, fileName str
 		args = append(args, "-f", formatSpec)
 	}
 
+	args = append(args, y.requiredArguments...)
 	args = append(args, url)
 
 	cmd := exec.CommandContext(ctx, y.binaryPath, args...)
