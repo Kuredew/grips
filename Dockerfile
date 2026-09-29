@@ -10,7 +10,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o main .
 
 #==========================
 
-FROM alpine:3.24.2
+FROM node:26-alpine
 
 WORKDIR /app
 
