@@ -9,23 +9,30 @@ export const downloadMedia = async (
 ): Promise<null | DoneEventData> => {
 	try {
 		let doneEventData: null | DoneEventData = null;
+		const recodeVideoString = settings.data.recodeVideo;
 
-		await getVideoUrl(url, mediaType, settings.data.mediaQuality, (output) => {
-			let data;
+		await getVideoUrl(
+			url,
+			mediaType,
+			settings.data.mediaQuality,
+			recodeVideoString == 'true',
+			(output) => {
+				let data;
 
-			switch (output.event) {
-				case 'error':
-					data = output.data as ErrorEventData;
-					throw new Error(data.message);
-				case 'done':
-					data = output.data as DoneEventData;
-					doneEventData = data;
-					break;
-				case 'progress':
-					data = output.data as ProgressEventData;
-					outputLogFunc(data.log);
+				switch (output.event) {
+					case 'error':
+						data = output.data as ErrorEventData;
+						throw new Error(data.message);
+					case 'done':
+						data = output.data as DoneEventData;
+						doneEventData = data;
+						break;
+					case 'progress':
+						data = output.data as ProgressEventData;
+						outputLogFunc(data.log);
+				}
 			}
-		});
+		);
 
 		return doneEventData;
 	} catch (e) {

@@ -5,13 +5,14 @@ export const getVideoUrl = async (
 	url: string,
 	mediaType: MediaType,
 	quality: Quality,
+	recodeVideo: boolean,
 	output: (streamEvent: StreamEvent) => void
 ): Promise<void> => {
 	try {
 		const params = new URLSearchParams();
 		params.append('url', url);
 		params.append('quality', quality);
-		params.append('recodeVideo', 'true');
+		params.append('recodeVideo', recodeVideo ? 'true' : 'false');
 
 		const res = await fetch(`${PUBLIC_API_BASE_URL}/download/${mediaType}?${params.toString()}`);
 

@@ -3,7 +3,8 @@ import { settingsSchema, type AppSettingsData } from './settingsSchema';
 
 class AppSettings {
 	#data = new PersistentState<AppSettingsData>('app-settings-data', {
-		mediaQuality: 'best'
+		mediaQuality: 'best',
+		recodeVideo: 'true'
 	});
 
 	readonly schema = settingsSchema;
