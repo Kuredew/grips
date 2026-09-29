@@ -53,6 +53,7 @@ func NewYTDLP(cookies *Cookies, bgutilBaseUrl string, binaryPath string, timeout
 		timeout:    timeout,
 		cookies:    cookies,
 		requiredArguments: []string{
+		  "-v",
 			"--cookies", cookies.CookiesPath,
 			"--extractor-args", "youtube:player_client=web_creator",
 			"--extractor-args", "youtubepot-bgutilhttp:base_url=" + bgutilBaseUrl,
@@ -113,7 +114,7 @@ func (y *YTDLP) GetInfo(ctx context.Context, url string) (*model.VideoInfo, erro
 	}, nil
 }
 
-func (y *YTDLP) Download(ctx context.Context, url, format, quality, fileName string, outputDir string, audioOnly bool, progressChan chan<- model.ProgressEventData) (string, error) {
+func (y *YTDLP) Download(ctx context.Context, url, format, quality, fileName string, outputDir string, recodeVideo bool, audioOnly bool, progressChan chan<- model.ProgressEventData) (string, error) {
 	ctx, cancel := context.WithTimeout(ctx, y.timeout)
 	defer cancel()
 
@@ -135,8 +136,14 @@ func (y *YTDLP) Download(ctx context.Context, url, format, quality, fileName str
 		args = append(args, "-f", formatSpec)
 	}
 
+	if (format != "" || quality != "") && recodeVideo {
+	  args = append(args, "--recode-video", "mp4")
+	}
+
 	args = append(args, y.requiredArguments...)
 	args = append(args, url)
+
+	fmt.Printf("running yt-dlp with arguments: %s\n", args)
 
 	cmd := exec.CommandContext(ctx, y.binaryPath, args...)
 

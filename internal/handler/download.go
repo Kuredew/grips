@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/google/uuid"
@@ -52,12 +53,19 @@ func (h *DownloadHandler) handleDownload(w http.ResponseWriter, r *http.Request,
 
 	format := r.URL.Query().Get("format")
 	quality := r.URL.Query().Get("quality")
+	recodeVideoString := r.URL.Query().Get("recodeVideo")
+
+	recodeVideo, err := strconv.ParseBool(recodeVideoString)
+	if err != nil {
+		http.Error(w, "Invalid 'recodeVideo' param value", http.StatusBadRequest)
+		return
+	}
 
 	downloadID := uuid.New().String()[:8]
 
 	detachedCtx := context.WithoutCancel(r.Context())
 
-	_, err := h.downloader.StartDownload(detachedCtx, downloadID, url, format, quality, audioOnly)
+	_, err = h.downloader.StartDownload(detachedCtx, downloadID, url, format, quality, recodeVideo, audioOnly)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusServiceUnavailable)
 		return

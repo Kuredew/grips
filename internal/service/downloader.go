@@ -34,7 +34,7 @@ func NewDownloader(ytdlp *YTDLP, storagePath, tmpPath string, maxConcurrent int)
 	}
 }
 
-func (d *Downloader) StartDownload(ctx context.Context, downloadID, url, format, quality string, audioOnly bool) (<-chan model.ProgressEventData, error) {
+func (d *Downloader) StartDownload(ctx context.Context, downloadID, url, format, quality string, recodeVideo bool, audioOnly bool) (<-chan model.ProgressEventData, error) {
 	select {
 	case d.sem <- struct{}{}:
 	case <-ctx.Done():
@@ -57,7 +57,7 @@ func (d *Downloader) StartDownload(ctx context.Context, downloadID, url, format,
 			Log: "[Download Started]",
 		}
 
-		downloadedFile, err := d.ytdlp.Download(ctx, url, format, quality, downloadID, d.tmpPath, audioOnly, progressChan)
+		downloadedFile, err := d.ytdlp.Download(ctx, url, format, quality, downloadID, d.tmpPath, recodeVideo, audioOnly, progressChan)
 		if err != nil {
 			progressChan <- model.ProgressEventData{
 				Log:   err.Error(),
