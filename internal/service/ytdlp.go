@@ -54,6 +54,7 @@ func NewYTDLP(cookies *Cookies, binaryPath string, timeout time.Duration) *YTDLP
 		cookies:    cookies,
 		requiredArguments: []string{
 			"--cookies", cookies.CookiesPath,
+			"--extractor-args", "youtube:player_client=default,web_embedded",
 		},
 	}
 }
