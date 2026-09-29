@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.2.0](https://github.com/Kuredew/grips/compare/v2.1.0...v2.2.0) (2026-09-29)
+
+
+### Features
+
+* add a switch container to create switch type setting ui ([d512257](https://github.com/Kuredew/grips/commit/d512257e96bef60d996924bf2a556c75571015dd))
+* add recode video settings to control where user wants to disable ([d512257](https://github.com/Kuredew/grips/commit/d512257e96bef60d996924bf2a556c75571015dd))
+* add recode video to mp4 (h264) feature after media downloaded ([1d1b49f](https://github.com/Kuredew/grips/commit/1d1b49f2c8bbaa15c352143dd81fc222bd43ded9))
+
+
+### Bug Fixes
+
+* add bgutil-ytdlp-pot-provider yt-dlp plugin ([e0bcf3c](https://github.com/Kuredew/grips/commit/e0bcf3c5ae572b76a954640c3a328a10e4258b97))
+* add web_embedded youtube player client to --extractor-args yt-dlp arguments ([14e3344](https://github.com/Kuredew/grips/commit/14e334461a7f7ffea33411430813bdf2b14a50ed))
+
 ## [2.1.0](https://github.com/Kuredew/grips/compare/v2.0.0...v2.1.0) (2026-09-28)
 
 
