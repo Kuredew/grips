@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { MediaType } from '$lib/types/types';
 	import Button from '../components/button/Button.svelte';
 	import Container from '../components/container/Container.svelte';
 	import { onMount } from 'svelte';
@@ -18,28 +17,27 @@
 	import LinkIcon from '../components/logo/LinkIcon.svelte';
 	import { checkHealth } from '$lib/api/checkHealth';
 	import { toast } from '@zerodevx/svelte-toast';
+	import { inputManager } from '../lib/input.svelte';
 
-	let ready = $state(false);
 	let inactiveBackend = $state(false);
 	let showInactiveBackendModal = $state(true);
 
 	let inputFocus = $state(false);
-	let mediaType: MediaType = $state('auto');
-	let url = $state('');
+	let mediaType = $state(inputManager.mediaType);
 	let loading = $state(false);
 	let error = $state('');
 
 	let input: null | HTMLInputElement = $state(null);
 
 	const sendToQueue = async () => {
-		if (!input || !input.value) return;
+		if (!input || !inputManager.inputValue) return;
 		loading = true;
 
 		try {
-			const videoInfo = await getVideoInfo(input.value);
-			queueManager.startQueue(videoInfo.title, input.value, mediaType);
+			const videoInfo = await getVideoInfo(inputManager.inputValue);
+			queueManager.startQueue(videoInfo.title, inputManager.inputValue, mediaType.current);
 
-			input.value = '';
+			inputManager.inputValue = '';
 		} catch (e) {
 			console.error(e);
 			error = String(e);
@@ -70,13 +68,15 @@
 			}
 		});
 		(async () => {
+			if (inputManager.ready) return;
+
 			const response = await checkHealth();
 			if (!response) {
 				inactiveBackend = true;
 				return;
 			}
 
-			ready = response;
+			inputManager.ready = response;
 		})();
 	});
 </script>
@@ -133,36 +133,36 @@
 				>
 					{#if inactiveBackend}
 						<CircleAlert size={20} />
-					{:else if ready}
+					{:else if inputManager.ready}
 						<LinkIcon />
 					{:else}
 						<Loading />
 					{/if}
 					<input
-						bind:value={url}
+						bind:value={inputManager.inputValue}
 						bind:this={input}
 						type="text"
 						id="input"
 						placeholder="paste your media url here and press enter."
 						onfocusin={() => (inputFocus = true)}
 						onfocusout={() => (inputFocus = false)}
-						disabled={loading || !ready}
+						disabled={loading || !inputManager.ready}
 					/>
 				</div>
 				<!-- type and quality selection -->
 				<div id="button-wrapper">
 					<RadioWrapper>
 						<RadioButton
-							onclick={() => (mediaType = 'auto')}
-							active={mediaType == 'auto'}
+							onclick={() => (mediaType.current = 'auto')}
+							active={mediaType.current == 'auto'}
 							class="button-home"
 						>
 							<SparkleIcon />
 							auto
 						</RadioButton>
 						<RadioButton
-							onclick={() => (mediaType = 'audio')}
-							active={mediaType == 'audio'}
+							onclick={() => (mediaType.current = 'audio')}
+							active={mediaType.current == 'audio'}
 							class="button-home"
 						>
 							<AudioIcon />
@@ -172,7 +172,7 @@
 					<Button
 						onclick={sendToQueue}
 						class="button-home"
-						disabled={loading || !ready}
+						disabled={loading || !inputManager.ready}
 						variant="primary"
 					>
 						{#if loading}
