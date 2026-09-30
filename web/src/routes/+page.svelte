@@ -146,7 +146,7 @@
 						placeholder="paste your media url here and press enter."
 						onfocusin={() => (inputFocus = true)}
 						onfocusout={() => (inputFocus = false)}
-						disabled={loading || inactiveBackend}
+						disabled={loading || !ready}
 					/>
 				</div>
 				<!-- type and quality selection -->
@@ -172,7 +172,7 @@
 					<Button
 						onclick={sendToQueue}
 						class="button-home"
-						disabled={loading || inactiveBackend}
+						disabled={loading || !ready}
 						variant="primary"
 					>
 						{#if loading}
