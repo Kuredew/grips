@@ -1,1 +1,49 @@
 @import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+@import '@fontsource-variable/dm-sans';
+@import 'lenis/dist/lenis.css';
+
+@theme {
+    --animate-scale-in: scale-in 0.2s ease-out;
+    --animate-scale-out: scale-out 0.2s ease-out;
+
+    @keyframes scale-in {
+        0% {
+            opacity: 0; 
+            transform: scale(0.9);
+        }
+        50% {
+            opacity: 1; 
+            transform: scale(1.01);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    @keyframes scale-out {
+        from {
+            opacity: 1; 
+            transform: scale(1);
+        }
+        to {
+            opacity: 0; 
+            transform: scale(0.9);
+        }
+    }
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+body {
+	font-family: 'General Sans';
+	color: var(--color-neutral-400);
+	background-color: black;
+    background-image: linear-gradient(to bottom, black, var(--color-neutral-800));
+}
+
+* {
+    outline: none;
+}
