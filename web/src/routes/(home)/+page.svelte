@@ -4,6 +4,7 @@
 	import ContainerContent from '#components/container/ContainerContent.svelte';
 	import ContainerRoot from '#components/container/ContainerRoot.svelte';
 	import Footer from '#components/footer/Footer.svelte';
+	import { resolve } from '$app/paths';
 	import { GithubLogoIcon } from 'phosphor-svelte';
 	import { fade } from 'svelte/transition';
 
@@ -38,7 +39,7 @@
 				</p>
 			</div>
 			<div class="flex gap-2">
-				<ButtonComponent>Get started</ButtonComponent>
+				<a href={resolve("/(app)/start")}><ButtonComponent>Get started</ButtonComponent></a>
 				<a href="https://github.com/kuredew/grips"
 					><ButtonComponent variant="secondary" class="flex gap-2"
 						><GithubLogoIcon /> Github</ButtonComponent

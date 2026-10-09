@@ -15,7 +15,7 @@
 				<GripsLogo />
 				<div class="hidden gap-8 text-xs md:flex md:text-base">
 					<a
-						href={resolve('/changelogs')}
+						href={resolve('/(home)/changelogs')}
 						class="flex items-center gap-2 tracking-tighter hover:text-white"
 						><DevToLogoIcon /> changelog</a
 					>
@@ -25,7 +25,7 @@
 						><CodeIcon /> source code</a
 					>
 					<a
-						href="/"
+						href={resolve('/(app)/start')}
 						class="flex items-center tracking-tighter text-white underline hover:text-white"
 						>start downloading</a
 					>

@@ -2,7 +2,6 @@
 	import './layout.css';
 	import favicon from '#lib/assets/favicon.svg';
 	import type { LayoutProps } from './$types';
-	import NavigationBar from '#components/bar/NavigationBar.svelte';
 	import Spinner from '#components/spinner/Spinner.svelte';
 	import { afterNavigate, beforeNavigate } from '$app/navigation';
 	import { fade } from 'svelte/transition';
@@ -29,8 +28,6 @@
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
-<NavigationBar />
-
 {#if loading}
 	<div transition:fade class="fixed bottom-0 left-0 p-4">
 		<Spinner />
@@ -38,7 +35,3 @@
 {/if}
 
 {@render children()}
-
-<!-- <p class="fixed bottom-0 w-dvw max-w-dvw py-8 text-center text-sm opacity-50">
-	this tool and their functionality is not vibe coded.
-</p> -->

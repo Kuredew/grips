@@ -30,10 +30,10 @@
 				</div>
 				<div class="max-w-200">
 					<div class="h-4"></div>
-					<BackLink href={resolve('/')} />
+					<BackLink href={resolve('/(home)')} />
 					<div class="h-6"></div>
 
-					<ChangelogItem changelog={data.currentChangelog} />
+					<ChangelogItem version={data.currentChangelog.version} changelog={data.currentChangelog} />
 					<div class="mt-10 flex w-full justify-between md:hidden">
 						{#if data.nextChangelogVersion}
 							<a class="justify-self-start" href={`/changelogs/${data.nextChangelogVersion}`}
