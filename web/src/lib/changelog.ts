@@ -58,7 +58,8 @@ const parseChanglogMarkdown = async (fileContent: string): Promise<Changelog> =>
 export const getAllChangelog = async () => {
 	const markdownFiles = import.meta.glob('/src/changelogs/*.md', {
 		eager: true,
-		as: 'raw'
+		query: '?raw',
+		import: 'default'
 	});
 
 	const changelogs: ChangelogItem[] = [];
