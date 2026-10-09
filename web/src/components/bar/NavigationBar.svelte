@@ -45,7 +45,7 @@
 								class="right-0 w-[55dvw] rounded-xl border-2 border-neutral-800 bg-neutral-900 p-1 font-semibold tracking-tighter data-[state=closed]:animate-scale-out  data-[state=open]:animate-scale-in md:w-70"
 							>
 								<DropdownMenu.Item class="rounded-lg hover:bg-neutral-800">
-									<a href={resolve('/changelogs')} class="flex items-center gap-2 px-4 py-2"
+									<a href={resolve('/(home)/changelogs')} class="flex items-center gap-2 px-4 py-2"
 										><DevToLogoIcon /> changelog</a
 									>
 								</DropdownMenu.Item>

@@ -39,7 +39,7 @@
 				</p>
 			</div>
 			<div class="flex gap-2">
-				<a href={resolve("/(app)/start")}><ButtonComponent>Get started</ButtonComponent></a>
+				<a href={resolve('/(app)/start')}><ButtonComponent>Get started</ButtonComponent></a>
 				<a href="https://github.com/kuredew/grips"
 					><ButtonComponent variant="secondary" class="flex gap-2"
 						><GithubLogoIcon /> Github</ButtonComponent

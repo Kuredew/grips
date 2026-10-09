@@ -96,35 +96,35 @@ export const getChangelog = async (version: string) => {
 };
 
 // export const getChangelog = (version: string) => {
-// 	const changelogs = getAllChangelog();
+//     const changelogs = getAllChangelog();
 //
-// 	return changelogs.filter((m) => m.version == version).pop() || null;
+//     return changelogs.filter((m) => m.version == version).pop() || null;
 // };
 //
 // export const getAllChangelog = () => {
-// 	const mdFiles = import.meta.glob<Changelog>('/src/changelogs/*.md', {
-// 		eager: true
-// 	});
-// 	const changelogItems: ChangelogItem[] = [];
+//     const mdFiles = import.meta.glob<Changelog>('/src/changelogs/*.md', {
+//         eager: true
+//     });
+//     const changelogItems: ChangelogItem[] = [];
 //
-// 	for (const path in mdFiles) {
-// 		const changelog = mdFiles[path];
-// 		const version = path.split('/').pop()?.replace('.md', '') || '';
-// 		changelogItems.push({
-// 			version,
-// 			changelog
-// 		});
-// 	}
+//     for (const path in mdFiles) {
+//         const changelog = mdFiles[path];
+//         const version = path.split('/').pop()?.replace('.md', '') || '';
+//         changelogItems.push({
+//             version,
+//             changelog
+//         });
+//     }
 //
-// 	const filterAndSorted = changelogItems
-// 		.filter((m) => m.version.includes('legacy'))
-// 		.toSorted((a, b) => parseInt(a.version) - parseInt(b.version));
+//     const filterAndSorted = changelogItems
+//         .filter((m) => m.version.includes('legacy'))
+//         .toSorted((a, b) => parseInt(a.version) - parseInt(b.version));
 //
-// 	filterAndSorted.push(
-// 		...changelogItems
-// 			.filter((m) => !m.version.includes('legacy'))
-// 			.toSorted((a, b) => parseInt(a.version) - parseInt(b.version))
-// 	);
+//     filterAndSorted.push(
+//         ...changelogItems
+//             .filter((m) => !m.version.includes('legacy'))
+//             .toSorted((a, b) => parseInt(a.version) - parseInt(b.version))
+//     );
 //
-// 	return filterAndSorted;
+//     return filterAndSorted;
 // };

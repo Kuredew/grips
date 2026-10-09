@@ -29,15 +29,3 @@
 {:else if variant == 'link'}
 	{@render button('underline text-white font-medium')}
 {/if}
-
-<!-- <Button.Root -->
-<!-- 	class="rounded-input bg-dark text-background shadow-mini hover:bg-dark/95 inline-flex -->
-<!-- 	h-12 cursor-pointer items-center justify-center -->
-<!-- 	rounded-lg bg-white px-5.25 text-[15px] font-medium text-black hover:bg-neutral-200 active:scale-[0.98] active:transition-all {klass} {variant == -->
-<!-- 	'secondary' -->
-<!-- 		? 'border-2 border-neutral-800! bg-neutral-900! text-white! hover:bg-neutral-800!' -->
-<!-- 		: ''}" -->
-<!-- 	{...rest} -->
-<!-- > -->
-<!-- 	{@render children()} -->
-<!-- </Button.Root> -->

@@ -69,7 +69,7 @@
 	<a
 		onmouseenter={() => (hover = true)}
 		onmouseleave={() => (hover = false)}
-		href={resolve('/changelogs/[version_id]', { version_id: version })}
+		href={resolve('/(home)/changelogs/[version_id]', { version_id: version })}
 	>
 		{@render main()}
 	</a>

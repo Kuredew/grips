@@ -5,7 +5,7 @@
 </script>
 
 <svelte:head>
-    <title>Home | GRIPS</title>
+	<title>Home | GRIPS</title>
 </svelte:head>
 
 <NavigationBar />
