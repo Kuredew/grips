@@ -46,10 +46,6 @@
 	let { children } = $props();
 </script>
 
-<svelte:head>
-	<title>Start | GRIPS</title>
-</svelte:head>
-
 <AppMenubar {menus} />
 
 <!-- <div class="h-20 w-full"></div> -->
