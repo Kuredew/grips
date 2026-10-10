@@ -1,6 +1,6 @@
 <script lang="ts">
-	import ContainerContent from '#components/layouts/container/ContainerContent.svelte';
-	import ContainerRoot from '#components/layouts/container/ContainerRoot.svelte';
+	import ContainerContent from '#components/ui/container/ContainerContent.svelte';
+	import ContainerRoot from '#components/ui/container/ContainerRoot.svelte';
 	import ChangelogItem from '#components/modules/changelog/ChangelogItem.svelte';
 	import Footer from '#components/modules/footer/Footer.svelte';
 	import BackLink from '#components/modules/navigation/BackLink.svelte';

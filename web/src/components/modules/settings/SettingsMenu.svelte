@@ -1,35 +1,39 @@
 <script lang="ts">
+	import MenuButton from '#components/ui/menu/MenuButton.svelte';
+	import MenuGroup from '#components/ui/menu/MenuGroup.svelte';
+	import MenuIcon from '#components/ui/menu/MenuIcon.svelte';
+	import MenuRoot from '#components/ui/menu/MenuRoot.svelte';
 	import { page } from '$app/state';
 	import { FileAudioIcon, SunIcon, VideoIcon } from 'phosphor-svelte';
-	import SettingsMenuButton from '#components/modules/settings/SettingsMenuButton.svelte';
-	import SettingsMenuIcon from '#components/modules/settings/SettingsMenuIcon.svelte';
-	import SettingsMenuGroup from './SettingsMenuGroup.svelte';
 
 	let openedGroup = $derived(
 		page.url.pathname.includes('/settings') ? page.url.pathname.split('/').pop() : ''
 	);
 </script>
 
-<SettingsMenuGroup>
-	<SettingsMenuButton path="/settings/appearance" active={openedGroup == 'appearance'}>
-		<SettingsMenuIcon>
-			<SunIcon size="20px" />
-		</SettingsMenuIcon>
-		<p>Appearance</p>
-	</SettingsMenuButton>
-</SettingsMenuGroup>
+<MenuRoot>
+	<MenuGroup>
+		<MenuButton path="/settings/appearance" active={openedGroup == 'appearance'}>
+			<MenuIcon>
+				<SunIcon size="20px" />
+			</MenuIcon>
+			<p>Appearance</p>
+		</MenuButton>
+	</MenuGroup>
 
-<SettingsMenuGroup>
-	<SettingsMenuButton path="/settings/video" active={openedGroup == 'video'}>
-		<SettingsMenuIcon>
-			<VideoIcon size="20px" />
-		</SettingsMenuIcon>
-		<p>Video</p>
-	</SettingsMenuButton>
-	<SettingsMenuButton path="/settings/audio" active={openedGroup == 'audio'}>
-		<SettingsMenuIcon>
-			<FileAudioIcon size="20px" />
-		</SettingsMenuIcon>
-		<p>Audio</p>
-	</SettingsMenuButton>
-</SettingsMenuGroup>
+	<MenuGroup>
+		<MenuButton path="/settings/video" active={openedGroup == 'video'}>
+			<MenuIcon>
+				<VideoIcon size="20px" />
+			</MenuIcon>
+			<p>Video</p>
+		</MenuButton>
+
+		<MenuButton path="/settings/audio" active={openedGroup == 'audio'}>
+			<MenuIcon>
+				<FileAudioIcon size="20px" />
+			</MenuIcon>
+			<p>Audio</p>
+		</MenuButton>
+	</MenuGroup>
+</MenuRoot>

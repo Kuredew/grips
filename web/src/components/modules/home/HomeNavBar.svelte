@@ -1,6 +1,6 @@
 <script lang="ts">
-	import ContainerContent from '#components/layouts/container/ContainerContent.svelte';
-	import ContainerRoot from '#components/layouts/container/ContainerRoot.svelte';
+	import ContainerContent from '#components/ui/container/ContainerContent.svelte';
+	import ContainerRoot from '#components/ui/container/ContainerRoot.svelte';
 	import { resolve } from '$app/paths';
 	import { DropdownMenu } from 'bits-ui';
 	import { CaretDownIcon, CodeIcon, DevToLogoIcon } from 'phosphor-svelte';

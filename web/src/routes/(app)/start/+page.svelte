@@ -1,6 +1,6 @@
 <script lang="ts">
-	import ContainerContent from '#components/layouts/container/ContainerContent.svelte';
-	import ContainerRoot from '#components/layouts/container/ContainerRoot.svelte';
+	import ContainerContent from '#components/ui/container/ContainerContent.svelte';
+	import ContainerRoot from '#components/ui/container/ContainerRoot.svelte';
 	import ButtonComponent from '#components/ui/button/ButtonComponent.svelte';
 	import { inputManager } from '#lib/input.svelte.ts';
 	import type { MediaType } from '#lib/types.ts';

@@ -1,6 +1,6 @@
 <script>
-	import ContainerContent from '#components/layouts/container/ContainerContent.svelte';
-	import ContainerRoot from '#components/layouts/container/ContainerRoot.svelte';
+	import ContainerContent from '#components/ui/container/ContainerContent.svelte';
+	import ContainerRoot from '#components/ui/container/ContainerRoot.svelte';
 	import Footer from '#components/modules/footer/Footer.svelte';
 	import ChangelogItem from '#components/modules/changelog/ChangelogItem.svelte';
 	import ButtonComponent from '#components/ui/button/ButtonComponent.svelte';
