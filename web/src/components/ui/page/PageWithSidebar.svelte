@@ -22,7 +22,7 @@
 <svelte:window bind:innerWidth={screenWidth} />
 
 <div class="group w-full" data-home={isHome} data-mobile={isMobile}>
-	<dir class="px-8">
+	<dir class="flex gap-8 px-4 md:px-8">
 		{@render children()}
 	</dir>
 </div>

@@ -4,6 +4,12 @@ export interface SelectOption {
 	value: string;
 }
 
+export interface SubGroupItem {
+	key: string;
+	label: string;
+	groupKey: string;
+}
+
 export type SettingType = 'select' | 'toggle';
 
 export interface SettingItem {
@@ -11,6 +17,7 @@ export interface SettingItem {
 	label: string;
 	type: SettingType;
 	groupKey: string;
+	subGroupKey?: string;
 	description: string;
 	requiredSettingItem?: {
 		key: string;
@@ -28,7 +35,7 @@ const VideoSettingItems: SettingItem[] = [
 		description: "We'll look for the one that most closely matches your choice.",
 		selectOptions: [
 			{ label: 'Best', key: 'best', value: 'best' },
-			{ label: 'worst', key: 'worst', value: 'worst' },
+			{ label: 'Worst', key: 'worst', value: 'worst' },
 			{ label: '1080p', key: '1080p', value: '1080p' },
 			{ label: '720p', key: '720p', value: '720p' },
 			{ label: '480p', key: '480p', value: '480p' },
@@ -39,6 +46,7 @@ const VideoSettingItems: SettingItem[] = [
 		key: 'recode_video',
 		label: 'Recode video',
 		groupKey: 'video',
+		subGroupKey: 'video_processing',
 		type: 'toggle',
 		description: 'Enable re-encode the downloaded video.'
 	},
@@ -46,8 +54,10 @@ const VideoSettingItems: SettingItem[] = [
 		key: 'video_codec',
 		label: 'Video codec',
 		groupKey: 'video',
+		subGroupKey: 'video_processing',
 		type: 'select',
-		description: 'Enable re-encode the downloaded video.',
+		description:
+			'Select video codec, required "Recode Video" setting to be enabled. (Recommended to select H264 for maximum compatibility)',
 		requiredSettingItem: {
 			key: 'recode_video',
 			value: true
@@ -77,5 +87,29 @@ const VideoSettingItems: SettingItem[] = [
 	}
 ];
 
-export const settingsSchema = [...VideoSettingItems];
+const appearanceSettings: SettingItem[] = [
+	{
+		key: 'dark_mode',
+		label: 'Dark Mode',
+		description: 'Toggle dark mode.',
+		type: 'toggle',
+		groupKey: 'appearance',
+		subGroupKey: 'theme'
+	}
+];
+
+export const subGroupSchema: SubGroupItem[] = [
+	{
+		key: 'theme',
+		label: 'Theme',
+		groupKey: 'appearance'
+	},
+	{
+		key: 'video_processing',
+		label: 'Video Processing',
+		groupKey: 'video'
+	}
+];
+
+export const settingsSchema = [...appearanceSettings, ...VideoSettingItems];
 export type settingKeyType = (typeof settingsSchema)[number]['key'];

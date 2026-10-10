@@ -4,7 +4,7 @@
 	import MenuIcon from '#components/ui/menu/MenuIcon.svelte';
 	import MenuRoot from '#components/ui/menu/MenuRoot.svelte';
 	import { page } from '$app/state';
-	import { FileAudioIcon, SunIcon, VideoIcon } from 'phosphor-svelte';
+	import { CpuIcon, FileAudioIcon, SunIcon, VideoIcon } from 'phosphor-svelte';
 
 	let openedGroup = $derived(
 		page.url.pathname.includes('/settings') ? page.url.pathname.split('/').pop() : ''
@@ -34,6 +34,15 @@
 				<FileAudioIcon size="20px" />
 			</MenuIcon>
 			<p>Audio</p>
+		</MenuButton>
+	</MenuGroup>
+
+	<MenuGroup>
+		<MenuButton path="/settings/preprocessing" active={openedGroup == 'preprocessing'}>
+			<MenuIcon>
+				<CpuIcon size="20px" />
+			</MenuIcon>
+			<p>Preprocessing</p>
 		</MenuButton>
 	</MenuGroup>
 </MenuRoot>
