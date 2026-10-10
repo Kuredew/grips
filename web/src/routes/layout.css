@@ -4,6 +4,7 @@
 @import 'lenis/dist/lenis.css';
 
 @theme {
+	--color-white: #ebebeb;
 	--animate-scale-in: scale-in 0.2s ease-out;
 	--animate-scale-out: scale-out 0.2s ease-out;
 

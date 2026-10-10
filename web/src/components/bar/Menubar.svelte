@@ -8,7 +8,7 @@
 
 <div class="fixed flex w-full p-4">
 	<Menubar.Root
-		class="flex h-12 items-center rounded-xl border-2 border-neutral-800 px-0.75 text-white"
+		class="flex h-12 w-full items-center rounded-xl border-2 border-neutral-800 px-0.75 text-white"
 	>
 		<div class="px-2.5">
 			<AsteriskIcon class="text-white" size="30px" />

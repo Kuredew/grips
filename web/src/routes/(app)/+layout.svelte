@@ -7,16 +7,9 @@
 		name: 'File',
 		field: [
 			{
-				name: 'Open',
-				value: 'open'
-			},
-			{
-				name: 'Save',
-				value: 'save'
-			},
-			{
-				name: 'Save as',
-				value: 'save_as'
+				name: 'New',
+				value: 'new',
+				callback: () => goto('/start')
 			},
 			{
 				name: 'Quit',
@@ -31,7 +24,8 @@
 		field: [
 			{
 				name: 'Settings',
-				value: 'open_settings'
+				value: 'open_settings',
+				callback: () => goto('/settings')
 			}
 		]
 	};
@@ -57,5 +51,7 @@
 </svelte:head>
 
 <Menubar {menus} />
+
+<div class="h-20 w-full"></div>
 
 {@render children()}
