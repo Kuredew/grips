@@ -22,7 +22,7 @@
 				</Menubar.Trigger>
 				<Menubar.Portal>
 					<Menubar.Content
-						class="focus-override bg-background shadow-popover z-50 w-50 rounded-xl border-2 border-neutral-800 px-1 py-1.5 text-sm text-white focus-visible:outline-hidden"
+						class="focus-override bg-background shadow-popover z-50 w-50 rounded-xl border-2 border-neutral-800 bg-black px-1 py-1.5 text-sm text-white focus-visible:outline-hidden"
 						align="start"
 						sideOffset={3}
 					>
