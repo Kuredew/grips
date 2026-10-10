@@ -1,7 +1,7 @@
 <script lang="ts">
-	import ButtonComponent from '#components/button/ButtonComponent.svelte';
-	import ContainerContent from '#components/container/ContainerContent.svelte';
-	import ContainerRoot from '#components/container/ContainerRoot.svelte';
+	import ContainerContent from '#components/layouts/container/ContainerContent.svelte';
+	import ContainerRoot from '#components/layouts/container/ContainerRoot.svelte';
+	import ButtonComponent from '#components/ui/button/ButtonComponent.svelte';
 	import { inputManager } from '#lib/input.svelte.ts';
 	import type { MediaType } from '#lib/types.ts';
 	import { ArrowUpIcon, MusicNoteIcon, SparkleIcon } from 'phosphor-svelte';
@@ -32,7 +32,7 @@
 
 <ContainerRoot>
 	<ContainerContent>
-		<div class="flex h-screen flex-col items-center justify-center gap-20">
+		<div class="flex h-full flex-col items-center justify-center gap-20">
 			<div class="text-[200px] leading-0 font-medium text-white">*</div>
 			<!-- <AsteriskIcon size="100px" class="text-white" /> -->
 			<div class="flex w-full flex-col items-center gap-4">
@@ -55,14 +55,16 @@
 							<ButtonComponent
 								onclick={() => changeMediaType('auto')}
 								variant={mediaType == 'auto' ? 'primary' : 'secondary'}
-								class="flex h-10! items-center gap-2 px-4! font-normal"
-								><SparkleIcon /> Auto</ButtonComponent
+								class="flex h-10! items-center gap-2 px-4! font-normal {mediaType == 'auto'
+									? 'cursor-default!'
+									: ''}"><SparkleIcon /> Auto</ButtonComponent
 							>
 							<ButtonComponent
 								onclick={() => changeMediaType('audio')}
 								variant={mediaType == 'audio' ? 'primary' : 'secondary'}
-								class="flex h-10! items-center gap-2 px-4! font-normal"
-								><MusicNoteIcon /> Audio Only</ButtonComponent
+								class="flex h-10! items-center gap-2 px-4! font-normal {mediaType == 'audio'
+									? 'cursor-default!'
+									: ''}"><MusicNoteIcon /> Audio Only</ButtonComponent
 							>
 						</div>
 						<div>

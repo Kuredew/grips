@@ -1,14 +1,14 @@
 <script lang="ts">
-	import ButtonComponent from '#components/button/ButtonComponent.svelte';
-	import ContainerContent from '#components/container/ContainerContent.svelte';
-	import ContainerRoot from '#components/container/ContainerRoot.svelte';
-	import GripsLogo from '#components/logo/GripsLogo.svelte';
+	import ContainerContent from '#components/layouts/container/ContainerContent.svelte';
+	import ContainerRoot from '#components/layouts/container/ContainerRoot.svelte';
 	import { resolve } from '$app/paths';
 	import { DropdownMenu } from 'bits-ui';
 	import { CaretDownIcon, CodeIcon, DevToLogoIcon } from 'phosphor-svelte';
+	import GripsLogo from '../logo/GripsLogo.svelte';
+	import ButtonComponent from '#components/ui/button/ButtonComponent.svelte';
 </script>
 
-<div class="sticky top-0 z-10 max-w-dvw border-b-2 border-neutral-800 bg-black">
+<div class="sticky top-0 z-10 max-w-dvw border-b-2 border-neutral-800 bg-black font-[General_Sans]">
 	<ContainerRoot>
 		<ContainerContent>
 			<div class="flex flex-1 justify-between py-4">

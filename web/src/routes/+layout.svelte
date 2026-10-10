@@ -2,9 +2,9 @@
 	import './layout.css';
 	import favicon from '#lib/assets/favicon.svg';
 	import type { LayoutProps } from './$types';
-	import Spinner from '#components/spinner/Spinner.svelte';
 	import { afterNavigate, beforeNavigate } from '$app/navigation';
 	import { fade } from 'svelte/transition';
+	import Spinner from '#components/ui/icon/Spinner.svelte';
 	let loading = $state(false);
 
 	beforeNavigate(() => {
@@ -13,9 +13,6 @@
 
 	afterNavigate(() => {
 		loading = false;
-	});
-	$effect(() => {
-		console.log(loading);
 	});
 	let { children }: LayoutProps = $props();
 </script>
@@ -33,5 +30,7 @@
 		<Spinner />
 	</div>
 {/if}
+
+<div class="fixed top-0 left-0 -z-10 h-dvh w-dvw bg-linear-to-b from-black to-neutral-800"></div>
 
 {@render children()}

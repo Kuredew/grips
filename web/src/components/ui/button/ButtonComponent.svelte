@@ -13,7 +13,7 @@
 
 {#snippet button(variantClass: string = '')}
 	<Button.Root
-		class="rounded-input bg-dark text-background shadow-mini hover:bg-dark/95 inline-flex
+		class="button rounded-input bg-dark text-background shadow-mini hover:bg-dark/95 inline-flex
         h-12 cursor-pointer items-center justify-center
         rounded-lg px-5.25 text-[15px] font-medium active:scale-[0.98] active:transition-all {klass} {variantClass}"
 		{...rest}

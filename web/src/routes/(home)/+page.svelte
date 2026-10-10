@@ -1,9 +1,9 @@
 <script>
-	import ButtonComponent from '#components/button/ButtonComponent.svelte';
-	import ChangelogItem from '#components/changelog/ChangelogItem.svelte';
-	import ContainerContent from '#components/container/ContainerContent.svelte';
-	import ContainerRoot from '#components/container/ContainerRoot.svelte';
-	import Footer from '#components/footer/Footer.svelte';
+	import ContainerContent from '#components/layouts/container/ContainerContent.svelte';
+	import ContainerRoot from '#components/layouts/container/ContainerRoot.svelte';
+	import Footer from '#components/modules/footer/Footer.svelte';
+	import ChangelogItem from '#components/modules/changelog/ChangelogItem.svelte';
+	import ButtonComponent from '#components/ui/button/ButtonComponent.svelte';
 	import { resolve } from '$app/paths';
 	import { GithubLogoIcon } from 'phosphor-svelte';
 	import { fade } from 'svelte/transition';

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Menubar from '#components/bar/Menubar.svelte';
+	import AppMenubar from '#components/modules/app/AppMenubar.svelte';
 	import type { Menu, Menus } from '#lib/types.ts';
 	import { goto } from '$app/navigation';
 
@@ -50,8 +50,10 @@
 	<title>Start | GRIPS</title>
 </svelte:head>
 
-<Menubar {menus} />
+<AppMenubar {menus} />
 
-<div class="h-20 w-full"></div>
+<!-- <div class="h-20 w-full"></div> -->
 
-{@render children()}
+<div class="h-[calc(100vh-80px)] w-full pt-20 font-[DM_Sans_Variable]">
+	{@render children()}
+</div>

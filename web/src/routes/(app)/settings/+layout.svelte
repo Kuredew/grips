@@ -1,12 +1,14 @@
 <script>
-	import SettingsMenu from '#components/settings/SettingsMenu.svelte';
+	import PageSidebar from '#components/layouts/Page/PageSidebar.svelte';
+	import PageWithSidebar from '#components/layouts/Page/PageWithSidebar.svelte';
+	import SettingsMenu from '#components/modules/settings/SettingsMenu.svelte';
 
 	let { children } = $props();
 </script>
 
-<div class="h-screen w-full">
-	<div class="h-full max-w-70 px-4">
+<PageWithSidebar path="settings">
+	<PageSidebar title="Settings">
 		<SettingsMenu />
-	</div>
+	</PageSidebar>
 	{@render children()}
-</div>
+</PageWithSidebar>

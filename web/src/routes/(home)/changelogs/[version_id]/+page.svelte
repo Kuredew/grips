@@ -1,10 +1,10 @@
 <script lang="ts">
-	import ButtonComponent from '#components/button/ButtonComponent.svelte';
-	import ChangelogItem from '#components/changelog/ChangelogItem.svelte';
-	import ContainerContent from '#components/container/ContainerContent.svelte';
-	import ContainerRoot from '#components/container/ContainerRoot.svelte';
-	import Footer from '#components/footer/Footer.svelte';
-	import BackLink from '#components/navigation/BackLink.svelte';
+	import ContainerContent from '#components/layouts/container/ContainerContent.svelte';
+	import ContainerRoot from '#components/layouts/container/ContainerRoot.svelte';
+	import ChangelogItem from '#components/modules/changelog/ChangelogItem.svelte';
+	import Footer from '#components/modules/footer/Footer.svelte';
+	import BackLink from '#components/modules/navigation/BackLink.svelte';
+	import ButtonComponent from '#components/ui/button/ButtonComponent.svelte';
 	import { resolve } from '$app/paths';
 
 	let { data } = $props();

@@ -34,15 +34,36 @@
 	}
 }
 
+:root {
+	/* Spacing Tokens (Pengganti px-2, px-4, dst) */
+	--space-1: 0.25rem; /* 4px */
+	--space-2: 0.5rem; /* 8px (setara px-2) */
+	--space-3: 0.75rem; /* 12px */
+	--space-4: 1rem; /* 16px (setara px-4) */
+	--space-6: 1.5rem; /* 24px */
+	--space-8: 2rem; /* 32px */
+
+	/* Border Radius */
+	--radius-sm: 6px;
+	--radius-md: 12px;
+	--radius-lg: 16px;
+
+	/* Colors */
+	--bg-main: #0b0f19;
+	--bg-card: #151b2c;
+	--text-main: #ffffff;
+	--text-muted: #94a3b8;
+	--brand: #3b82f6;
+}
+
 html {
 	scroll-behavior: smooth;
 }
 
 body {
-	font-family: 'General Sans';
 	color: var(--color-neutral-400);
 	background-color: black;
-	background-image: linear-gradient(to bottom, black, var(--color-neutral-900));
+	/*background-image: linear-gradient(to bottom, black, var(--color-neutral-900));*/
 }
 
 * {
