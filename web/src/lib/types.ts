@@ -10,3 +10,5 @@ export interface Menu {
 }
 
 export type Menus = Menu[];
+
+export type MediaType = 'auto' | 'audio';

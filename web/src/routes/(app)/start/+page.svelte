@@ -2,15 +2,18 @@
 	import ButtonComponent from '#components/button/ButtonComponent.svelte';
 	import ContainerContent from '#components/container/ContainerContent.svelte';
 	import ContainerRoot from '#components/container/ContainerRoot.svelte';
+	import { inputManager } from '#lib/input.svelte.ts';
+	import type { MediaType } from '#lib/types.ts';
 	import { ArrowUpIcon, MusicNoteIcon, SparkleIcon } from 'phosphor-svelte';
 	import { onMount } from 'svelte';
 
 	let focus = $state(false);
-	let mediaType = $state('auto');
+	let mediaType = $derived(inputManager.mediaType.current);
+
 	let textareaElement: HTMLTextAreaElement | null = $state(null);
 
-	let changeMediaType = (value: string) => {
-		mediaType = value;
+	let changeMediaType = (value: MediaType) => {
+		inputManager.mediaType.current = value;
 	};
 
 	onMount(() => {
@@ -45,7 +48,8 @@
 						class="resize-none overflow-hidden text-white"
 						autocomplete="off"
 						rows="3"
-						placeholder="Paste your media link"></textarea>
+						placeholder="Paste your media link"
+						bind:value={inputManager.inputValue.current}></textarea>
 					<div class="flex justify-between">
 						<div class="flex gap-1.5">
 							<ButtonComponent
