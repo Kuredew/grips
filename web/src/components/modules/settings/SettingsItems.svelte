@@ -19,17 +19,11 @@
 
 		subGroupKeys.forEach((key) => {
 			const schema = subGroupSchema.filter((m) => m.key == key).pop();
-			console.log(schema);
 			if (!schema) return;
 			label[key] = schema.label;
 		});
 
 		return label;
-	});
-
-	$effect(() => {
-		console.log(subGroupKeys);
-		console.log(subGroupLabels);
 	});
 </script>
 

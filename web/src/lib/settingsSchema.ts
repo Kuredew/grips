@@ -95,6 +95,26 @@ const appearanceSettings: SettingItem[] = [
 		type: 'toggle',
 		groupKey: 'appearance',
 		subGroupKey: 'theme'
+	},
+	{
+		key: 'border_radius',
+		label: 'Border Radius',
+		description: 'All component corner roundness will follow the settings here.',
+		type: 'select',
+		groupKey: 'appearance',
+		subGroupKey: 'component',
+		selectOptions: [
+			{
+				key: 'blocky',
+				label: 'Blocky',
+				value: 'blocky'
+			},
+			{
+				key: 'rounded',
+				label: 'Rounded',
+				value: 'rounded'
+			}
+		]
 	}
 ];
 
@@ -102,6 +122,11 @@ export const subGroupSchema: SubGroupItem[] = [
 	{
 		key: 'theme',
 		label: 'Theme',
+		groupKey: 'appearance'
+	},
+	{
+		key: 'component',
+		label: 'Component',
 		groupKey: 'appearance'
 	},
 	{

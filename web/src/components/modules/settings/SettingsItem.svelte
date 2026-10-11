@@ -28,7 +28,9 @@
 			>
 				{#each settingItem.selectOptions as option (option.key)}
 					<ButtonComponent
-						onclick={() => (settingsManager.settingsValue.current[settingItem.key] = option.value)}
+						onclick={() => {
+							settingsManager.settingsValue.current[settingItem.key] = option.value;
+						}}
 						variant={value == option.value ? 'primary' : 'secondary'}
 						class="h-fit w-full rounded-xl border-none py-2 text-sm! {value == option.value
 							? 'pointer-events-none'

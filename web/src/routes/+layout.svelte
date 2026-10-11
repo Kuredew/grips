@@ -5,6 +5,8 @@
 	import { afterNavigate, beforeNavigate } from '$app/navigation';
 	import { fade } from 'svelte/transition';
 	import Spinner from '#components/ui/icon/Spinner.svelte';
+	import { settingsManager } from '#lib/settings.svelte.ts';
+	import { browser } from '$app/env';
 	let loading = $state(false);
 
 	beforeNavigate(() => {
@@ -13,6 +15,25 @@
 
 	afterNavigate(() => {
 		loading = false;
+	});
+
+	$effect(() => {
+		if (browser) {
+			const value = settingsManager.settingsValue.current['border_radius'];
+			let style = '';
+			switch (value) {
+				case 'blocky':
+					style = '0';
+					break;
+				case 'rounded':
+					style = '1';
+					break;
+			}
+
+			const root = document.documentElement;
+			root.style.setProperty('--radius-scale', style);
+			root.dataset.borderRadius = value as string;
+		}
 	});
 	let { children }: LayoutProps = $props();
 </script>
