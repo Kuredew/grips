@@ -57,7 +57,7 @@ const VideoSettingItems: SettingItem[] = [
 		subGroupKey: 'video_processing',
 		type: 'select',
 		description:
-			'Select video codec, required "Recode Video" setting to be enabled. (Recommended to select H264 for maximum compatibility)',
+			'Required "Recode Video" setting to be enabled. (Recommended to select H264 for maximum compatibility)',
 		requiredSettingItem: {
 			key: 'recode_video',
 			value: true
@@ -91,7 +91,7 @@ const appearanceSettings: SettingItem[] = [
 	{
 		key: 'dark_mode',
 		label: 'Dark Mode',
-		description: 'Toggle dark mode.',
+		description: 'Toggle dark mode. (not yet implemented)',
 		type: 'toggle',
 		groupKey: 'appearance',
 		subGroupKey: 'theme'

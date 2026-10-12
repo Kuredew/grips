@@ -3,6 +3,8 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import type { Snippet } from 'svelte';
+	import ContainerRoot from '../container/ContainerRoot.svelte';
+	import ContainerContent from '../container/ContainerContent.svelte';
 
 	let { children, path }: { children: Snippet; path: string } = $props();
 
@@ -21,8 +23,12 @@
 
 <svelte:window bind:innerWidth={screenWidth} />
 
-<div class="group w-full" data-home={isHome} data-mobile={isMobile}>
-	<dir class="flex gap-8 px-4 md:px-8">
-		{@render children()}
-	</dir>
-</div>
+<ContainerRoot>
+	<ContainerContent>
+		<div class="group w-full" data-home={isHome} data-mobile={isMobile}>
+			<dir class="flex gap-8 px-4 md:px-8">
+				{@render children()}
+			</dir>
+		</div>
+	</ContainerContent>
+</ContainerRoot>

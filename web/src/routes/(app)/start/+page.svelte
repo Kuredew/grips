@@ -6,15 +6,86 @@
 	import type { MediaType } from '#lib/types.ts';
 	import { ArrowUpIcon, MusicNoteIcon, SparkleIcon } from 'phosphor-svelte';
 	import { onMount } from 'svelte';
+	import Spinner from '#components/ui/icon/Spinner.svelte';
+	import { queueManager } from '#lib/queue.svelte.ts';
+	import { getMediaInfo } from '#lib/api/getMediaInfo.ts';
+	import type { MediaInfo } from '#lib/types/api.ts';
+	import { isValidUrl } from '#lib/util/url.ts';
+	import DialogError from '#components/ui/dialog/DialogError.svelte';
+	import { checkHealth } from '#lib/api/checkHealth.ts';
 
 	let focus = $state(false);
 	let mediaType = $derived(inputManager.mediaType.current);
+	let isLoading = $derived(inputManager.loading);
+
+	let isInvalid = $state(false);
+	let errorDetail = $state<string | null>(null);
+	let openErrorDialog = $state(false);
+
+	let isDown = $derived(inputManager.isDown);
+	let openDownErrorDialog = $state(false);
+	let isDownDialogOpened = $derived(inputManager.isDownDialogOpened);
 
 	let textareaElement: HTMLTextAreaElement | null = $state(null);
 
 	let changeMediaType = (value: MediaType) => {
 		inputManager.mediaType.current = value;
 	};
+
+	async function submit() {
+		isInvalid = false;
+
+		const inputValue = inputManager.inputValue.current;
+		if (!isValidUrl(inputValue)) {
+			isInvalid = true;
+			return;
+		}
+		inputManager.loading = true;
+
+		let mediaInfo: MediaInfo;
+
+		try {
+			mediaInfo = await getMediaInfo(inputValue);
+		} catch (e) {
+			console.error(`failed to get media information: ${e}`);
+			errorDetail = String(e);
+			openErrorDialog = true;
+			return;
+		} finally {
+			inputManager.loading = false;
+		}
+
+		const job = queueManager.createQueueJob(mediaInfo, inputValue, mediaType);
+		job.start();
+
+		inputManager.inputValue.current = '';
+		inputManager.loading = false;
+		if (!inputManager.queueListOpened) {
+			inputManager.queueListOpened = true;
+		}
+	}
+
+	$effect(() => {
+		if (inputManager.inputValue.current != null) isInvalid = false;
+	});
+
+	$effect(() => {
+		if (isDown && !isDownDialogOpened) {
+			openDownErrorDialog = true;
+			inputManager.isDownDialogOpened = true;
+		}
+	});
+
+	$effect(() => {
+		if (isDown || inputManager.isServerChecked) return;
+		inputManager.loading = true;
+
+		(async () => {
+			inputManager.isDown = !(await checkHealth());
+			inputManager.isServerChecked = true;
+			inputManager.loading = false;
+		})();
+	});
 
 	onMount(() => {
 		if (!textareaElement) {
@@ -30,14 +101,27 @@
 	});
 </script>
 
+<DialogError
+	bind:open={openErrorDialog}
+	description="An error occurred, the server could not get information from the link you provided, the link may not be supported by yt-dlp."
+	{errorDetail}
+/>
+
+<DialogError
+	bind:open={openDownErrorDialog}
+	description="We are currently unable to connect to the server, it is most likely down, please wait a moment or monitor the status from the home page."
+/>
+
 <ContainerRoot>
 	<ContainerContent>
 		<div class="flex h-full flex-col items-center justify-center gap-20">
-			<div class="text-[200px] leading-0 font-medium text-white">*</div>
-			<!-- <AsteriskIcon size="100px" class="text-white" /> -->
-			<div class="flex w-full flex-col items-center gap-4">
+			<div class="py-8 text-[200px] leading-0 font-medium text-white">{isInvalid ? '?' : '*'}</div>
+
+			<div class="flex w-full max-w-150 flex-col items-center gap-4">
 				<div
-					class="flex h-fit w-full max-w-150 flex-col gap-4 rounded-3xl border-2 border-neutral-800 bg-neutral-900 px-6 pt-6 pb-4 {focus
+					class="flex h-fit w-full max-w-full flex-col gap-4 rounded-3xl border-2 border-neutral-800 bg-neutral-900 px-6 pt-6 pb-4 {isInvalid
+						? 'border-red-900'
+						: ''} {isLoading || isDown ? 'pointer-events-none opacity-50' : ''} {focus
 						? 'border-neutral-500!'
 						: ''}"
 				>
@@ -68,13 +152,32 @@
 							>
 						</div>
 						<div>
-							<ButtonComponent class="h-10! w-10! p-0!"><ArrowUpIcon /></ButtonComponent>
+							<ButtonComponent
+								onclick={submit}
+								variant={isLoading ? 'secondary' : 'primary'}
+								class="h-10! w-10! p-0!"
+							>
+								{#if isLoading}
+									<Spinner />
+								{:else}
+									<ArrowUpIcon />
+								{/if}
+							</ButtonComponent>
 						</div>
 					</div>
 				</div>
-				<p class="cursor-default text-sm">
-					At first glance, this display looks like AI chat, right?
-				</p>
+				{#if isDown}
+					<p class="cursor-default text-center text-sm text-balance">
+						We are currently unable to connect to the server, it is most likely down, please wait a
+						moment or monitor the status from the home page.
+					</p>
+				{:else if isInvalid}
+					<p class="cursor-default text-center text-sm text-balance">
+						What you entered is not even a valid link!
+					</p>
+				{:else}
+					<p class="cursor-default text-sm">At first glance, this looks like an AI chatbot heh?</p>
+				{/if}
 			</div>
 		</div>
 	</ContainerContent>

@@ -19,9 +19,30 @@ html[data-border-radius='blocky'] .rounded-full {
 }
 
 @theme {
+    --font-sans: 'DM Sans Variable';
 	--color-white: #ebebeb;
 	--animate-scale-in: scale-in 0.2s ease-out;
 	--animate-scale-out: scale-out 0.2s ease-out;
+    --animate-fade-in: fade-in 0.2s ease-out;
+    --animate-fade-out: fade-out 0.2s ease-out;
+
+	@keyframes fade-in {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
+
+	@keyframes fade-out {
+		0% {
+			opacity: 1;
+		}
+		100% {
+			opacity: 0;
+		}
+	}
 
 	@keyframes scale-in {
 		0% {

@@ -9,10 +9,10 @@ class SettingsManager {
 
 	defaultValue: Record<settingKeyType, string | boolean> = {
 		dark_mode: true,
-		video_quality: 'best',
-		recode_video: true,
+		video_quality: '1080p',
+		recode_video: false,
 		video_codec: 'h264',
-		border_radius: 'blocky'
+		border_radius: 'rounded'
 	};
 
 	constructor() {

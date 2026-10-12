@@ -13,7 +13,7 @@
 </svelte:head>
 
 <PageWithSidebar path="settings">
-	<PageSidebar title="Settings">
+	<PageSidebar backButtonHref="/start" title="Settings">
 		<SettingsMenu />
 	</PageSidebar>
 
