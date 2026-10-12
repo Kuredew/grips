@@ -22,13 +22,13 @@
 			align="end"
 			sideOffset={3}
 		>
-			<div class="flex flex-col gap-2 rounded-3xl border-2 border-neutral-800 bg-black px-1 py-1.5">
-				<div class="px-4 py-2 text-lg font-medium">Queue</div>
+			<div class="flex flex-col gap-2 rounded-3xl border-2 border-neutral-800 bg-black p-4">
+				<div class="text-lg font-medium">Queue</div>
 				{#if queueItems.length > 0}
 					{#each queueItems as queueItem (queueItem.id)}
 						<AppQueueItem {queueItem} />
 					{/each}
-					<div class="py-4 text-center text-pretty text-neutral-400">
+					<div class="text-center text-pretty text-neutral-400">
 						The queue list here will disappear after the page is reloaded.
 					</div>
 				{:else}

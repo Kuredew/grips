@@ -139,7 +139,16 @@ class QueueManager {
 						}
 					});
 
-					const fileName = `${mediaInfo.title}.${doneData.file_ext}`;
+					const file_ext = doneData.file_name.split('.').pop();
+					const fileName = `${mediaInfo.title}.${file_ext}`;
+
+					const itemNow = this.findQueueItem(queueItem.id);
+					if (itemNow) {
+						this.#updateItemInArray({
+							...itemNow,
+							title: fileName
+						});
+					}
 
 					downloadBlob(blob, fileName);
 
