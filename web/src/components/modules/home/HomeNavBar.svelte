@@ -6,67 +6,92 @@
 	import { CaretDownIcon, CodeIcon, DevToLogoIcon } from 'phosphor-svelte';
 	import GripsLogo from '../logo/GripsLogo.svelte';
 	import ButtonComponent from '#components/ui/button/ButtonComponent.svelte';
+	import type { Announcement } from '#lib/types/announcement.ts';
+	import { page } from '$app/state';
+
+	let announcement: Announcement = $derived(page.data.announcement);
 </script>
 
-<div class="sticky top-0 z-10 max-w-dvw border-b-2 border-neutral-800 bg-black font-[General_Sans]">
-	<ContainerRoot>
-		<ContainerContent>
-			<div class="flex flex-1 justify-between py-4">
-				<GripsLogo />
-				<div class="hidden gap-8 text-xs md:flex md:text-base">
-					<a
-						href={resolve('/(home)/changelogs')}
-						class="flex items-center gap-2 tracking-tighter hover:text-white"
-						><DevToLogoIcon /> changelog</a
-					>
-					<a
-						href="https://github.com/Kuredew/grips"
-						class="flex items-center gap-2 tracking-tighter hover:text-white"
-						><CodeIcon /> source code</a
-					>
-					<a
-						href={resolve('/(app)/start')}
-						class="flex items-center tracking-tighter text-white underline hover:text-white"
-						>start downloading</a
-					>
-				</div>
-				<div class="block md:hidden">
-					<DropdownMenu.Root>
-						<DropdownMenu.Trigger class="group">
-							<ButtonComponent class="h-fit max-w-fit px-2! py-2">
-								<div class=" group-data-[state=open]:rotate-180">
-									<CaretDownIcon />
-								</div>
-							</ButtonComponent>
-						</DropdownMenu.Trigger>
-						<DropdownMenu.Portal>
-							<DropdownMenu.Content
-								align="end"
-								class="right-0 z-100 w-[55dvw] rounded-xl border-2 border-neutral-800 bg-neutral-900 p-1 font-semibold tracking-tighter data-[state=closed]:animate-scale-out  data-[state=open]:animate-scale-in md:w-70"
+<div class="sticky top-0 z-10 max-w-dvw font-[General_Sans]">
+	{#if announcement && announcement.active}
+		<div class="bg-linear-to-l from-black to-neutral-600">
+			<a href={announcement.link}>
+				<ContainerRoot>
+					<ContainerContent>
+						<div class="flex items-center justify-center gap-4 py-3 text-xs">
+							<div
+								class="flex items-center justify-center rounded-full bg-white px-3 py-1 text-xs font-medium text-black"
 							>
-								<DropdownMenu.Item class="rounded-lg hover:bg-neutral-800">
-									<a href={resolve('/(home)/changelogs')} class="flex items-center gap-2 px-4 py-2"
-										><DevToLogoIcon /> changelog</a
-									>
-								</DropdownMenu.Item>
-								<DropdownMenu.Item class="rounded-lg hover:bg-neutral-800">
-									<a
-										href="https://github.com/Kuredew/grips"
-										class="flex items-center gap-2 px-4 py-2"><CodeIcon /> source code</a
-									>
-								</DropdownMenu.Item>
-								<DropdownMenu.Item class="rounded-lg hover:bg-neutral-800">
-									<a
-										href="/start"
-										class="flex items-center px-4 py-2 text-white underline hover:text-white"
-										>start downloading</a
-									>
-								</DropdownMenu.Item>
-							</DropdownMenu.Content>
-						</DropdownMenu.Portal>
-					</DropdownMenu.Root>
+								{announcement.type}
+							</div>
+							<p class="text-sm text-white">{announcement.text}</p>
+						</div>
+					</ContainerContent>
+				</ContainerRoot>
+			</a>
+		</div>
+	{/if}
+	<div class="border-b-2 border-neutral-800 bg-black">
+		<ContainerRoot>
+			<ContainerContent>
+				<div class="flex flex-1 justify-between py-4">
+					<GripsLogo />
+					<div class="hidden gap-8 text-xs md:flex md:text-base">
+						<a
+							href={resolve('/(home)/changelogs')}
+							class="flex items-center gap-2 tracking-tighter hover:text-white"
+							><DevToLogoIcon /> changelog</a
+						>
+						<a
+							href="https://github.com/Kuredew/grips"
+							class="flex items-center gap-2 tracking-tighter hover:text-white"
+							><CodeIcon /> source code</a
+						>
+						<a
+							href={resolve('/(app)/start')}
+							class="flex items-center tracking-tighter text-white underline hover:text-white"
+							>start downloading</a
+						>
+					</div>
+					<div class="block md:hidden">
+						<DropdownMenu.Root>
+							<DropdownMenu.Trigger class="group">
+								<ButtonComponent class="h-fit max-w-fit px-2! py-2">
+									<div class=" group-data-[state=open]:rotate-180">
+										<CaretDownIcon />
+									</div>
+								</ButtonComponent>
+							</DropdownMenu.Trigger>
+							<DropdownMenu.Portal>
+								<DropdownMenu.Content
+									align="end"
+									class="right-0 z-100 w-[55dvw] rounded-xl border-2 border-neutral-800 bg-neutral-900 p-1 font-semibold tracking-tighter data-[state=closed]:animate-scale-out  data-[state=open]:animate-scale-in md:w-70"
+								>
+									<DropdownMenu.Item class="rounded-lg hover:bg-neutral-800">
+										<a
+											href={resolve('/(home)/changelogs')}
+											class="flex items-center gap-2 px-4 py-2"><DevToLogoIcon /> changelog</a
+										>
+									</DropdownMenu.Item>
+									<DropdownMenu.Item class="rounded-lg hover:bg-neutral-800">
+										<a
+											href="https://github.com/Kuredew/grips"
+											class="flex items-center gap-2 px-4 py-2"><CodeIcon /> source code</a
+										>
+									</DropdownMenu.Item>
+									<DropdownMenu.Item class="rounded-lg hover:bg-neutral-800">
+										<a
+											href="/start"
+											class="flex items-center px-4 py-2 text-white underline hover:text-white"
+											>start downloading</a
+										>
+									</DropdownMenu.Item>
+								</DropdownMenu.Content>
+							</DropdownMenu.Portal>
+						</DropdownMenu.Root>
+					</div>
 				</div>
-			</div>
-		</ContainerContent>
-	</ContainerRoot>
+			</ContainerContent>
+		</ContainerRoot>
+	</div>
 </div>
