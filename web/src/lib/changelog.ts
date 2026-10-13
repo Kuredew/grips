@@ -3,6 +3,7 @@ import semver from 'semver';
 
 export interface Changelog {
 	content: string;
+	content_raw: string;
 	metadata: {
 		title: string;
 		date: string;
@@ -46,6 +47,7 @@ const parseChanglogMarkdown = async (fileContent: string): Promise<Changelog> =>
 
 	return {
 		content,
+		content_raw: markdownBody,
 		metadata: {
 			title,
 			date,
