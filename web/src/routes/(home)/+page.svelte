@@ -125,11 +125,21 @@
 					>
 						<div>
 							<p class="text-xl font-medium text-white">Extractor Service</p>
-							<p>No active incidents</p>
+							<p>
+								{data.extractorOnline
+									? 'No active incidents'
+									: 'Unable to connect to the server at this time'}
+							</p>
 						</div>
-						<p>Online</p>
+						<p>{data.extractorOnline ? 'Online' : 'Offline'}</p>
 					</div>
 				</div>
+				<p class="text-center">
+					For server uptime, check <a
+						class="text-white underline"
+						href="https://stats.uptimerobot.com/icou3jzi5c">here</a
+					>.
+				</p>
 			</div>
 
 			<!-- frame_4 -->
