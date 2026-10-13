@@ -1,12 +1,13 @@
 <script lang="ts">
 	import './layout.css';
-	import favicon from '#lib/assets/favicon.svg';
 	import type { LayoutProps } from './$types';
 	import { afterNavigate, beforeNavigate } from '$app/navigation';
 	import { fade } from 'svelte/transition';
 	import Spinner from '#components/ui/icon/Spinner.svelte';
 	import { settingsManager } from '#lib/settings.svelte.ts';
 	import { browser } from '$app/env';
+	import Seo from '#components/ui/seo/Seo.svelte';
+	import { page } from '$app/state';
 	let loading = $state(false);
 
 	beforeNavigate(() => {
@@ -43,8 +44,17 @@
 		rel="stylesheet"
 		href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap"
 	/>
-	<link rel="icon" href={favicon} />
+	<link rel="icon" href="/img/grips/favicon.png" />
 </svelte:head>
+
+<Seo
+	type={page.data.type || 'website'}
+	siteName="grips"
+	title={page.data.title}
+	canonicalUrl={page.data.canonicalUrl}
+	imageUrl="/img/grips/banner.png"
+	description={page.data.description}
+/>
 
 {#if loading}
 	<div transition:fade class="fixed bottom-0 left-0 p-4">

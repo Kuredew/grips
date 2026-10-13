@@ -18,8 +18,8 @@
 <ContainerRoot>
 	<ContainerContent>
 		<!-- frame_1 -->
-		<div class="relative flex h-[calc(100vh-64px)] flex-col items-center justify-center gap-20">
-			<div class="absolute top-40 text-8xl font-medium text-white">*</div>
+		<div class="flex h-[calc(100vh-64px)] flex-col items-center justify-center gap-20">
+			<!-- <div class="text-8xl font-medium text-white">*</div> -->
 			<div class="-mt-16 flex w-full max-w-220 flex-col gap-8">
 				<div
 					class="flex h-20 items-center justify-between text-3xl font-medium! tracking-tight text-white md:h-30 md:text-6xl"

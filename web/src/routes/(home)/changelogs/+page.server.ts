@@ -1,10 +1,14 @@
 import { getAllChangelog } from '#lib/changelog.ts';
-import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
 	const changelogs = await getAllChangelog();
-	const latest = changelogs[0]?.version;
+	const latestVersion = changelogs[0]?.version;
 
-	return redirect(303, `/changelogs/${latest}`);
+	return {
+		title: 'Changelogs',
+		description: 'See what’s new, what’s fixed, and what’s cooking.',
+		canonicalUrl: '/changelogs',
+		latestVersion
+	};
 };

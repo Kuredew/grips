@@ -19,6 +19,10 @@ export const load: PageServerLoad = async ({ params }) => {
 	const nextChangelogVersion = allChangelogs[currentIndex - 1]?.version;
 
 	return {
+		type: 'article',
+		title: 'Changelogs - ' + currentChangelog?.changelog.metadata.title,
+		description: 'See what’s new, what’s fixed, and what’s cooking.',
+		canonicalUrl: '/changelogs/' + version,
 		currentChangelog,
 		prevChangelogVersion,
 		nextChangelogVersion
