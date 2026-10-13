@@ -9,6 +9,9 @@
 	import Seo from '#components/ui/seo/Seo.svelte';
 	import { page } from '$app/state';
 	let loading = $state(false);
+	let dimmed = $state(false);
+
+	let timeout: NodeJS.Timeout | null = null;
 
 	beforeNavigate(() => {
 		loading = true;
@@ -16,6 +19,19 @@
 
 	afterNavigate(() => {
 		loading = false;
+	});
+
+	$effect(() => {
+		if (loading) {
+			timeout = setTimeout(() => {
+				dimmed = true;
+			}, 300);
+		} else {
+			dimmed = false;
+
+			if (!timeout) return;
+			clearTimeout(timeout);
+		}
 	});
 
 	$effect(() => {
@@ -56,8 +72,12 @@
 	description={page.data.description}
 />
 
+{#if dimmed}
+	<div transition:fade class="pointer-events-none fixed z-100 h-dvh w-dvw bg-black/50"></div>
+{/if}
+
 {#if loading}
-	<div transition:fade class="fixed bottom-0 left-0 p-4">
+	<div transition:fade class="fixed bottom-0 left-0 z-200 p-4">
 		<Spinner />
 	</div>
 {/if}
