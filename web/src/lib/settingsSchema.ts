@@ -57,7 +57,7 @@ const VideoSettingItems: SettingItem[] = [
 		subGroupKey: 'video_processing',
 		type: 'select',
 		description:
-			'Required "Recode Video" setting to be enabled. (Recommended to select H264 for maximum compatibility)',
+			'The server currently only supports transcoding to H.264, and will support other codecs in future versions. Changing this setting to a codec other than H.264 will have no effect.',
 		requiredSettingItem: {
 			key: 'recode_video',
 			value: true
