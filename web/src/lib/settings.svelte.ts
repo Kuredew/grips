@@ -1,17 +1,32 @@
 import { PersistentState } from '@friendofsvelte/state';
-import { settingsSchema, type AppSettingsData } from './settingsSchema';
+import type { settingKeyType } from './settingsSchema';
 
-class AppSettings {
-	#data = new PersistentState<AppSettingsData>('app-settings-data', {
-		mediaQuality: 'best',
-		recodeVideo: 'true'
-	});
+class SettingsManager {
+	#settingsValue = new PersistentState<Record<settingKeyType, string | boolean>>(
+		'settings_data',
+		{}
+	);
 
-	readonly schema = settingsSchema;
+	defaultValue: Record<settingKeyType, string | boolean> = {
+		dark_mode: true,
+		video_quality: '1080p',
+		recode_video: false,
+		video_codec: 'h264',
+		border_radius: 'rounded'
+	};
 
-	get data() {
-		return this.#data.current;
+	constructor() {
+		Object.keys(this.defaultValue).forEach((key) => {
+			const value = this.#settingsValue.current[key];
+			if (value !== undefined) return;
+
+			this.#settingsValue.current[key] = this.defaultValue[key];
+		});
+	}
+
+	get settingsValue() {
+		return this.#settingsValue;
 	}
 }
 
-export const settings = new AppSettings();
+export const settingsManager = new SettingsManager();

@@ -1,9 +1,7 @@
-## grips web
+## grips-web
 
-this is the source code for grips frontend, built with sveltekit 5
+This is the source code for Web Grips, built using the Sveltekit 5 framework!
 
-run with `pnpm install && pnpm run dev`
+Required environment variables:
 
-### environment variables
-
-- `PUBLIC_API_BASE_URL`: grips api base url.
+- API_BASE_URL: grips backend api base url

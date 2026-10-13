@@ -1,31 +1,140 @@
-import type { AppSetting } from './types/types';
+export interface SelectOption {
+	key: string;
+	label: string;
+	value: string;
+}
 
-export const settingsSchema = [
+export interface SubGroupItem {
+	key: string;
+	label: string;
+	groupKey: string;
+}
+
+export type SettingType = 'select' | 'toggle';
+
+export interface SettingItem {
+	key: string;
+	label: string;
+	type: SettingType;
+	groupKey: string;
+	subGroupKey?: string;
+	description: string;
+	requiredSettingItem?: {
+		key: string;
+		value: string | boolean;
+	};
+	selectOptions?: SelectOption[];
+}
+
+const VideoSettingItems: SettingItem[] = [
 	{
-		key: 'mediaQuality',
-		label: 'quality',
-		description:
-			"select the video quality you want to download, we'll look for the one that most closely matches your choice.",
-		group: 'media',
-		type: 'select' as const,
-		options: [
-			{ label: 'best', value: 'best' },
-			{ label: 'worst', value: 'worst' },
-			{ label: '1080p', value: '1080p' },
-			{ label: '720p', value: '720p' },
-			{ label: '480p', value: '480p' },
-			{ label: '360p', value: '360p' }
+		key: 'video_quality',
+		label: 'Video quality',
+		groupKey: 'video',
+		type: 'select',
+		description: "We'll look for the one that most closely matches your choice.",
+		selectOptions: [
+			{ label: 'Best', key: 'best', value: 'best' },
+			{ label: 'Worst', key: 'worst', value: 'worst' },
+			{ label: '1080p', key: '1080p', value: '1080p' },
+			{ label: '720p', key: '720p', value: '720p' },
+			{ label: '480p', key: '480p', value: '480p' },
+			{ label: '360p', key: '360p', value: '360p' }
 		]
 	},
 	{
-		key: 'recodeVideo',
-		label: 'recode video',
+		key: 'recode_video',
+		label: 'Recode video',
+		groupKey: 'video',
+		subGroupKey: 'video_processing',
+		type: 'toggle',
+		description: 'Enable re-encode the downloaded video.'
+	},
+	{
+		key: 'video_codec',
+		label: 'Video codec',
+		groupKey: 'video',
+		subGroupKey: 'video_processing',
+		type: 'select',
 		description:
-			'encode the downloaded video to h264, but it will take longer because the server needs time to re-encode the media.',
-		group: 'media',
-		type: 'checkbox'
+			'The server currently only supports transcoding to H.264, and will support other codecs in future versions. Changing this setting to a codec other than H.264 will have no effect.',
+		requiredSettingItem: {
+			key: 'recode_video',
+			value: true
+		},
+		selectOptions: [
+			{
+				label: 'H264',
+				key: 'h264',
+				value: 'h264'
+			},
+			{
+				label: 'H265',
+				key: 'h265',
+				value: 'h265'
+			},
+			{
+				label: 'VP9',
+				key: 'vp9',
+				value: 'vp9'
+			},
+			{
+				label: 'AV1',
+				key: 'av1',
+				value: 'av1'
+			}
+		]
 	}
-] as const satisfies readonly AppSetting[];
+];
 
-export type SettingKey = (typeof settingsSchema)[number]['key'];
-export type AppSettingsData = Record<string, string>;
+const appearanceSettings: SettingItem[] = [
+	{
+		key: 'dark_mode',
+		label: 'Dark Mode',
+		description: 'Toggle dark mode. (not yet implemented)',
+		type: 'toggle',
+		groupKey: 'appearance',
+		subGroupKey: 'theme'
+	},
+	{
+		key: 'border_radius',
+		label: 'Border Radius',
+		description: 'All component corner roundness will follow the settings here.',
+		type: 'select',
+		groupKey: 'appearance',
+		subGroupKey: 'component',
+		selectOptions: [
+			{
+				key: 'blocky',
+				label: 'Blocky',
+				value: 'blocky'
+			},
+			{
+				key: 'rounded',
+				label: 'Rounded',
+				value: 'rounded'
+			}
+		]
+	}
+];
+
+export const subGroupSchema: SubGroupItem[] = [
+	{
+		key: 'theme',
+		label: 'Theme',
+		groupKey: 'appearance'
+	},
+	{
+		key: 'component',
+		label: 'Component',
+		groupKey: 'appearance'
+	},
+	{
+		key: 'video_processing',
+		label: 'Video Processing',
+		groupKey: 'video'
+	}
+];
+
+export const settingsSchema = [...appearanceSettings, ...VideoSettingItems];
+export type settingKeyType = (typeof settingsSchema)[number]['key'];

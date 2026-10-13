@@ -1,85 +1,172 @@
+import { streamVideoUrl } from './api/streamVideoUrl';
 import { downloadFileWithProgress } from './core/downloadFile';
-import { downloadMedia } from './core/downloadMedia';
-import type { MediaType, Queue } from './types/types';
+import { settingsManager } from './settings.svelte';
+import type { MediaType, Quality } from './types';
+import type { DoneEventData, ErrorEventData, MediaInfo, ProgressEventData } from './types/api';
+import {
+	createExtractingQueueItem,
+	toDownloading,
+	toFailed,
+	toFinished,
+	type QueueItem
+} from './types/queue';
 import { downloadBlob } from './util/downloadBlob';
 
+export const mockQueueItems: QueueItem[] = [
+	{
+		id: '231',
+		title: 'Mac Mini M6 Ternyata Sekencang Ini?! Mac Mini M6 Ternyata Sekencang Ini?!',
+		url: '',
+		log: ['Extracting content...'],
+		state: 'extracting',
+		mediaType: 'auto'
+	},
+	{
+		id: '2314',
+		title: 'いえない / ひらぎ （cover）',
+		url: '',
+		progress: 50,
+		state: 'downloading',
+		mediaType: 'audio',
+		downloadableUrl: ''
+	},
+	{
+		id: '2312',
+		title: 'いえない / ひらぎ （cover',
+		url: '',
+		blob: new Blob(),
+		state: 'finished',
+		mediaType: 'audio'
+	},
+	{
+		id: '2313',
+		title: 'いえない / ひらぎ （cover',
+		url: '',
+		state: 'failed',
+		errorDetail: 'Failed to get blabla.',
+		mediaType: 'audio'
+	}
+];
+
 class QueueManager {
-	#items = $state<Queue[]>([
-		// {
-		// 	id: '0',
-		// 	title: 'Some Video',
-		// 	fileName: 'test.mp4',
-		// 	mediaType: 'video',
-		// 	mediaUrl: null,
-		// 	mediaBlob: new Blob(),
-		// 	status: 'completed',
-		// 	percent: 50,
-		// 	log: [],
-		// 	file_url: null
-		// }
-	]);
+	#queueItems: QueueItem[] = $state([]);
 
-	get items() {
-		return this.#items;
+	get queueItems() {
+		return this.#queueItems;
 	}
 
-	getItem(id: string) {
-		return this.#items.find((m) => m.id === id);
+	findQueueItem(id: string) {
+		return this.#queueItems.find((m) => m.id == id);
 	}
 
-	setItem(queue: Queue, editValue: Partial<Queue>) {
-		Object.assign(queue, editValue);
+	addQueueItem(title: string, url: string, mediaType: MediaType) {
+		const id = crypto.randomUUID();
+
+		this.#queueItems.push(createExtractingQueueItem(id, title, url, mediaType));
+		return this.findQueueItem(id);
 	}
 
-	async startQueue(title: string, url: string, mediaType: MediaType) {
-		const queue = this.add();
-		if (!queue) throw new Error('Queue not created!');
-
-		this.setItem(queue, { title, mediaUrl: url, mediaType, status: 'processing' });
-
-		try {
-			const doneData = await downloadMedia(url, mediaType, (msg) => {
-				this.setItem(queue, { log: [...queue.log, msg] });
-			});
-			if (!doneData) {
-				throw new Error(
-					'an issue occurred while assigning the server to download media: the server did not send a done data at all'
-				);
-			}
-
-			this.setItem(queue, { file_url: doneData.file_url, status: 'downloading' });
-
-			const blob = await downloadFileWithProgress(doneData.file_url, (percent) => {
-				queue.percent = percent;
-			});
-			const fileName = title + '.' + doneData.file_ext;
-
-			downloadBlob(blob, fileName);
-
-			this.setItem(queue, { mediaBlob: blob, fileName: fileName, status: 'completed' });
-		} catch (e) {
-			this.setItem(queue, { status: 'failed', log: [...queue.log, String(e)], error: String(e) });
-			console.error(e);
+	#updateItemInArray(item: QueueItem) {
+		const index = this.#queueItems.findIndex((m) => m.id == item.id);
+		if (index != -1) {
+			this.#queueItems[index] = item;
 		}
 	}
 
-	add() {
-		const id = crypto.randomUUID();
-		this.#items.push({
-			id,
-			title: null,
-			fileName: null,
-			mediaType: null,
-			mediaUrl: null,
-			mediaBlob: null,
-			status: 'fetching',
-			percent: 0,
-			log: [],
-			error: null,
-			file_url: null
-		});
+	createQueueJob(mediaInfo: MediaInfo, url: string, mediaType: MediaType) {
+		const queueItem = this.addQueueItem(mediaInfo.title, url, mediaType);
+		if (!queueItem) throw new Error('Queue is not created succesfully.');
 
-		return this.getItem(id);
+		return {
+			start: async () => {
+				const settings = settingsManager.settingsValue.current;
+				const quality = settings['video_quality'] as Quality;
+				const recodeVideo = settings['recode_video'] as boolean;
+
+				let doneEventData: null | DoneEventData = null;
+				let errorEventData: null | ErrorEventData = null;
+
+				try {
+					await streamVideoUrl(url, mediaType, quality, recodeVideo, (streamEvent) => {
+						const currentState = this.findQueueItem(queueItem.id);
+						if (!currentState) return;
+
+						let data;
+
+						switch (streamEvent.event) {
+							case 'error':
+								data = streamEvent.data as ErrorEventData;
+								errorEventData = data;
+								break;
+							case 'done':
+								data = streamEvent.data as DoneEventData;
+								doneEventData = data;
+								break;
+							case 'progress':
+								data = streamEvent.data as ProgressEventData;
+								if (currentState.state == 'extracting') {
+									this.#updateItemInArray({
+										...currentState,
+										log: [...currentState.log, data.log]
+									});
+								}
+						}
+					});
+
+					if (!doneEventData) {
+						if (errorEventData) {
+							const errorData = errorEventData as ErrorEventData;
+							throw new Error(
+								`Error occured while downloading media to server: ${errorData.message}`
+							);
+						}
+
+						throw new Error('Error streamVideoUrl not return done event.');
+					}
+					const doneData = doneEventData as DoneEventData;
+
+					const currentItem = this.findQueueItem(queueItem.id);
+					if (currentItem && currentItem.state == 'extracting') {
+						this.#updateItemInArray(toDownloading(currentItem, 0, doneData.file_url));
+					}
+					const blob = await downloadFileWithProgress(doneData.file_url, (progress) => {
+						const itemNow = this.findQueueItem(queueItem.id);
+						if (itemNow && itemNow.state == 'downloading') {
+							this.#updateItemInArray({
+								...itemNow,
+								progress
+							});
+						}
+					});
+
+					const file_ext = doneData.file_name.split('.').pop();
+					const fileName = `${mediaInfo.title}.${file_ext}`;
+
+					const itemNow = this.findQueueItem(queueItem.id);
+					if (itemNow) {
+						this.#updateItemInArray({
+							...itemNow,
+							title: fileName
+						});
+					}
+
+					downloadBlob(blob, fileName);
+
+					const itemBeforeFinish = this.findQueueItem(queueItem.id);
+					if (itemBeforeFinish && itemBeforeFinish.state == 'downloading') {
+						this.#updateItemInArray(toFinished(itemBeforeFinish, blob));
+					}
+				} catch (e) {
+					const currentItem = this.findQueueItem(queueItem.id);
+					if (
+						currentItem &&
+						(currentItem.state == 'extracting' || currentItem.state == 'downloading')
+					) {
+						this.#updateItemInArray(toFailed(currentItem, `queue failed: ${e}`));
+					}
+				}
+			}
+		};
 	}
 }
 

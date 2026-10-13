@@ -1,8 +1,8 @@
-import { PUBLIC_API_BASE_URL } from '$env/static/public';
+import { API_BASE_URL } from '$app/env/public';
 
 export const checkHealth = async () => {
 	try {
-		const response = await fetch(PUBLIC_API_BASE_URL + '/health');
+		const response = await fetch(API_BASE_URL + '/health', { cache: 'no-store' });
 		if (!response.ok) {
 			return false;
 		}
