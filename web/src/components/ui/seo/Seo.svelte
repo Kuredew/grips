@@ -24,7 +24,7 @@
 
 {#snippet titleComponent(content: string)}
 	<title>{content}</title>
-	<meta property="twitter/title" {content} />
+	<meta property="twitter:title" {content} />
 	<meta property="og:title" {content} />
 {/snippet}
 
@@ -33,13 +33,13 @@
 {/snippet}
 
 {#snippet descriptionComponent(content: string)}
-	<meta property="twitter/description" {content} />
+	<meta property="twitter:description" {content} />
 	<meta property="description" {content} />
 	<meta property="og:description" {content} />
 {/snippet}
 
 {#snippet imageComponent(content: string)}
-	<meta property="twitter/image" {content} />
+	<meta property="twitter:image" {content} />
 	<meta property="og:image" {content} />
 {/snippet}
 
@@ -77,5 +77,5 @@
 		{@render typeComponent(type)}
 	{/if}
 
-	<meta property="twitter/card" content="summary_large_image" />
+	<meta property="twitter:card" content="summary_large_image" />
 </svelte:head>
