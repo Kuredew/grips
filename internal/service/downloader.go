@@ -79,6 +79,15 @@ func (d *Downloader) StartDownload(ctx context.Context, downloadID, url, format,
 			return
 		}
 
+		duration := 4 * time.Hour
+		time.AfterFunc(duration, func() {
+			err := os.Remove(finalFile)
+			if err != nil {
+				fmt.Printf("Failed to remove file: %s", err)
+				return
+			}
+		})
+
 		progressChan <- model.ProgressEventData{
 			Error:   false,
 			Done:    true,

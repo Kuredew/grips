@@ -88,6 +88,18 @@ func main() {
 		}
 	}()
 
+	go func() {
+		ticker := time.NewTicker(1 * time.Hour)
+		defer ticker.Stop()
+		for range ticker.C {
+			if err := downloader.CleanupOldFiles(4 * time.Hour); err != nil {
+				log.Printf("Cleanup error: %v", err)
+			} else {
+				log.Println("Cleanup completed")
+			}
+		}
+	}()
+
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
