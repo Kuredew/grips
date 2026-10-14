@@ -44,7 +44,7 @@
 		{/if}
 	</div>
 
-	<div class="flex min-w-0 flex-1 flex-col gap-2">
+	<div class="flex min-w-0 flex-1 flex-col {queueItem.state == 'downloading' ? 'gap-2' : 'gap-1'}">
 		<p class="truncate text-left">{queueItem.title}</p>
 		{#if queueItem.state == 'downloading'}
 			<div class="relative flex h-1 max-h-1 min-h-1 flex-1 rounded-full bg-neutral-800">
@@ -54,9 +54,11 @@
 				></div>
 			</div>
 		{/if}
-		<div class="flex justify-between">
+		<div class="flex justify-between text-left">
 			{#if queueItem.state == 'extracting'}
-				<p class="truncate text-neutral-400">{queueItem.log[queueItem.log.length - 1]}</p>
+				<p class="truncate text-neutral-400">
+					{queueItem.log[queueItem.log.length - 1] || 'Preparing...'}
+				</p>
 			{:else if queueItem.state == 'downloading'}
 				<p class="text-neutral-400">Downloading media...</p>
 				<p>{queueItem.progress}%</p>

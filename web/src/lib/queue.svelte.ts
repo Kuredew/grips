@@ -43,7 +43,7 @@ export const mockQueueItems: QueueItem[] = [
 		title: 'いえない / ひらぎ （cover',
 		url: '',
 		state: 'failed',
-		errorDetail: 'Failed to get blabla.',
+		errorDetail: 'queue failed: Error: EventSource stream connection error: [object Event]',
 		mediaType: 'audio'
 	}
 ];
@@ -164,6 +164,9 @@ class QueueManager {
 					) {
 						this.#updateItemInArray(toFailed(currentItem, `queue failed: ${e}`));
 					}
+
+					console.error(`Theres an error in queue with id ${currentItem?.id}!`);
+					console.error(e);
 				}
 			}
 		};
