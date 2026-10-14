@@ -1,52 +1,55 @@
 <script lang="ts">
 	import AppMenubar from '#components/modules/app/AppMenubar.svelte';
-	import type { Menu, Menus } from '#lib/types.ts';
-	import { goto } from '$app/navigation';
+	import type { MenuTab } from '#lib/types.ts';
 
-	let fileMenu: Menu = {
+	let fileMenu: MenuTab = {
 		name: 'File',
-		field: [
+		menuList: [
 			{
-				name: 'New',
-				value: 'new',
-				callback: () => goto('/start')
+				name: 'Start',
+				value: 'start',
+				type: 'link',
+				href: '/start'
 			},
 			{
 				name: 'Quit',
 				value: 'quit',
-				callback: () => goto('/')
+				type: 'link',
+				href: '/'
 			}
 		]
 	};
 
-	let editMenu: Menu = {
+	let editMenu: MenuTab = {
 		name: 'Edit',
-		field: [
+		menuList: [
 			{
 				name: 'Settings',
 				value: 'open_settings',
-				callback: () => goto('/settings')
+				type: 'link',
+				href: '/settings'
 			}
 		]
 	};
 
-	let viewMenu: Menu = {
+	let viewMenu: MenuTab = {
 		name: 'View',
-		field: [
+		menuList: [
 			{
 				name: 'Reload',
 				value: 'reload',
+				type: 'callback',
 				callback: () => location.reload()
 			}
 		]
 	};
 
-	let menus: Menus = [fileMenu, editMenu, viewMenu];
+	let menuTabs: MenuTab[] = [fileMenu, editMenu, viewMenu];
 
 	let { children } = $props();
 </script>
 
-<AppMenubar {menus} />
+<AppMenubar {menuTabs} />
 
 <!-- <div class="h-20 w-full"></div> -->
 

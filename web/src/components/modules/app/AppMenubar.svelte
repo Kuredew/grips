@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Menubar, Separator } from 'bits-ui';
 	import { AsteriskIcon } from 'phosphor-svelte';
-	import { type Menus } from '#lib/types.ts';
+	import { type MenuTab } from '#lib/types.ts';
 	import ContainerContent from '#components/ui/container/ContainerContent.svelte';
 	import AppQueueMenu from './AppQueueMenu.svelte';
 	import { inputManager } from '#lib/input.svelte.ts';
@@ -13,7 +13,7 @@
 			value = 'app-queue';
 		}
 	});
-	let { menus }: { menus: Menus } = $props();
+	let { menuTabs }: { menuTabs: MenuTab[] } = $props();
 </script>
 
 <div class="fixed flex w-full justify-center py-4">
@@ -25,12 +25,12 @@
 			<div class="px-2.5">
 				<AsteriskIcon class="text-white" size="30px" />
 			</div>
-			{#each menus as menu (menu.name)}
+			{#each menuTabs as menuTab (menuTab.name)}
 				<Menubar.Menu>
 					<Menubar.Trigger
 						class="data-highlighted:bg-muted inline-flex h-10 cursor-default items-center justify-center rounded-lg px-4 text-sm font-medium focus-visible:outline-none data-[state=open]:bg-neutral-800"
 					>
-						{menu.name}
+						{menuTab.name}
 					</Menubar.Trigger>
 					<Menubar.Portal>
 						<Menubar.Content
@@ -38,15 +38,22 @@
 							align="start"
 							sideOffset={3}
 						>
-							{#each menu.field as field (field.value)}
-								<Menubar.Item
-									class="cursor-default rounded-lg px-3 py-2 font-medium hover:bg-neutral-800"
-									onSelect={() => {
-										if (field.callback) {
-											field.callback();
-										}
-									}}>{field.name}</Menubar.Item
-								>
+							{#each menuTab.menuList as menu (menu.name)}
+								{#if menu.type == 'callback'}
+									<Menubar.Item
+										class="cursor-default rounded-lg px-3 py-2 font-medium hover:bg-neutral-800"
+										onSelect={() => {
+											menu.callback();
+										}}>{menu.name}</Menubar.Item
+									>
+								{:else if menu.type == 'link'}
+									<a href={menu.href}>
+										<Menubar.Item
+											class="cursor-default rounded-lg px-3 py-2 font-medium hover:bg-neutral-800"
+											>{menu.name}</Menubar.Item
+										>
+									</a>
+								{/if}
 							{/each}
 						</Menubar.Content>
 					</Menubar.Portal>
