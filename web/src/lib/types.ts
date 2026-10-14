@@ -20,5 +20,5 @@ export interface MenuTab {
 	menuList: Menu[];
 }
 
-export type MediaType = 'auto' | 'audio';
+export type MediaType = 'auto' | 'audio' | 'video';
 export type Quality = 'best' | 'worst' | '1080p' | '720p' | '480p' | '360p' | string;

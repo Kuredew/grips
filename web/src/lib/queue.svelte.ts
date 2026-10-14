@@ -73,7 +73,7 @@ class QueueManager {
 		}
 	}
 
-	createQueueJob(mediaInfo: MediaInfo, url: string, mediaType: MediaType) {
+	createQueueJob(mediaInfo: MediaInfo, url: string, mediaType: 'video' | 'audio') {
 		const queueItem = this.addQueueItem(mediaInfo.title, url, mediaType);
 		if (!queueItem) throw new Error('Queue is not created succesfully.');
 

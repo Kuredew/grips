@@ -1,10 +1,10 @@
-import type { MediaType, Quality } from '#lib/types.ts';
+import type { Quality } from '#lib/types.ts';
 import type { StreamEvent } from '#lib/types/api.ts';
 import { API_BASE_URL } from '$app/env/public';
 
 export const streamVideoUrl = async (
 	url: string,
-	mediaType: MediaType,
+	mediaType: 'video' | 'audio',
 	quality: Quality,
 	recodeVideo: boolean,
 	output: (streamEvent: StreamEvent) => void

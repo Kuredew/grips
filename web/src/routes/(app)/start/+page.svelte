@@ -13,6 +13,7 @@
 	import { isValidUrl } from '#lib/util/url.ts';
 	import DialogError from '#components/ui/dialog/DialogError.svelte';
 	import { checkHealth } from '#lib/api/checkHealth.ts';
+	import { isVideo } from '#lib/util/mediaInfo.ts';
 
 	let focus = $state(false);
 	let mediaType = $derived(inputManager.mediaType.current);
@@ -55,7 +56,13 @@
 			inputManager.loading = false;
 		}
 
-		const job = queueManager.createQueueJob(mediaInfo, inputValue, mediaType);
+		const isVideoMedia = isVideo(mediaInfo);
+
+		const job = queueManager.createQueueJob(
+			mediaInfo,
+			inputValue,
+			isVideoMedia ? 'video' : 'audio'
+		);
 		job.start();
 
 		inputManager.inputValue.current = '';
