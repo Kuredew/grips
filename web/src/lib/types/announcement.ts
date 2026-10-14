@@ -2,5 +2,5 @@ export interface Announcement {
 	text: string;
 	type: string;
 	link: string;
-	active: boolean;
+	activeUntil: Date;
 }
