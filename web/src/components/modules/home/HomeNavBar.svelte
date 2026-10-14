@@ -34,7 +34,7 @@
 	});
 </script>
 
-<div class="relative bg-linear-to-l from-black to-neutral-600">
+<div class="relative z-200 bg-linear-to-l from-black to-neutral-600">
 	<a href={activeAnnouncements[currentIndex].link}>
 		<ContainerRoot>
 			<ContainerContent>
@@ -53,7 +53,7 @@
 	</a>
 </div>
 
-<div class="sticky top-0 border-b-2 border-neutral-800 bg-black">
+<div class="sticky top-0 z-200 border-b-2 border-neutral-800 bg-black">
 	<ContainerRoot>
 		<ContainerContent>
 			<div class="flex flex-1 justify-between py-4">
