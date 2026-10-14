@@ -4,7 +4,7 @@ Before the current UI was created, I experimented extensively to build a clean w
 
 ### cli-dl (2025, ReactJS)
 
-![cli-dl](/img/cli-dl.png)
+![cli-dl](static/img/cli-dl.png)
 
 This is the name and original concept behind Grips; it’s called cli-dl because it used to be a CLI tool that also executed yt-dlp.
 
@@ -14,29 +14,29 @@ This is my first time learning advanced JavaScript, and this website was built w
 
 ### grips v1 (Jan 1, 2026, ReactJS)
 
-![grips-1](/img/grips-1.png)
+![grips-1](static/img/grips-1.png)
 
 And so, the first version of Grips was finally created. The UI is still very simple, like cli-dl, but I tried to design the website so that it’s at least easy on the eyes. I also experimented with floating windows and some cool React libraries.
 
 Other images:
-![grips-about](/img/grips-1-about.png)
-![grips-settings](/img/grips-1-settings.png)
+![grips-about](static/img/grips-1-about.png)
+![grips-settings](static/img/grips-1-settings.png)
 
 ### grips v1.2 (16 May, ReactJS)
 
-![grips-1.2](/img/grips-1.2.png)
+![grips-1.2](static/img/grips-1.2.png)
 
 On this website, I used shadcn-ui to build it, and the design seems to be growing on me, even though it’s a bit too template-like.
 
-### grips v2 (23 Sep, Sveltekit)
+### grips v2 (23 Sep, SvelteKit)
 
-![grips-2](/img/grips-2.png)
+![grips-2](static/img/grips-2.png)
 
 And for this website, I ended up using Svelte—it was really easy and fun to build, and the design is once again based on cobalt.tools
 
-### grips v0 (Oct, sveltekit)
+### grips v0 (Oct, SvelteKit)
 
-![grips-0](/img/grips-0.png)
+![grips-0](static/img/grips-0.png)
 
 And here it is—the new grips are finally done, and now they have their own landing page!
 
