@@ -2,7 +2,7 @@
 	import type { QueueItem } from '#lib/types/queue.ts';
 	import { copyToClipboard } from '#lib/util/copyToClipboard.ts';
 	import { downloadBlob } from '#lib/util/downloadBlob.ts';
-	import { FileAudioIcon, SparkleIcon } from 'phosphor-svelte';
+	import { FileAudioIcon, SparkleIcon, VideoIcon } from 'phosphor-svelte';
 	let copiedHint = $state(false);
 
 	$effect(() => {
@@ -39,6 +39,8 @@
 	<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-black">
 		{#if queueItem.mediaType == 'auto'}
 			<SparkleIcon size="20px" />
+		{:else if queueItem.mediaType == 'video'}
+			<VideoIcon size="20px" />
 		{:else if queueItem.mediaType == 'audio'}
 			<FileAudioIcon size="20px" />
 		{/if}
