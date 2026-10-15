@@ -20,7 +20,7 @@ export const load: PageServerLoad = async ({ params }) => {
 
 	return {
 		type: 'article',
-		title: 'Changelogs - ' + currentChangelog?.changelog.metadata.title,
+		title: currentChangelog?.changelog.metadata.title,
 		description: 'See what’s new, what’s fixed, and what’s cooking.',
 		canonicalUrl: '/changelogs/' + version,
 		currentChangelog,
