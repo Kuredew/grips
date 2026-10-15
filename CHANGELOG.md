@@ -1,5 +1,52 @@
 # Changelog
 
+## [0.1.0](https://github.com/Kuredew/grips/compare/v2.2.0...v0.1.0) (2026-10-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* add final grips landing page
+* add sveltekit minimal project
+* remove v2 grips web source code
+
+### Features
+
+* add announcement in home page ([a2c90fb](https://github.com/Kuredew/grips/commit/a2c90fb516519470050a84031c448798d6a9c27f))
+* add border-radius settings and improve settings state data ([c275c12](https://github.com/Kuredew/grips/commit/c275c12089e25b11d881bff4320dca25bbdc0d67))
+* add dimmed whole screen if page loading takes up to 300ms ([9fed145](https://github.com/Kuredew/grips/commit/9fed145d15d22ff1a25a83637f1372b5ac8bfce7))
+* add final grips landing page ([cecc934](https://github.com/Kuredew/grips/commit/cecc934b7b8df8e6183664519467625109868ce6))
+* add meta tags for seo and add grips logo and banner ([e64f3e1](https://github.com/Kuredew/grips/commit/e64f3e17253cfad0a85107e2222888f2494e6882))
+* add persistent input and media type radio input ([dd54bf3](https://github.com/Kuredew/grips/commit/dd54bf35972d43c73bbc29bcbe405b7d50ca8b69))
+* add settings menu ui and add new settings in settingsSchema ([8ca65eb](https://github.com/Kuredew/grips/commit/8ca65eb26521e7b631be5bcd1beda1e587625d62))
+* add settings menubar ([34b6200](https://github.com/Kuredew/grips/commit/34b62007d0036719e5d0d470245370236d6ceadc))
+* add sitemap.xml route and use super-sitemap to generate sitemap ([5c33e38](https://github.com/Kuredew/grips/commit/5c33e3897f07c7104edb811b0467399f67ad8731))
+* add sveltekit minimal project ([340b6f9](https://github.com/Kuredew/grips/commit/340b6f945cb9a5aac89c558cf2aef4bc2e2c90c2))
+* automate delete media files after 4 hours ([a90ccf4](https://github.com/Kuredew/grips/commit/a90ccf42e56e75efc451cd2d1f30abf40e5ce469))
+* check backend health and send result to home page ([6170b78](https://github.com/Kuredew/grips/commit/6170b78770980d0f39fd699545348ff30f45ddc4))
+* implement all features until completion. ([b86d0ea](https://github.com/Kuredew/grips/commit/b86d0ea87a566af9ad98c036fc161c5de1ea3329))
+* implement an announcement that rotates every 3 seconds ([aea8c0c](https://github.com/Kuredew/grips/commit/aea8c0cbe0c92a81dedd70ee34fb78dd439db17e))
+* setup menubar and input field in grips dashboard ([2a4e07e](https://github.com/Kuredew/grips/commit/2a4e07e5467e0e81dff6ec56a9f137bfca773076))
+
+
+### Bug Fixes
+
+* change as: 'raw' to query: '?raw' in import.meta.glob ([426b12d](https://github.com/Kuredew/grips/commit/426b12d992d56426e67feb4108d2f112e8f87397))
+* check whether the media link is a video to ensure consitent formatting ([db65a92](https://github.com/Kuredew/grips/commit/db65a92f8c2ff5a7a17318d0e4da24d4b171306c))
+* correct insert the file_ext obtained from the backend ([8eae137](https://github.com/Kuredew/grips/commit/8eae137a9a01ad962d526b449cf45f434d119c9f))
+* dropdown menu content in mobile overlapped by navigation bar ([2b1f2cc](https://github.com/Kuredew/grips/commit/2b1f2cc3a7b819a715d44d00baf25d74a737f131))
+* fix wrong twitter meta tag in seo components ([b9578cc](https://github.com/Kuredew/grips/commit/b9578ccfd3f8a0b7af1534ed8a0e7279c72c76e4))
+* home navigation bar overlapped ([87f2545](https://github.com/Kuredew/grips/commit/87f25452c2b4537deb5f79efd301547d6eee767f))
+
+
+### Miscellaneous Chores
+
+* force next release version ([866f6aa](https://github.com/Kuredew/grips/commit/866f6aa305cf32adf4997a5cf1baa95149ab36b4))
+
+
+### Code Refactoring
+
+* remove v2 grips web source code ([489d2fd](https://github.com/Kuredew/grips/commit/489d2fd5736614feaeb2158d8f15237d25af5ea2))
+
 ## [2.2.0](https://github.com/Kuredew/grips/compare/v2.1.0...v2.2.0) (2026-09-29)
 
 
