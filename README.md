@@ -1,5 +1,7 @@
 ## grips
 
+![grips-download-showcase](/web/static/img/grips/grips-download-showcase.gif)
+
 a media downloader with queue and quality selection features that runs directly in the browser.
 
 ### why
