@@ -101,6 +101,8 @@
 			</div>
 
 			<!-- frame_3 -->
+			<!-- Since using API just to display the online status seems a bit excessive, I intentionally hard-coded this part. -->
+			<!-- You can go to the uptime page I’ve provided below if you want to check the server status in real time. -->
 			<div class="flex flex-col gap-12">
 				<div class="flex flex-col gap-2 lg:max-w-3xl">
 					<h2 class="text-4xl font-medium tracking-tight text-balance text-white md:text-5xl">
@@ -135,10 +137,9 @@
 					</div>
 				</div>
 				<p class="text-center">
-					For server uptime, check <a
-						class="text-white underline"
-						href="https://stats.uptimerobot.com/icou3jzi5c">here</a
-					>.
+					<a class="text-white underline" href="https://stats.uptimerobot.com/icou3jzi5c"
+						>Click here</a
+					> to view the status in real time.
 				</p>
 			</div>
 
