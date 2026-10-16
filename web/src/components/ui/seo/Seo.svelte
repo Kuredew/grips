@@ -20,6 +20,19 @@
 		if (imageUrl) return origin + imageUrl;
 		return null;
 	});
+
+	const jsonLd = $derived({
+		'@context': 'https://schema.org',
+		'@type': 'WebSite',
+		name: 'grips',
+		alternateName: ['Grips Downloader'],
+		url: origin + '/'
+	});
+
+	const jsonLdTag = $derived(
+		// eslint-disable-next-line
+		`<script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}<\/script>`
+	);
 </script>
 
 {#snippet titleComponent(content: string)}
@@ -78,4 +91,6 @@
 	{/if}
 
 	<meta property="twitter:card" content="summary_large_image" />
+
+	{@html jsonLdTag}
 </svelte:head>
