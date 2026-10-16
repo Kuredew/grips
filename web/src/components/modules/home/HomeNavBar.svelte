@@ -56,7 +56,7 @@
 <div class="sticky top-0 z-90 border-b-2 border-neutral-800 bg-black">
 	<ContainerRoot>
 		<ContainerContent>
-			<div class="flex flex-1 justify-between py-4">
+			<nav class="flex flex-1 justify-between py-4">
 				<GripsLogo />
 				<div class="hidden gap-8 text-xs md:flex md:text-base">
 					<a
@@ -111,7 +111,7 @@
 						</DropdownMenu.Portal>
 					</DropdownMenu.Root>
 				</div>
-			</div>
+			</nav>
 		</ContainerContent>
 	</ContainerRoot>
 </div>

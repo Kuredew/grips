@@ -13,7 +13,7 @@
 	class="flex h-full w-full flex-col gap-4 text-white group-data-[mobile=false]:w-70! group-[[data-home='false'][data-mobile='true']]:hidden"
 >
 	<BackLink href={backButtonHref} />
-	<div class="text-lg font-medium text-white">{title}</div>
+	<h2 class="text-lg font-medium text-white">{title}</h2>
 	<div class="flex w-full flex-col">
 		{@render children()}
 	</div>

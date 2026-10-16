@@ -13,7 +13,7 @@
 {#if data.currentChangelog !== null}
 	<ContainerRoot>
 		<ContainerContent>
-			<div class="flex justify-center gap-10">
+			<main class="flex justify-center gap-10">
 				<div
 					class="sticky top-0 hidden h-[calc(100dvh-64px)] flex-1 items-center justify-center md:flex"
 				>
@@ -83,7 +83,7 @@
 						</a>
 					{/if}
 				</div>
-			</div>
+			</main>
 		</ContainerContent>
 	</ContainerRoot>
 {/if}
