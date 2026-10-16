@@ -28,7 +28,7 @@
 						</a>
 					{/if}
 				</div>
-				<div class="max-w-200">
+				<main class="max-w-200">
 					<div class="h-4"></div>
 					<BackLink href={resolve('/(home)')} />
 					<div class="h-6"></div>
@@ -68,7 +68,7 @@
 						{/if}
 					</div>
 					<Footer />
-				</div>
+				</main>
 				<div
 					class="sticky top-0 hidden h-[calc(100dvh-64px)] flex-1 items-center justify-center md:flex"
 				>

@@ -60,7 +60,8 @@
 		rel="stylesheet"
 		href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap"
 	/>
-	<link rel="icon" href="/img/grips/favicon.png" />
+	<link rel="icon" href="/img/grips/favicon-48.png" type="image/png" sizes="48x48" />
+	<link rel="icon" href="/img/grips/favicon.png" type="image/png" sizes="512x512" />
 </svelte:head>
 
 <Seo

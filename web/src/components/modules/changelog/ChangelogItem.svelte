@@ -12,13 +12,15 @@
 </script>
 
 {#snippet title()}
-	<h3
-		class="text-4xl font-medium! tracking-tight text-balance text-white {compact
-			? 'text-xl!'
-			: 'tracking-normal!'}"
-	>
-		{changelog.changelog.metadata.title}
-	</h3>
+	{#if !compact}
+		<h1 class="text-4xl font-medium! tracking-tight text-balance text-white">
+			{changelog.changelog.metadata.title}
+		</h1>
+	{:else}
+		<h3 class="text-xl font-medium! tracking-tight text-balance text-white">
+			{changelog.changelog.metadata.title}
+		</h3>
+	{/if}
 {/snippet}
 
 {#snippet versionSnippet()}
@@ -43,7 +45,7 @@
 				<img
 					class="h-full w-full object-cover transition-transform {hover ? 'scale-105' : ''}"
 					src={'/img/' + changelog.changelog.metadata.image}
-					alt=""
+					alt={changelog.changelog.metadata.image_desc}
 				/>
 			</div>
 			{#if !compact}

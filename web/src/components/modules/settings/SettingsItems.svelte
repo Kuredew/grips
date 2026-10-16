@@ -30,7 +30,7 @@
 {#if settings.length > 0}
 	{#each subGroupKeys as subGroupKey (subGroupKey)}
 		<div class="flex w-full flex-col gap-2">
-			<p class="font-medium text-white">{subGroupLabels[subGroupKey]}</p>
+			<h3 class="font-medium text-white">{subGroupLabels[subGroupKey]}</h3>
 			<div class="flex w-full flex-col gap-4 px-1">
 				{#each settings as setting (setting.key)}
 					{#if setting.subGroupKey && setting.subGroupKey == subGroupKey}

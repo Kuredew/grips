@@ -26,9 +26,9 @@
 <ContainerRoot>
 	<ContainerContent>
 		<div class="group w-full" data-home={isHome} data-mobile={isMobile}>
-			<dir class="flex gap-8 px-4 md:px-8">
+			<div class="flex gap-8 px-4 md:px-8">
 				{@render children()}
-			</dir>
+			</div>
 		</div>
 	</ContainerContent>
 </ContainerRoot>

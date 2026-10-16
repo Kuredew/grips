@@ -17,10 +17,18 @@
 	});
 </script>
 
+{#snippet label()}
+	{#if settingItem.subGroupKey}
+		<h4 class="font-medium text-white">{settingItem.label}</h4>
+	{:else}
+		<h3 class="font-medium text-white">{settingItem.label}</h3>
+	{/if}
+{/snippet}
+
 <div class="flex w-full flex-col gap-1 {allowedChange ? '' : 'pointer-events-none opacity-70'}">
 	{#if settingItem.type == 'select'}
 		<!-- label -->
-		<div class="font-medium text-white">{settingItem.label}</div>
+		{@render label()}
 
 		{#if settingItem.selectOptions}
 			<div
@@ -46,7 +54,7 @@
 			}}
 			class="flex h-11 w-full cursor-pointer items-center justify-between rounded-xl bg-neutral-900 px-4 hover:bg-neutral-800"
 		>
-			<div class="font-medium text-white">{settingItem.label}</div>
+			{@render label()}
 			<Switch active={value ? true : false} />
 		</button>
 	{/if}
