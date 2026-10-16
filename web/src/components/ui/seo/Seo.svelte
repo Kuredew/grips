@@ -34,7 +34,7 @@
 
 {#snippet descriptionComponent(content: string)}
 	<meta property="twitter:description" {content} />
-	<meta property="description" {content} />
+	<meta name="description" {content} />
 	<meta property="og:description" {content} />
 {/snippet}
 
