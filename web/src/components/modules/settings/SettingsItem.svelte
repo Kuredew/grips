@@ -52,7 +52,7 @@
 			onclick={() => {
 				settingsManager.settingsValue.current[settingItem.key] = !value;
 			}}
-			class="flex h-11 w-full cursor-pointer items-center justify-between rounded-xl bg-neutral-900 px-4 hover:bg-neutral-800"
+			class="flex h-11 w-full cursor-pointer items-center justify-between rounded-xl bg-neutral-900 px-4 transition-all hover:bg-neutral-800"
 		>
 			{@render label()}
 			<Switch active={value ? true : false} />

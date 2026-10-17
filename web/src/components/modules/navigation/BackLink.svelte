@@ -10,6 +10,9 @@
 	let { ...rest }: BackLinkProps = $props();
 </script>
 
-<a href={rest.href} {...rest} class="flex w-fit items-center justify-center gap-2 hover:text-white"
+<a
+	href={rest.href}
+	{...rest}
+	class="flex w-fit items-center justify-center gap-2 transition-all hover:text-white"
 	><ArrowLeftIcon /> Back</a
 >
