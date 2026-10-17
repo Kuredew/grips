@@ -2,6 +2,6 @@
 
 This is the source code for Web Grips, built using the Sveltekit 5 framework!
 
-Required environment variables:
+### Required environment variables
 
-- API_BASE_URL: grips backend api base url
+Open [env.ts](src/env.ts) to view the required variables
