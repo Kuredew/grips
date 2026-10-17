@@ -18,7 +18,7 @@
 	</Menubar.Trigger>
 	<Menubar.Portal>
 		<Menubar.Content
-			class="focus-override bg-background shadow-popover z-50 flex w-100 max-w-dvw flex-col gap-2 px-4 font-[DM_Sans_Variable] text-sm text-white focus-visible:outline-hidden md:px-0"
+			class="focus-override bg-background shadow-popover z-50 flex w-100 max-w-dvw animate-scale-out flex-col gap-2 px-4 font-[DM_Sans_Variable] text-sm text-white transition-all focus-visible:outline-hidden data-[state=open]:animate-scale-in md:px-0"
 			align="end"
 			sideOffset={3}
 		>

@@ -61,12 +61,12 @@
 				<div class="hidden gap-8 text-xs md:flex md:text-base">
 					<a
 						href={resolve('/(home)/changelogs')}
-						class="flex items-center gap-2 tracking-tighter hover:text-white"
+						class="flex items-center gap-2 tracking-tighter transition-all hover:text-white"
 						><DevToLogoIcon /> changelog</a
 					>
 					<a
 						href="https://github.com/Kuredew/grips"
-						class="flex items-center gap-2 tracking-tighter hover:text-white"
+						class="flex items-center gap-2 tracking-tighter transition-all hover:text-white"
 						><CodeIcon /> source code</a
 					>
 					<a
@@ -89,18 +89,18 @@
 								align="end"
 								class="right-0 z-100 w-[55dvw] rounded-xl border-2 border-neutral-800 bg-neutral-900 p-1 font-semibold tracking-tighter data-[state=closed]:animate-scale-out  data-[state=open]:animate-scale-in md:w-70"
 							>
-								<DropdownMenu.Item class="rounded-lg hover:bg-neutral-800">
+								<DropdownMenu.Item class="rounded-lg transition-all hover:bg-neutral-800">
 									<a href={resolve('/(home)/changelogs')} class="flex items-center gap-2 px-4 py-2"
 										><DevToLogoIcon /> changelog</a
 									>
 								</DropdownMenu.Item>
-								<DropdownMenu.Item class="rounded-lg hover:bg-neutral-800">
+								<DropdownMenu.Item class="rounded-lg transition-all hover:bg-neutral-800">
 									<a
 										href="https://github.com/Kuredew/grips"
 										class="flex items-center gap-2 px-4 py-2"><CodeIcon /> source code</a
 									>
 								</DropdownMenu.Item>
-								<DropdownMenu.Item class="rounded-lg hover:bg-neutral-800">
+								<DropdownMenu.Item class="rounded-lg transition-all hover:bg-neutral-800">
 									<a
 										href="/start"
 										class="flex items-center px-4 py-2 text-white underline hover:text-white"

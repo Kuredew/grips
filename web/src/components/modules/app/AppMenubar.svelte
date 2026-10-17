@@ -28,7 +28,7 @@
 			{#each menuTabs as menuTab (menuTab.name)}
 				<Menubar.Menu>
 					<Menubar.Trigger
-						class="data-highlighted:bg-muted inline-flex h-10 cursor-default items-center justify-center rounded-lg px-4 text-sm font-medium focus-visible:outline-none data-[state=open]:bg-neutral-800"
+						class="data-highlighted:bg-muted inline-flex h-10 cursor-default items-center justify-center rounded-lg px-4 text-sm font-medium transition-all focus-visible:outline-none data-[state=open]:bg-neutral-800"
 					>
 						{menuTab.name}
 					</Menubar.Trigger>
@@ -41,7 +41,7 @@
 							{#each menuTab.menuList as menu (menu.name)}
 								{#if menu.type == 'callback'}
 									<Menubar.Item
-										class="cursor-default rounded-lg px-3 py-2 font-medium hover:bg-neutral-800"
+										class="cursor-default rounded-lg px-3 py-2 font-medium transition-all hover:bg-neutral-800 active:scale-95"
 										onSelect={() => {
 											menu.callback();
 										}}>{menu.name}</Menubar.Item
@@ -49,7 +49,7 @@
 								{:else if menu.type == 'link'}
 									<a href={menu.href}>
 										<Menubar.Item
-											class="cursor-default rounded-lg px-3 py-2 font-medium hover:bg-neutral-800"
+											class="cursor-default rounded-lg px-3 py-2 font-medium transition-all hover:bg-neutral-800 active:scale-95"
 											>{menu.name}</Menubar.Item
 										>
 									</a>

@@ -126,7 +126,7 @@
 
 			<div class="flex w-full max-w-150 flex-col items-center gap-4">
 				<div
-					class="flex h-fit w-full max-w-full flex-col gap-4 rounded-3xl border-2 border-neutral-800 bg-neutral-900 px-6 pt-6 pb-4 {isInvalid
+					class="flex h-fit w-full max-w-full flex-col gap-4 rounded-3xl border-2 border-neutral-800 bg-neutral-900 px-6 pt-6 pb-4 transition-all {isInvalid
 						? 'border-red-900'
 						: ''} {isLoading || isDown ? 'pointer-events-none opacity-50' : ''} {focus
 						? 'border-neutral-500!'
