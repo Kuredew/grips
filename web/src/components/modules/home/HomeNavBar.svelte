@@ -10,10 +10,12 @@
 	import { page } from '$app/state';
 	import { onMount } from 'svelte';
 
-	let announcements: Announcement[] = $derived(page.data.announcements);
+	let announcements: Announcement[] | null = $derived(page.data.announcements);
 	let currentIndex = $state(0);
 	let dateNow = new Date();
-	let activeAnnouncements = $derived(announcements.filter((m) => m.activeUntil >= dateNow));
+	let activeAnnouncements = $derived(
+		announcements ? announcements.filter((m) => m.activeUntil >= dateNow) : []
+	);
 
 	function nextIndex() {
 		if (currentIndex == activeAnnouncements.length - 1) {
@@ -35,22 +37,24 @@
 </script>
 
 <div class="relative z-90 bg-linear-to-l from-black to-neutral-600">
-	<a href={activeAnnouncements[currentIndex].link}>
-		<ContainerRoot>
-			<ContainerContent>
-				<div class="flex items-center justify-center gap-4 py-3 text-xs">
-					<div
-						class="flex items-center justify-center rounded-full bg-white px-3 py-1 text-xs font-medium text-black"
-					>
-						{activeAnnouncements[currentIndex].type}
+	{#if activeAnnouncements[currentIndex]}
+		<a href={activeAnnouncements[currentIndex].link}>
+			<ContainerRoot>
+				<ContainerContent>
+					<div class="flex items-center justify-center gap-4 py-3 text-xs">
+						<div
+							class="flex items-center justify-center rounded-full bg-white px-3 py-1 text-xs font-medium text-black"
+						>
+							{activeAnnouncements[currentIndex].type}
+						</div>
+						<p class="line-clamp-2 text-sm text-white">
+							{activeAnnouncements[currentIndex].text}
+						</p>
 					</div>
-					<p class="line-clamp-2 text-sm text-white">
-						{activeAnnouncements[currentIndex].text}
-					</p>
-				</div>
-			</ContainerContent>
-		</ContainerRoot>
-	</a>
+				</ContainerContent>
+			</ContainerRoot>
+		</a>
+	{/if}
 </div>
 
 <div class="sticky top-0 z-90 border-b-2 border-neutral-800 bg-black">

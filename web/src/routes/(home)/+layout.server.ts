@@ -1,9 +1,13 @@
 import { getAnnouncement } from '#lib/api/getAnnouncement.ts';
 
 export const load = async () => {
-	const announcements = await getAnnouncement();
+	try {
+		const announcements = await getAnnouncement();
 
-	return {
-		announcements
-	};
+		return {
+			announcements
+		};
+	} catch {
+		return {};
+	}
 };

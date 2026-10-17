@@ -1,7 +1,9 @@
 import type { Announcement } from '#lib/types/announcement.ts';
 import { ANNOUNCEMENT_TSV_URL } from '$app/env/public';
 
-export const getAnnouncement = async (): Promise<Announcement[]> => {
+export const getAnnouncement = async (): Promise<Announcement[] | null> => {
+	if (ANNOUNCEMENT_TSV_URL == null) return null;
+
 	const res = await fetch(ANNOUNCEMENT_TSV_URL, { cache: 'no-store' });
 	if (!res.ok) throw new Error('Response not ok');
 
