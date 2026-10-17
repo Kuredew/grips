@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.1](https://github.com/Kuredew/grips/compare/v0.1.0...v0.1.1) (2026-10-17)
+
+
+### Bug Fixes
+
+* add height to the gradient background element ([b263f63](https://github.com/Kuredew/grips/commit/b263f6339ece60df1eb843529da5fb8eaa9b47c8))
+* change the property attribute to name in the description meta tag ([6281390](https://github.com/Kuredew/grips/commit/62813907334357571a2c1372f3cc57f67f534bbd))
+* **component:** add handle if announcement env variable does not exist ([ae6bade](https://github.com/Kuredew/grips/commit/ae6bade68bd2c88b3d91233a7accdc4efc113025))
+
 ## [0.1.0](https://github.com/Kuredew/grips/compare/v2.2.0...v0.1.0) (2026-10-15)
 
 
