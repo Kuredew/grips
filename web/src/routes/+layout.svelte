@@ -83,6 +83,6 @@
 	</div>
 {/if}
 
-<div class="fixed top-0 left-0 -z-10 h-dvh w-dvw bg-linear-to-b from-black to-neutral-800"></div>
+<div class="fixed top-0 left-0 -z-10 h-[350vh] w-dvw bg-linear-to-b from-black to-white"></div>
 
 {@render children()}
