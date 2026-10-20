@@ -61,6 +61,32 @@ func NewYTDLP(cookies *Cookies, bgutilBaseUrl string, binaryPath string, timeout
 	}
 }
 
+func toVideoInfo(raw VideoInfoRaw) *model.VideoInfo {
+	formats := make([]model.VideoFormat, len(raw.Formats))
+	for i, f := range raw.Formats {
+		formats[i] = model.VideoFormat{
+			FormatID:   f.FormatID,
+			Ext:        f.Ext,
+			Resolution: f.Resolution,
+			Filesize:   f.Filesize,
+			VCodec:     f.VCodec,
+			ACodec:     f.ACodec,
+			Note:       f.FormatNote,
+		}
+	}
+
+	return &model.VideoInfo{
+		ID:          raw.ID,
+		Title:       raw.Title,
+		Description: raw.Description,
+		Duration:    raw.Duration,
+		Thumbnail:   raw.Thumbnail,
+		Uploader:    raw.Uploader,
+		ViewCount:   raw.ViewCount,
+		Formats:     formats,
+	}
+}
+
 func (y *YTDLP) GetInfo(ctx context.Context, url string) (*model.VideoInfo, error) {
 	ctx, cancel := context.WithTimeout(ctx, y.timeout)
 	defer cancel()
@@ -88,29 +114,37 @@ func (y *YTDLP) GetInfo(ctx context.Context, url string) (*model.VideoInfo, erro
 		return nil, fmt.Errorf("failed to parse yt-dlp output: %w", err)
 	}
 
-	formats := make([]model.VideoFormat, len(raw.Formats))
-	for i, f := range raw.Formats {
-		formats[i] = model.VideoFormat{
-			FormatID:   f.FormatID,
-			Ext:        f.Ext,
-			Resolution: f.Resolution,
-			Filesize:   f.Filesize,
-			VCodec:     f.VCodec,
-			ACodec:     f.ACodec,
-			Note:       f.FormatNote,
-		}
+	return toVideoInfo(raw), nil
+}
+
+func (y *YTDLP) GetPlaylistVideoInfo(ctx context.Context, url string) (*model.VideoInfo, error) {
+	ctx, cancel := context.WithTimeout(ctx, y.timeout)
+	defer cancel()
+
+	args := []string{
+		"--dump-json",
+		"--no-playlist",
+		"--quiet",
+		"--no-warnings",
 	}
 
-	return &model.VideoInfo{
-		ID:          raw.ID,
-		Title:       raw.Title,
-		Description: raw.Description,
-		Duration:    raw.Duration,
-		Thumbnail:   raw.Thumbnail,
-		Uploader:    raw.Uploader,
-		ViewCount:   raw.ViewCount,
-		Formats:     formats,
-	}, nil
+	args = append(args, y.requiredArguments...)
+	args = append(args, url)
+
+	fmt.Printf("running yt-dlp with arguments: %s\n", args)
+
+	cmd := exec.CommandContext(ctx, y.binaryPath, args...)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		return nil, fmt.Errorf("yt-dlp get info failed: %w, output: %s", err, string(output))
+	}
+
+	var raw VideoInfoRaw
+	if err := json.Unmarshal(output, &raw); err != nil {
+		return nil, fmt.Errorf("failed to parse yt-dlp output: %w", err)
+	}
+
+	return toVideoInfo(raw), nil
 }
 
 func (y *YTDLP) Download(ctx context.Context, url, format, quality, fileName string, outputDir string, recodeVideo bool, audioOnly bool, progressChan chan<- model.ProgressEventData) (string, error) {
@@ -118,7 +152,7 @@ func (y *YTDLP) Download(ctx context.Context, url, format, quality, fileName str
 	defer cancel()
 
 	args := []string{
-	  "-v",
+		"-v",
 		"--no-playlist",
 		"--newline",
 		"--progress",
@@ -137,7 +171,7 @@ func (y *YTDLP) Download(ctx context.Context, url, format, quality, fileName str
 	}
 
 	if (format != "" || quality != "") && recodeVideo {
-	  args = append(args, "--recode-video", "mp4")
+		args = append(args, "--recode-video", "mp4")
 	}
 
 	args = append(args, y.requiredArguments...)
