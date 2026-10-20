@@ -20,7 +20,7 @@
 	let isLoading = $derived(inputManager.loading);
 
 	let isInvalid = $state(false);
-	let errorDetail = $state<string | null>(null);
+	let log = $state<string | null>(null);
 	let openErrorDialog = $state(false);
 
 	let isDown = $derived(inputManager.isDown);
@@ -49,7 +49,7 @@
 			mediaInfo = await getMediaInfo(inputValue);
 		} catch (e) {
 			console.error(`failed to get media information: ${e}`);
-			errorDetail = String(e);
+			log = String(e);
 			openErrorDialog = true;
 			return;
 		} finally {
@@ -110,8 +110,8 @@
 
 <DialogError
 	bind:open={openErrorDialog}
-	description="An error occurred, the server could not get information from the link you provided, the link may not be supported by yt-dlp."
-	{errorDetail}
+	description="An error occurred, the server could not get information from the link you provided."
+	{log}
 />
 
 <DialogError
