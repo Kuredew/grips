@@ -232,6 +232,9 @@ func (y *YTDLP) Download(ctx context.Context, url, format, quality, fileName str
 	if (format != "" || quality != "") && recodeVideo {
 		args = append(args, "--recode-video", "mp4")
 	}
+	if !audioOnly {
+		args = append(args, "--remux-video", "mp4")
+	}
 
 	args = append(args, y.requiredArguments...)
 	args = append(args, url)
