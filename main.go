@@ -45,8 +45,9 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed loading cookies: %v", err)
 	}
+	tempFile := service.NewTempFile(tmpPath)
 
-	ytdlp := service.NewYTDLP(cookies, bgutilBaseUrl, ytDlpBinary, ytDlpTimeout)
+	ytdlp := service.NewYTDLP(cookies, tempFile, bgutilBaseUrl, ytDlpBinary, ytDlpTimeout)
 	downloader := service.NewDownloader(ytdlp, storagePath, tmpPath, maxConcurrent)
 	storage := service.NewStorage(storagePath, baseURL)
 

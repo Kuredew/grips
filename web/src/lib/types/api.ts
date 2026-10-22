@@ -42,3 +42,23 @@ export interface MediaInfo {
 	view_count: string;
 	formats: MediaFormat[];
 }
+
+export interface PlaylistInfo {
+	id: string;
+	title: string;
+	uploader: string;
+	n_entries: number;
+	entries: MediaInfo[];
+}
+
+export interface MediaInfoResult {
+	is_playlist: false;
+	video_info: MediaInfo;
+}
+
+export interface PlaylistInfoResult {
+	is_playlist: true;
+	playlist_info: PlaylistInfo;
+}
+
+export type InfoResult = MediaInfoResult | PlaylistInfoResult;

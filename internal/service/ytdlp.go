@@ -2,6 +2,7 @@ package service
 
 import (
 	"bufio"
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -19,6 +20,7 @@ type YTDLP struct {
 	binaryPath        string
 	timeout           time.Duration
 	cookies           *Cookies
+	tempFile          *TempFile
 	requiredArguments []string
 }
 
@@ -41,7 +43,15 @@ type VideoInfoRaw struct {
 	} `json:"formats"`
 }
 
-func NewYTDLP(cookies *Cookies, bgutilBaseUrl string, binaryPath string, timeout time.Duration) *YTDLP {
+type PlaylistInfoRaw struct {
+	ID         string         `json:"id"`
+	Title      string         `json:"title"`
+	Uploader   string         `json:"uploader"`
+	EntryCount int            `json:"n_entries"`
+	Entries    []VideoInfoRaw `json:"entries"`
+}
+
+func NewYTDLP(cookies *Cookies, tempFile *TempFile, bgutilBaseUrl string, binaryPath string, timeout time.Duration) *YTDLP {
 	if binaryPath == "" {
 		binaryPath = "yt-dlp"
 	}
@@ -52,6 +62,7 @@ func NewYTDLP(cookies *Cookies, bgutilBaseUrl string, binaryPath string, timeout
 		binaryPath: binaryPath,
 		timeout:    timeout,
 		cookies:    cookies,
+		tempFile:   tempFile,
 		requiredArguments: []string{
 			"--cookies", cookies.CookiesPath,
 			"--extractor-args", "youtube:player_client=web_creator",
@@ -117,14 +128,20 @@ func (y *YTDLP) GetInfo(ctx context.Context, url string) (*model.VideoInfo, erro
 	return toVideoInfo(raw), nil
 }
 
-func (y *YTDLP) GetPlaylistVideoInfo(ctx context.Context, url string) (*model.VideoInfo, error) {
+func (y *YTDLP) FetchInfo(ctx context.Context, url string) (*model.InfoResult, error) {
 	ctx, cancel := context.WithTimeout(ctx, y.timeout)
 	defer cancel()
 
+	tempFile, cleanup, err := y.tempFile.Create("info_")
+	if err != nil {
+		return nil, err
+	}
+	defer cleanup()
+
 	args := []string{
-		"--dump-json",
-		"--no-playlist",
+		"--dump-single-json",
 		"--quiet",
+		"--ignore-errors",
 		"--no-warnings",
 	}
 
@@ -133,18 +150,60 @@ func (y *YTDLP) GetPlaylistVideoInfo(ctx context.Context, url string) (*model.Vi
 
 	fmt.Printf("running yt-dlp with arguments: %s\n", args)
 
+	var stderrBuf bytes.Buffer
 	cmd := exec.CommandContext(ctx, y.binaryPath, args...)
-	output, err := cmd.CombinedOutput()
+	cmd.Stdout = tempFile
+	cmd.Stderr = &stderrBuf
+
+	cmd.Run()
+
+	info, err := os.ReadFile(tempFile.Name())
 	if err != nil {
-		return nil, fmt.Errorf("yt-dlp get info failed: %w, output: %s", err, string(output))
+		return nil, fmt.Errorf("cannot read information file: %w", err)
 	}
 
-	var raw VideoInfoRaw
-	if err := json.Unmarshal(output, &raw); err != nil {
-		return nil, fmt.Errorf("failed to parse yt-dlp output: %w", err)
+	if string(info) == "null\n" {
+		return nil, fmt.Errorf("cannot get any information from url: %s", stderrBuf.String())
 	}
 
-	return toVideoInfo(raw), nil
+	var probe struct {
+		Type string `json:"_type"`
+	}
+	if err := json.Unmarshal(info, &probe); err != nil {
+		return nil, fmt.Errorf("failed to parse yt_dlp output: %w", err)
+	}
+
+	switch probe.Type {
+	case "playlist":
+		var raw PlaylistInfoRaw
+		if err := json.Unmarshal(info, &raw); err != nil {
+			return nil, fmt.Errorf("failed to parse playlist: %w", err)
+		}
+		entries := make([]model.VideoInfo, len(raw.Entries))
+		for i, e := range raw.Entries {
+			entries[i] = *toVideoInfo(e)
+		}
+
+		return &model.InfoResult{
+			IsPlaylist: true,
+			Playlist: &model.PlaylistInfo{
+				ID:         raw.ID,
+				Title:      raw.Title,
+				Uploader:   raw.Uploader,
+				EntryCount: raw.EntryCount,
+				Entries:    entries,
+			},
+		}, nil
+	default:
+		var raw VideoInfoRaw
+		if err := json.Unmarshal(info, &raw); err != nil {
+			return nil, fmt.Errorf("failed to parse video info: %w", err)
+		}
+
+		return &model.InfoResult{
+			Video: toVideoInfo(raw),
+		}, nil
+	}
 }
 
 func (y *YTDLP) Download(ctx context.Context, url, format, quality, fileName string, outputDir string, recodeVideo bool, audioOnly bool, progressChan chan<- model.ProgressEventData) (string, error) {
