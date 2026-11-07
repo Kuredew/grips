@@ -32,7 +32,7 @@ func (h *InfoHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
 	defer cancel()
 
-	info, err := h.ytdlp.GetInfo(ctx, url)
+	info, err := h.ytdlp.FetchInfo(ctx, url)
 	if err != nil {
 		http.Error(w, "Failed to get video info: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -41,4 +41,3 @@ func (h *InfoHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(info)
 }
-

@@ -1,0 +1,14 @@
+version: "3"
+
+tasks:
+  build:
+    desc: Build grips executable
+    cmds:
+      - go build -v -o grips.exe
+
+  run:
+    desc: Run grips backend
+    deps:
+      - build
+    cmds:
+      - ./grips.exe

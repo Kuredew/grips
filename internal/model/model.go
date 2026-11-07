@@ -32,6 +32,20 @@ type VideoInfo struct {
 	Formats     []VideoFormat `json:"formats"`
 }
 
+type PlaylistInfo struct {
+	ID         string      `json:"id"`
+	Title      string      `json:"title"`
+	Uploader   string      `json:"uploader"`
+	EntryCount int         `json:"n_entries"`
+	Entries    []VideoInfo `json:"entries"`
+}
+
+type InfoResult struct {
+	IsPlaylist bool          `json:"is_playlist"`
+	Video      *VideoInfo    `json:"video_info"`
+	Playlist   *PlaylistInfo `json:"playlist_info"`
+}
+
 type DownloadResponse struct {
 	DownloadID string `json:"download_id"`
 	Status     string `json:"status"`

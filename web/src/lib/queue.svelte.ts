@@ -77,6 +77,7 @@ class QueueManager {
 		const queueItem = this.addQueueItem(mediaInfo.title, url, mediaType);
 		if (!queueItem) throw new Error('Queue is not created succesfully.');
 
+		let latestLog = '';
 		return {
 			start: async () => {
 				const settings = settingsManager.settingsValue.current;
@@ -110,6 +111,8 @@ class QueueManager {
 										log: [...currentState.log, data.log]
 									});
 								}
+								console.log(data.log);
+								latestLog = data.log;
 						}
 					});
 
@@ -162,7 +165,9 @@ class QueueManager {
 						currentItem &&
 						(currentItem.state == 'extracting' || currentItem.state == 'downloading')
 					) {
-						this.#updateItemInArray(toFailed(currentItem, `queue failed: ${e}`));
+						this.#updateItemInArray(
+							toFailed(currentItem, `queue failed: ${e}, Latest log: ${latestLog}`)
+						);
 					}
 
 					console.error(`Theres an error in queue with id ${currentItem?.id}!`);

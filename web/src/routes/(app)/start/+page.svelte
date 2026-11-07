@@ -9,7 +9,7 @@
 	import Spinner from '#components/ui/icon/Spinner.svelte';
 	import { queueManager } from '#lib/queue.svelte.ts';
 	import { getMediaInfo } from '#lib/api/getMediaInfo.ts';
-	import type { MediaInfo } from '#lib/types/api.ts';
+	import type { InfoResult } from '#lib/types/api.ts';
 	import { isValidUrl } from '#lib/util/url.ts';
 	import DialogError from '#components/ui/dialog/DialogError.svelte';
 	import { checkHealth } from '#lib/api/checkHealth.ts';
@@ -20,7 +20,7 @@
 	let isLoading = $derived(inputManager.loading);
 
 	let isInvalid = $state(false);
-	let errorDetail = $state<string | null>(null);
+	let log = $state<string | null>(null);
 	let openErrorDialog = $state(false);
 
 	let isDown = $derived(inputManager.isDown);
@@ -43,32 +43,35 @@
 		}
 		inputManager.loading = true;
 
-		let mediaInfo: MediaInfo;
+		let info: InfoResult;
 
 		try {
-			mediaInfo = await getMediaInfo(inputValue);
+			info = await getMediaInfo(inputValue);
 		} catch (e) {
 			console.error(`failed to get media information: ${e}`);
-			errorDetail = String(e);
+			log = String(e);
 			openErrorDialog = true;
 			return;
 		} finally {
 			inputManager.loading = false;
 		}
 
-		const isVideoMedia = isVideo(mediaInfo);
+		if (!info.is_playlist) {
+			const mediaInfo = info.video_info;
+			const isVideoMedia = isVideo(mediaInfo);
 
-		const job = queueManager.createQueueJob(
-			mediaInfo,
-			inputValue,
-			isVideoMedia ? 'video' : 'audio'
-		);
-		job.start();
+			const job = queueManager.createQueueJob(
+				mediaInfo,
+				inputValue,
+				isVideoMedia && mediaType == 'auto' ? 'video' : 'audio'
+			);
+			job.start();
 
-		inputManager.inputValue.current = '';
-		inputManager.loading = false;
-		if (!inputManager.queueListOpened) {
-			inputManager.queueListOpened = true;
+			inputManager.inputValue.current = '';
+			inputManager.loading = false;
+			if (!inputManager.queueListOpened) {
+				inputManager.queueListOpened = true;
+			}
 		}
 	}
 
@@ -110,8 +113,8 @@
 
 <DialogError
 	bind:open={openErrorDialog}
-	description="An error occurred, the server could not get information from the link you provided, the link may not be supported by yt-dlp."
-	{errorDetail}
+	description="An error occurred, the server could not get information from the link you provided."
+	{log}
 />
 
 <DialogError
