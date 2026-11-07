@@ -1,5 +1,6 @@
 {
     "release-type": "go",
+    "bootstrap-sha": "ae420c14cc7d7d06775dbac66e04a049d408f6c7",
     "bump-minor-pre-major": true,
     "bump-patch-for-minor-pre-major": true
 }
