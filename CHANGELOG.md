@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.0.0](https://github.com/Kuredew/grips/compare/v0.1.0...v1.0.0) (2026-11-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* add support if the submitted URL is a playlist
+
+### Features
+
+* add a step to remux all downloaded videos to mp4 ([150fc88](https://github.com/Kuredew/grips/commit/150fc88739f1e4cb5c6e20bef842c14658055072))
+* add support if the submitted URL is a playlist ([40c050e](https://github.com/Kuredew/grips/commit/40c050e9bade3cfd70dd66c41e408e65bb405803))
+
+
+### Bug Fixes
+
+* add height to the gradient background element ([b263f63](https://github.com/Kuredew/grips/commit/b263f6339ece60df1eb843529da5fb8eaa9b47c8))
+* **api:** put the name of the api function into the error object ([896ca61](https://github.com/Kuredew/grips/commit/896ca6101340c99e10053c7f74769a574ba3a677))
+* change the property attribute to name in the description meta tag ([6281390](https://github.com/Kuredew/grips/commit/62813907334357571a2c1372f3cc57f67f534bbd))
+* **component:** add a max width to the components inside the error dialog ([03643e0](https://github.com/Kuredew/grips/commit/03643e08efab3955156c26c70026e93c498034ab))
+* **component:** add handle if announcement env variable does not exist ([ae6bade](https://github.com/Kuredew/grips/commit/ae6bade68bd2c88b3d91233a7accdc4efc113025))
+* **ytdlp:** remove the recode video argument when downloading to audio only mode ([c296818](https://github.com/Kuredew/grips/commit/c2968181167cf03104eed7afbb6bd2ebed66d0c2))
+
 ## [0.1.0](https://github.com/Kuredew/grips/compare/v2.2.0...v0.1.0) (2026-10-15)
 
 
