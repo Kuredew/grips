@@ -46,9 +46,14 @@ export const streamVideoUrl = async (
 					}
 				};
 
-				eventSource.onerror = (err) => {
-					eventSource.close();
-					throw new Error('EventSource stream connection error: ' + err);
+				eventSource.onerror = (event) => {
+					console.error('Theres a problem in EventSource:', event);
+
+					if (eventSource.readyState === EventSource.CONNECTING) {
+						console.warn('Connection closed. Trying again...');
+					} else if (eventSource.readyState === EventSource.CLOSED) {
+						reject(new Error('streamVideoUrl<eventsource>: Connection closed.'));
+					}
 				};
 			} catch (e) {
 				reject(new Error(`streamVideoUrl<promise>: ${e}`));
