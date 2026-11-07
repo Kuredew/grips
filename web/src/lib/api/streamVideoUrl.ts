@@ -29,28 +29,32 @@ export const streamVideoUrl = async (
 		}
 
 		return new Promise((resolve, reject) => {
-			const eventSource = new EventSource(`${API_BASE_URL}/stream/${downloadID}`);
+			try {
+				const eventSource = new EventSource(`${API_BASE_URL}/stream/${downloadID}`);
 
-			eventSource.onmessage = (event) => {
-				try {
-					const parsedData = JSON.parse(event.data) as StreamEvent;
-					output(parsedData);
+				eventSource.onmessage = (event) => {
+					try {
+						const parsedData = JSON.parse(event.data) as StreamEvent;
+						output(parsedData);
 
-					if (parsedData.event == 'done') {
-						resolve();
-						eventSource.close();
+						if (parsedData.event == 'done') {
+							resolve();
+							eventSource.close();
+						}
+					} catch (e) {
+						throw new Error('Failed to parse sse event data: ' + e, { cause: e });
 					}
-				} catch (e) {
-					reject(new Error('Failed to parse sse event data: ' + e));
-				}
-			};
+				};
 
-			eventSource.onerror = (err) => {
-				eventSource.close();
-				reject(new Error('EventSource stream connection error: ' + err));
-			};
+				eventSource.onerror = (err) => {
+					eventSource.close();
+					throw new Error('EventSource stream connection error: ' + err);
+				};
+			} catch (e) {
+				reject(new Error(`streamVideoUrl<promise>: ${e}`));
+			}
 		});
 	} catch (e) {
-		throw new Error('getVideoUrl: ' + e, { cause: e });
+		throw new Error('streamVideoUrl: ' + e, { cause: e });
 	}
 };
