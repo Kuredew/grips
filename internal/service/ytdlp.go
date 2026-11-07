@@ -222,18 +222,19 @@ func (y *YTDLP) Download(ctx context.Context, url, format, quality, fileName str
 
 	if audioOnly {
 		args = append(args, "-x", "--audio-format", "mp3", "--audio-quality", "0")
-	} else if format != "" {
-		args = append(args, "-f", format)
-	} else if quality != "" {
-		formatSpec := y.qualityToFormat(quality)
-		args = append(args, "-f", formatSpec)
-	}
+	} else if !audioOnly {
+		if format != "" {
+			args = append(args, "-f", format)
+		} else if quality != "" {
+			formatSpec := y.qualityToFormat(quality)
+			args = append(args, "-f", formatSpec)
+		}
 
-	if (format != "" || quality != "") && recodeVideo {
-		args = append(args, "--recode-video", "mp4")
-	}
-	if !audioOnly {
-		args = append(args, "--remux-video", "mp4")
+		if recodeVideo {
+			args = append(args, "--recode-video", "mp4")
+		} else {
+			args = append(args, "--remux-video", "mp4")
+		}
 	}
 
 	args = append(args, y.requiredArguments...)
