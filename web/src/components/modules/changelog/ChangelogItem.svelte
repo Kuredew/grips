@@ -13,11 +13,11 @@
 
 {#snippet title()}
 	{#if !compact}
-		<h1 class="text-4xl font-medium! tracking-tight text-balance text-white">
+		<h1 class="text-4xl font-medium! tracking-tight text-pretty text-white">
 			{changelog.changelog.metadata.title}
 		</h1>
 	{:else}
-		<h3 class="text-xl font-medium! tracking-tight text-balance text-white">
+		<h3 class="text-xl font-medium! tracking-tight text-pretty text-white">
 			{changelog.changelog.metadata.title}
 		</h3>
 	{/if}
@@ -44,7 +44,7 @@
 			<div class="aspect-video overflow-hidden rounded-3xl">
 				<img
 					class="h-full w-full object-cover transition-transform {hover ? 'scale-105' : ''}"
-					src={'/img/' + changelog.changelog.metadata.image}
+					src={changelog.changelog.metadata.image}
 					alt={changelog.changelog.metadata.image_desc}
 				/>
 			</div>
