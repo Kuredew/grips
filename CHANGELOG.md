@@ -1,5 +1,42 @@
 # Changelog
 
+## 0.2.0
+
+### Backend
+
+#### Extractor
+
+- Added support for playlist type media links
+
+#### Downloader
+
+- Added yt-dlp argument to remux downloaded video to mp4
+- Fixed downloading results being video if the mode is audio only
+
+### Web
+
+#### Queue
+
+- Added the last log from the backend to the error detail
+- Added what function caused the error to error details
+
+#### Style
+
+- Added transition animations to interactive components
+- Added height to the gradient background element
+
+### misc
+
+- _(readme)_ Clarify required environment variables in README
+- _(taskfile)_ Added a task file to quickly build and run the project
+- _(release)_ Added release please configuration for v0
+- _(release)_ Added release please manifest config
+- _(release)_ Added bootstrap-sha
+- _(workflow)_ Removed release-type and add config file path to release-please step
+- _(config)_ Added packages and schema in json
+- _(config)_ Added cliff config file for bump with git-cliff
+
+
 ## [0.1.0](https://github.com/Kuredew/grips/compare/v2.2.0...v0.1.0) (2026-10-15)
 
 
