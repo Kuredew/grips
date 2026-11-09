@@ -13,16 +13,6 @@ body = """
 {% else %}\
     ## [Unreleased]
 {% endif %}\
-{% for scope_name, scope_commits in commits | group_by(attribute="scope") %}
-    ### {{ scope_name | striptags | trim | upper_first }}
-
-    {% for group_name, group_commits in scope_commits | group_by(attribute="group") %}\
-        - {{ group_name | striptags | trim | upper_first }}
-        {% for commit in group_commits %}\
-        {% raw %}  {% endraw %}- {% if commit.breaking %}[**breaking**] {% endif %}{{ commit.message | upper_first }} ([{{ commit.id | truncate(length=7, end="") }}](https://github.com/Kuredew/grips/commit/{{ commit.id }}))
-        {% endfor %}
-    {% endfor %}\
-{% endfor %}\
 {% set_global no_scope_commits = [] %}\
 {% for commit in commits %}\
   {% if not commit.scope %}\
@@ -39,6 +29,16 @@ body = """
         {% endfor %}
     {% endfor %}\
 {% endif %}\
+{% for scope_name, scope_commits in commits | group_by(attribute="scope") %}
+    ### {{ scope_name | striptags | trim | upper_first }}
+
+    {% for group_name, group_commits in scope_commits | group_by(attribute="group") %}\
+        - {{ group_name | striptags | trim | upper_first }}
+        {% for commit in group_commits %}\
+        {% raw %}  {% endraw %}- {% if commit.breaking %}[**breaking**] {% endif %}{{ commit.message | upper_first }} ([{{ commit.id | truncate(length=7, end="") }}](https://github.com/Kuredew/grips/commit/{{ commit.id }}))
+        {% endfor %}
+    {% endfor %}\
+{% endfor %}\
 
 """
 # Remove leading and trailing whitespaces from the changelog's body.

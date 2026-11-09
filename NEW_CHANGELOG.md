@@ -1,5 +1,16 @@
 ## Update 0.2.0
 
+### General
+
+- Added
+  - [**breaking**] Add support if the submitted URL is a playlist ([40c050e](https://github.com/Kuredew/grips/commit/40c050e9bade3cfd70dd66c41e408e65bb405803))
+  - Add a step to remux all downloaded videos to mp4 ([150fc88](https://github.com/Kuredew/grips/commit/150fc88739f1e4cb5c6e20bef842c14658055072))
+
+- Fixed
+  - Change the property attribute to name in the description meta tag ([6281390](https://github.com/Kuredew/grips/commit/62813907334357571a2c1372f3cc57f67f534bbd))
+  - Add height to the gradient background element ([b263f63](https://github.com/Kuredew/grips/commit/b263f6339ece60df1eb843529da5fb8eaa9b47c8))
+
+
 ### Api
 
 - Fixed
@@ -23,17 +34,6 @@
 
 - Fixed
   - Remove the recode video argument when downloading to audio only mode ([c296818](https://github.com/Kuredew/grips/commit/c2968181167cf03104eed7afbb6bd2ebed66d0c2))
-
-
-### General
-
-- Added
-  - [**breaking**] Add support if the submitted URL is a playlist ([40c050e](https://github.com/Kuredew/grips/commit/40c050e9bade3cfd70dd66c41e408e65bb405803))
-  - Add a step to remux all downloaded videos to mp4 ([150fc88](https://github.com/Kuredew/grips/commit/150fc88739f1e4cb5c6e20bef842c14658055072))
-
-- Fixed
-  - Change the property attribute to name in the description meta tag ([6281390](https://github.com/Kuredew/grips/commit/62813907334357571a2c1372f3cc57f67f534bbd))
-  - Add height to the gradient background element ([b263f63](https://github.com/Kuredew/grips/commit/b263f6339ece60df1eb843529da5fb8eaa9b47c8))
 
 ## Update 0.1.0
 
