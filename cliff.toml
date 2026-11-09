@@ -19,7 +19,7 @@ body = """
     {% for group_name, group_commits in scope_commits | group_by(attribute="group") %}\
         - {{ group_name | striptags | trim | upper_first }}
         {% for commit in group_commits %}\
-        {% raw %}  {% endraw %}- {% if commit.breaking %}[**breaking**] {% endif %}{{ commit.message | upper_first }}
+        {% raw %}  {% endraw %}- {% if commit.breaking %}[**breaking**] {% endif %}{{ commit.message | upper_first }} ([{{ commit.id | truncate(length=7, end="") }}](https://github.com/Kuredew/grips/commit/{{ commit.id }}))
         {% endfor %}
     {% endfor %}\
 {% endfor %}\
@@ -35,7 +35,7 @@ body = """
     {% for group_name, group_commits in no_scope_commits | group_by(attribute="group") %}\
         - {{ group_name | striptags | trim | upper_first }}
         {% for commit in group_commits %}\
-        {% raw %}  {% endraw %}- {% if commit.breaking %}[**breaking**] {% endif %}{{ commit.message | upper_first }}
+        {% raw %}  {% endraw %}- {% if commit.breaking %}[**breaking**] {% endif %}{{ commit.message | upper_first }} ([{{ commit.id | truncate(length=7, end="") }}](https://github.com/Kuredew/grips/commit/{{ commit.id }}))
         {% endfor %}
     {% endfor %}\
 {% endif %}\

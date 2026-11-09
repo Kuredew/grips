@@ -3,228 +3,228 @@
 ### Api
 
 - Fixed
-  - Put the name of the api function into the error object
+  - Put the name of the api function into the error object ([896ca61](https://github.com/Kuredew/grips/commit/896ca6101340c99e10053c7f74769a574ba3a677))
 
 
 ### Component
 
 - Fixed
-  - Add handle if announcement env variable does not exist
-  - Add a max width to the components inside the error dialog
+  - Add handle if announcement env variable does not exist ([ae6bade](https://github.com/Kuredew/grips/commit/ae6bade68bd2c88b3d91233a7accdc4efc113025))
+  - Add a max width to the components inside the error dialog ([03643e0](https://github.com/Kuredew/grips/commit/03643e08efab3955156c26c70026e93c498034ab))
 
 
 ### Release
 
 - Fixed
-  - Force root version to 0.1.0
+  - Force root version to 0.1.0 ([f994e54](https://github.com/Kuredew/grips/commit/f994e5481d3537239ef057d406a5540060f1b8cf))
 
 
 ### Ytdlp
 
 - Fixed
-  - Remove the recode video argument when downloading to audio only mode
+  - Remove the recode video argument when downloading to audio only mode ([c296818](https://github.com/Kuredew/grips/commit/c2968181167cf03104eed7afbb6bd2ebed66d0c2))
 
 
 ### General
 
 - Added
-  - [**breaking**] Add support if the submitted URL is a playlist
-  - Add a step to remux all downloaded videos to mp4
+  - [**breaking**] Add support if the submitted URL is a playlist ([40c050e](https://github.com/Kuredew/grips/commit/40c050e9bade3cfd70dd66c41e408e65bb405803))
+  - Add a step to remux all downloaded videos to mp4 ([150fc88](https://github.com/Kuredew/grips/commit/150fc88739f1e4cb5c6e20bef842c14658055072))
 
 - Fixed
-  - Change the property attribute to name in the description meta tag
-  - Add height to the gradient background element
+  - Change the property attribute to name in the description meta tag ([6281390](https://github.com/Kuredew/grips/commit/62813907334357571a2c1372f3cc57f67f534bbd))
+  - Add height to the gradient background element ([b263f63](https://github.com/Kuredew/grips/commit/b263f6339ece60df1eb843529da5fb8eaa9b47c8))
 
 ## Update 0.1.0
 
 ### General
 
 - Added
-  - [**breaking**] Add sveltekit minimal project
-  - [**breaking**] Add final grips landing page
-  - Setup menubar and input field in grips dashboard
-  - Add persistent input and media type radio input
-  - Add settings menubar
-  - Add settings menu ui and add new settings in settingsSchema
-  - Add border-radius settings and improve settings state data
-  - Implement all features until completion.
-  - Add meta tags for seo and add grips logo and banner
-  - Check backend health and send result to home page
-  - Add dimmed whole screen if page loading takes up to 300ms
-  - Add announcement in home page
-  - Implement an announcement that rotates every 3 seconds
-  - Automate delete media files after 4 hours
-  - Add sitemap.xml route and use super-sitemap to generate sitemap
+  - [**breaking**] Add sveltekit minimal project ([340b6f9](https://github.com/Kuredew/grips/commit/340b6f945cb9a5aac89c558cf2aef4bc2e2c90c2))
+  - [**breaking**] Add final grips landing page ([cecc934](https://github.com/Kuredew/grips/commit/cecc934b7b8df8e6183664519467625109868ce6))
+  - Setup menubar and input field in grips dashboard ([2a4e07e](https://github.com/Kuredew/grips/commit/2a4e07e5467e0e81dff6ec56a9f137bfca773076))
+  - Add persistent input and media type radio input ([dd54bf3](https://github.com/Kuredew/grips/commit/dd54bf35972d43c73bbc29bcbe405b7d50ca8b69))
+  - Add settings menubar ([34b6200](https://github.com/Kuredew/grips/commit/34b62007d0036719e5d0d470245370236d6ceadc))
+  - Add settings menu ui and add new settings in settingsSchema ([8ca65eb](https://github.com/Kuredew/grips/commit/8ca65eb26521e7b631be5bcd1beda1e587625d62))
+  - Add border-radius settings and improve settings state data ([c275c12](https://github.com/Kuredew/grips/commit/c275c12089e25b11d881bff4320dca25bbdc0d67))
+  - Implement all features until completion. ([b86d0ea](https://github.com/Kuredew/grips/commit/b86d0ea87a566af9ad98c036fc161c5de1ea3329))
+  - Add meta tags for seo and add grips logo and banner ([e64f3e1](https://github.com/Kuredew/grips/commit/e64f3e17253cfad0a85107e2222888f2494e6882))
+  - Check backend health and send result to home page ([6170b78](https://github.com/Kuredew/grips/commit/6170b78770980d0f39fd699545348ff30f45ddc4))
+  - Add dimmed whole screen if page loading takes up to 300ms ([9fed145](https://github.com/Kuredew/grips/commit/9fed145d15d22ff1a25a83637f1372b5ac8bfce7))
+  - Add announcement in home page ([a2c90fb](https://github.com/Kuredew/grips/commit/a2c90fb516519470050a84031c448798d6a9c27f))
+  - Implement an announcement that rotates every 3 seconds ([aea8c0c](https://github.com/Kuredew/grips/commit/aea8c0cbe0c92a81dedd70ee34fb78dd439db17e))
+  - Automate delete media files after 4 hours ([a90ccf4](https://github.com/Kuredew/grips/commit/a90ccf42e56e75efc451cd2d1f30abf40e5ce469))
+  - Add sitemap.xml route and use super-sitemap to generate sitemap ([5c33e38](https://github.com/Kuredew/grips/commit/5c33e3897f07c7104edb811b0467399f67ad8731))
 
 - Fixed
-  - Change as: 'raw' to query: '?raw' in import.meta.glob
-  - Correct insert the file_ext obtained from the backend
-  - Fix wrong twitter meta tag in seo components
-  - Home navigation bar overlapped
-  - Check whether the media link is a video to ensure consitent formatting
+  - Change as: 'raw' to query: '?raw' in import.meta.glob ([426b12d](https://github.com/Kuredew/grips/commit/426b12d992d56426e67feb4108d2f112e8f87397))
+  - Correct insert the file_ext obtained from the backend ([8eae137](https://github.com/Kuredew/grips/commit/8eae137a9a01ad962d526b449cf45f434d119c9f))
+  - Fix wrong twitter meta tag in seo components ([b9578cc](https://github.com/Kuredew/grips/commit/b9578ccfd3f8a0b7af1534ed8a0e7279c72c76e4))
+  - Home navigation bar overlapped ([87f2545](https://github.com/Kuredew/grips/commit/87f25452c2b4537deb5f79efd301547d6eee767f))
+  - Check whether the media link is a video to ensure consitent formatting ([db65a92](https://github.com/Kuredew/grips/commit/db65a92f8c2ff5a7a17318d0e4da24d4b171306c))
 
 ## Update 2.2.0
 
 ### General
 
 - Added
-  - Add recode video to mp4 (h264) feature after media downloaded
+  - Add recode video to mp4 (h264) feature after media downloaded ([1d1b49f](https://github.com/Kuredew/grips/commit/1d1b49f2c8bbaa15c352143dd81fc222bd43ded9))
 
 - Fixed
-  - Add web_embedded youtube player client to --extractor-args yt-dlp arguments
-  - Add bgutil-ytdlp-pot-provider yt-dlp plugin
+  - Add web_embedded youtube player client to --extractor-args yt-dlp arguments ([14e3344](https://github.com/Kuredew/grips/commit/14e334461a7f7ffea33411430813bdf2b14a50ed))
+  - Add bgutil-ytdlp-pot-provider yt-dlp plugin ([e0bcf3c](https://github.com/Kuredew/grips/commit/e0bcf3c5ae572b76a954640c3a328a10e4258b97))
 
 ## Update 2.1.0
 
 ### General
 
 - Added
-  - Open the url and check the information first before adding it to the download queue
-  - Add a click animation to the button component
-  - Add file_ext to stream done event so frontend can use it
-  - Add the auto mediaType to the download processing and integrate it into the UI so that user can select it
-  - Add a modal dialog if the server doesn't response
-  - Add click to copy error detail if queue is failed
+  - Open the url and check the information first before adding it to the download queue ([6f65346](https://github.com/Kuredew/grips/commit/6f65346ec2cb676e90fee1c13ba348ced2a8b157))
+  - Add a click animation to the button component ([03d614d](https://github.com/Kuredew/grips/commit/03d614d07dce59b916ac3d675af15417ffcc1fc9))
+  - Add file_ext to stream done event so frontend can use it ([2aa6978](https://github.com/Kuredew/grips/commit/2aa6978fc814465e5e37fb02500d2487f1e6d5d4))
+  - Add the auto mediaType to the download processing and integrate it into the UI so that user can select it ([e3c6a4b](https://github.com/Kuredew/grips/commit/e3c6a4b2c5e85ea5531f4017b1afaf015756b269))
+  - Add a modal dialog if the server doesn't response ([f3885b6](https://github.com/Kuredew/grips/commit/f3885b600804815f7fbc048fc817028fb532466b))
+  - Add click to copy error detail if queue is failed ([f6e7c04](https://github.com/Kuredew/grips/commit/f6e7c04d75007c924e93566e38a1b64333a5441f))
 
 - Fixed
-  - Change the duration type from int to float64 because yt-dlp most returns float values for duration
-  - Replace the fetch to EventSource to read log stream
+  - Change the duration type from int to float64 because yt-dlp most returns float values for duration ([75bc900](https://github.com/Kuredew/grips/commit/75bc900ef4beaa4d32284c55ae92619e0148ffe4))
+  - Replace the fetch to EventSource to read log stream ([f139dc5](https://github.com/Kuredew/grips/commit/f139dc5a81064ceaf7f5114d90ab4aac5fb9c82a))
 
 ## Update 2.0.0
 
 ### General
 
 - Added
-  - [**breaking**] Refactor the entire grips api source code to transition to a new download method
-  - [**breaking**] Setup minimal sveltekit project for creating a new grips web
-  - Add cors middleware to entire web endpoint
-  - Add web download and get info functionality
-  - Bind the mediatype state to getVideoUrl and downloadMedia func
-  - Add download queue logic to queue system
-  - Complete the queue feature so that it works perfectly
-  - Add cookies.txt file path to yt-dlp arguments to reduce errors related to cookies
-  - Add fetch github api in page header to display the latest version and commit hash
+  - [**breaking**] Refactor the entire grips api source code to transition to a new download method ([2b0112b](https://github.com/Kuredew/grips/commit/2b0112b536c0c0b53529a9b3ae62550b91dfcd07))
+  - [**breaking**] Setup minimal sveltekit project for creating a new grips web ([9a56ffc](https://github.com/Kuredew/grips/commit/9a56ffc1542ac1131446d3a1c008bf335a52dad1))
+  - Add cors middleware to entire web endpoint ([893d2ba](https://github.com/Kuredew/grips/commit/893d2baf2d8c7bad90f1a161007dbaea1e76182f))
+  - Add web download and get info functionality ([3bc1281](https://github.com/Kuredew/grips/commit/3bc1281281f7b3608e53f936d1fa77c9671585f3))
+  - Bind the mediatype state to getVideoUrl and downloadMedia func ([28ac6bb](https://github.com/Kuredew/grips/commit/28ac6bbb3cdd1398d38baba1ca91321d637ce346))
+  - Add download queue logic to queue system ([6a92eb4](https://github.com/Kuredew/grips/commit/6a92eb48fd45d49fadb0e2bc1e3c49459d4b71de))
+  - Complete the queue feature so that it works perfectly ([19557ff](https://github.com/Kuredew/grips/commit/19557ff08fe172a0423a3b790088473fba425d3a))
+  - Add cookies.txt file path to yt-dlp arguments to reduce errors related to cookies ([a8cad7a](https://github.com/Kuredew/grips/commit/a8cad7a48add2937705722ffa4b6d5b15008f3e0))
+  - Add fetch github api in page header to display the latest version and commit hash ([04355c4](https://github.com/Kuredew/grips/commit/04355c4610ad14db90eca8d14ba0d90903f70997))
 
 - Fixed
-  - Disable error and warning yt-dlp output to prevent parsing yt-dlp output error
-  - Add -print after_move:pathfile in yt-dlp argument to getting filepath after merge
-  - Remove middleware in /stream endpoint so that the streams works properly
-  - Remove and fix code syntax for eslint
-  - Fix the incorrect css syntax in the border section that is causing a build error
-  - Change fatal to regular log in the error log when .env is not found
-  - Add --cookies argument to the getinfo function in yt-dlp service
+  - Disable error and warning yt-dlp output to prevent parsing yt-dlp output error ([9552b60](https://github.com/Kuredew/grips/commit/9552b608bdad4b8d14da8828d14cfd0603fbde31))
+  - Add -print after_move:pathfile in yt-dlp argument to getting filepath after merge ([78030f7](https://github.com/Kuredew/grips/commit/78030f783a3cf48e57e585a2845b28d59e868f13))
+  - Remove middleware in /stream endpoint so that the streams works properly ([dd68083](https://github.com/Kuredew/grips/commit/dd68083a38431c33daa0f5537599b8f60b28c7ab))
+  - Remove and fix code syntax for eslint ([ac75b4a](https://github.com/Kuredew/grips/commit/ac75b4aa4854770874282b40241e3dc21bdaa131))
+  - Fix the incorrect css syntax in the border section that is causing a build error ([f05262a](https://github.com/Kuredew/grips/commit/f05262a0c0bcfc570288eeb908dd491a73210a04))
+  - Change fatal to regular log in the error log when .env is not found ([b867f29](https://github.com/Kuredew/grips/commit/b867f2990b4a4a1880fbcfba3f74ea28947091cb))
+  - Add --cookies argument to the getinfo function in yt-dlp service ([f6d6a6f](https://github.com/Kuredew/grips/commit/f6d6a6fe3a796d756bfd40903629938cf8e5dc75))
 
 - Docs
-  - Replace the old README with the new, clearer one
+  - Replace the old README with the new, clearer one ([40843fb](https://github.com/Kuredew/grips/commit/40843fb3b3fbcd67700ab21dbbb3a3aeaea85fbf))
 
 ## Update 1.2.0
 
 ### General
 
 - Added
-  - [**breaking**] Add improved grips web implementation
-  - Add disable audio encode toggle
+  - [**breaking**] Add improved grips web implementation ([edf1429](https://github.com/Kuredew/grips/commit/edf14298bd32b388b151c67934c48f5c3b0a4fe1))
+  - Add disable audio encode toggle ([abdf8f8](https://github.com/Kuredew/grips/commit/abdf8f8d72de322942ee19b0a36eac47e12b7b7c))
 
 - Fixed
-  - Urls separator not working
-  - Encode audio error because ext file is not valid
-  - Url validation not working properly
+  - Urls separator not working ([370da99](https://github.com/Kuredew/grips/commit/370da991fb9e39be388f7a768c31572631f98193))
+  - Encode audio error because ext file is not valid ([ffdce1c](https://github.com/Kuredew/grips/commit/ffdce1c815c2b0948c35a2576c935f8d968ff2a2))
+  - Url validation not working properly ([7fc8de4](https://github.com/Kuredew/grips/commit/7fc8de4f2f1ac9e5720b7534fb26fe67c0b7f677))
 
 ## Update 1.1.0
 
 ### General
 
 - Added
-  - Add ffmpeg loading information while hovered loading element
-  - Add resourceService to get grips resource
-  - Add useResource hooks to get grips resource
-  - Add announcement and contribute info in about page
+  - Add ffmpeg loading information while hovered loading element ([3ffd755](https://github.com/Kuredew/grips/commit/3ffd75543a6441c9ec9787c555ed26f13cfdb177))
+  - Add resourceService to get grips resource ([3e2b6b5](https://github.com/Kuredew/grips/commit/3e2b6b5e7d79f2df266cdef2928a7cb46d3e19aa))
+  - Add useResource hooks to get grips resource ([b11a4de](https://github.com/Kuredew/grips/commit/b11a4debe29f257123b9c226d82f71e9e064f4d9))
+  - Add announcement and contribute info in about page ([9496ccd](https://github.com/Kuredew/grips/commit/9496ccd9e49fb5827280ff44eefdfcaac352e69b))
 
 - Fixed
-  - GithubService function always return undefined
-  - Json unmarshall error because title sometimes returned invalid json string
-  - Window overflow on mobile browser
-  - Weird black bar on about page
-  - API crash if .env is not present
-  - Download error because urls doesnt separate
+  - GithubService function always return undefined ([763f9b7](https://github.com/Kuredew/grips/commit/763f9b79fb0fda069270813c95dc14c32c230883))
+  - Json unmarshall error because title sometimes returned invalid json string ([3d0c4bf](https://github.com/Kuredew/grips/commit/3d0c4bf8be65055c9d84063f792445cbe454ae90))
+  - Window overflow on mobile browser ([8f6e356](https://github.com/Kuredew/grips/commit/8f6e356144eca2a382363092a4069e09664706eb))
+  - Weird black bar on about page ([7737eed](https://github.com/Kuredew/grips/commit/7737eed369cf6fa83fcbddc95d82646374e34755))
+  - API crash if .env is not present ([3c3f376](https://github.com/Kuredew/grips/commit/3c3f376f1647b9d5506c63ca68ca0accee31a556))
+  - Download error because urls doesnt separate ([9b0d0bc](https://github.com/Kuredew/grips/commit/9b0d0bc47a5bd4b4257061f635fbbb7f65d4fd53))
 
 ## Update 1.0.0
 
 ### General
 
 - Added
-  - Add API folder structure for grips
-  - Add GetTitle function for getinfo endpoint
-  - Add GetInfo handler to return video info
-  - Assamble downloader and handler
-  - Execute init in main function
-  - Listen and Serve API
-  - Add extractvideo function for extractvideo endpoint
-  - Add extractvideo handler for extractvideo request
-  - Add endpoint for extractvideo
-  - Import new react vite project to web folder
-  - Import unfinished react grips website
-  - Add Notification state
-  - Add delete notification function
-  - Add notification daemon to app comp
-  - Add close icon
-  - Add tailwind-scrollbar plugin
-  - Add notification daemon
-  - Add base for download function using notification daemon
-  - Add default string if notification is empty
-  - Add custom hooks for page and window
-  - Add manager for notification, pages, and window for maintain consistently
-  - Add down icon
-  - Add base ffmpeg custom hook system
-  - Add grips settings system
-  - Add ffmpeg loading because many grips function dependent on ffmpeg
-  - Add unfinished basic download function
-  - Add verbose and no playlist to display log more
-  - Add proxy handler and endpoint to download from server
-  - Add sleep helper function
-  - Add cookies to yt-dlp argument to prevent ip blocked error
-  - Add tailwind-scrollbar-hide plugin to index.css
-  - Add spinner icon to display loading
-  - Add github service for get latest tag and relese info
-  - Add useVersion hook to check version
-  - Load version in startup to check version
-  - Add changelog for track changes
+  - Add API folder structure for grips ([ec38ac7](https://github.com/Kuredew/grips/commit/ec38ac788b3c80c6c9421a9f70945ebb884dcbcd))
+  - Add GetTitle function for getinfo endpoint ([1f4e8e8](https://github.com/Kuredew/grips/commit/1f4e8e81d10292ef35ef142bb1e732f66146461b))
+  - Add GetInfo handler to return video info ([a6351db](https://github.com/Kuredew/grips/commit/a6351db9b5cee0a5c0316ddb85bc93661053956b))
+  - Assamble downloader and handler ([29b5387](https://github.com/Kuredew/grips/commit/29b53872ac22449de242a9daa806d598215f7614))
+  - Execute init in main function ([052b1bc](https://github.com/Kuredew/grips/commit/052b1bcc09ad3c1f499709bf758f57a851c68270))
+  - Listen and Serve API ([763bfe0](https://github.com/Kuredew/grips/commit/763bfe078c3e305ec7763e566362b6b8d4a0b98d))
+  - Add extractvideo function for extractvideo endpoint ([e873318](https://github.com/Kuredew/grips/commit/e873318c5ecb6ab38fceb9f722892b00174ef637))
+  - Add extractvideo handler for extractvideo request ([5759e08](https://github.com/Kuredew/grips/commit/5759e08a1b29f1156c37da6f53fd39eef25d5782))
+  - Add endpoint for extractvideo ([23fa6ea](https://github.com/Kuredew/grips/commit/23fa6ea735416adcea0b7d61331adc4fd21dd388))
+  - Import new react vite project to web folder ([5f1db42](https://github.com/Kuredew/grips/commit/5f1db42c870252bdfe01ac2c28123d16aae097ad))
+  - Import unfinished react grips website ([a81947c](https://github.com/Kuredew/grips/commit/a81947c2082cabd526cc5a1cb884ae599ed14a68))
+  - Add Notification state ([92db1b0](https://github.com/Kuredew/grips/commit/92db1b068791f036d0a490f4d0aeebf7604c5f4a))
+  - Add delete notification function ([2848b8d](https://github.com/Kuredew/grips/commit/2848b8da91e525b97650d930faab2a9e92f82923))
+  - Add notification daemon to app comp ([f900e61](https://github.com/Kuredew/grips/commit/f900e616912e5e6107730939ad21d7a9ce0ea526))
+  - Add close icon ([cdfe7ed](https://github.com/Kuredew/grips/commit/cdfe7ed4bbd28a4a3d48beef25db228653255648))
+  - Add tailwind-scrollbar plugin ([9ac416b](https://github.com/Kuredew/grips/commit/9ac416b11025620d4ebabb30a45f3ea4b50b9ec5))
+  - Add notification daemon ([16fd587](https://github.com/Kuredew/grips/commit/16fd5879103cbc1cdc07b421b37083b285b5e6f9))
+  - Add base for download function using notification daemon ([49717f2](https://github.com/Kuredew/grips/commit/49717f2a0099088e682db31b0b3cf389e0605383))
+  - Add default string if notification is empty ([9f13234](https://github.com/Kuredew/grips/commit/9f13234f3197cf89ddb2261cfd87e1c99147fbe4))
+  - Add custom hooks for page and window ([18a165b](https://github.com/Kuredew/grips/commit/18a165bf900686dce3b227e07f52f60568978767))
+  - Add manager for notification, pages, and window for maintain consistently ([e104a3e](https://github.com/Kuredew/grips/commit/e104a3ec8431af07d28053ee1cf27b40fdf4b946))
+  - Add down icon ([19f4172](https://github.com/Kuredew/grips/commit/19f4172ae243c083e49f5e6bc6d6f9721caba836))
+  - Add base ffmpeg custom hook system ([b532f42](https://github.com/Kuredew/grips/commit/b532f421713154bd5fb29965bac283df55e755e0))
+  - Add grips settings system ([40eef62](https://github.com/Kuredew/grips/commit/40eef62e8a3d4b7f3cc810bfdf0098d20991d888))
+  - Add ffmpeg loading because many grips function dependent on ffmpeg ([a9cb961](https://github.com/Kuredew/grips/commit/a9cb9611b656e52b21e29a75810731b93cbb9f6b))
+  - Add unfinished basic download function ([7f78da4](https://github.com/Kuredew/grips/commit/7f78da43f49366f6c8fdd3491897881e31f48a80))
+  - Add verbose and no playlist to display log more ([ea68745](https://github.com/Kuredew/grips/commit/ea6874586b84bdb877115da60741cef88bf526cc))
+  - Add proxy handler and endpoint to download from server ([5736c9e](https://github.com/Kuredew/grips/commit/5736c9efbf0fba415ff13067cedda06ee221a633))
+  - Add sleep helper function ([e0fe0a3](https://github.com/Kuredew/grips/commit/e0fe0a38f0725b4fee814a58753d128aec71e708))
+  - Add cookies to yt-dlp argument to prevent ip blocked error ([6e23566](https://github.com/Kuredew/grips/commit/6e23566015f5ff50e361eaf345721a76b3313e22))
+  - Add tailwind-scrollbar-hide plugin to index.css ([4b98b05](https://github.com/Kuredew/grips/commit/4b98b05cfb8034c63fddfa4f573edd011c4c334d))
+  - Add spinner icon to display loading ([910e517](https://github.com/Kuredew/grips/commit/910e517362952a27a3a61a4b5ba7838a920ed056))
+  - Add github service for get latest tag and relese info ([4d60c1a](https://github.com/Kuredew/grips/commit/4d60c1a80de9aef816e98cb40028df84df12a1cb))
+  - Add useVersion hook to check version ([67199f8](https://github.com/Kuredew/grips/commit/67199f85404ed244d4c2581b0709c57fea958ff6))
+  - Load version in startup to check version ([3f6b085](https://github.com/Kuredew/grips/commit/3f6b085f42f466bf61cf177d022b39447e0fa568))
+  - Add changelog for track changes ([26a9cfe](https://github.com/Kuredew/grips/commit/26a9cfe5962fc1d5c98782ea3b137c29611bd6c1))
 
 - Fixed
-  - BinaryPath doesn't found ytdlp binary (this is for development)
-  - Barcode not showing in about page
-  - Notification cannot be deleted
-  - Progress not working
-  - Change function name to maintain consistently
-  - Window overflow issue
-  - Make body overflow hidden
-  - Key not present
-  - Save settings not working
-  - Overflow issue
-  - CORS problem with the dfferent localhost port
-  - Make sure only add setTimeout after notification created
-  - Import not resolve error
-  - Ambigous variable name
-  - Validate response and options is not working
-  - Progress bug
-  - Notification overflow if text is too many
-  - Window overflow if content is too many
-  - Progress bug
-  - Concatenated Json error because api sometimes sending 2 chunks
-  - Progress bugs and fix uncaught error
-  - Error log is empty, change to return last obj
-  - Some formats not found because args is wrong
-  - Window is too small on mobile
-  - Forgot to add ```!``` to loading check
-  - Fix build error due to \ character at the end of command
-  - Download progress over 100% because contentLength is not valid after resuming download
-  - Support confinue checking not working
+  - BinaryPath doesn't found ytdlp binary (this is for development) ([d6bff03](https://github.com/Kuredew/grips/commit/d6bff032dbe1797b12cc20566626cc92aa3d63cd))
+  - Barcode not showing in about page ([b7b216b](https://github.com/Kuredew/grips/commit/b7b216b06974d795754f1a28bf83a2a95062a952))
+  - Notification cannot be deleted ([c35969b](https://github.com/Kuredew/grips/commit/c35969b9f35566030573560f039589620093f57f))
+  - Progress not working ([0f58366](https://github.com/Kuredew/grips/commit/0f58366a1f00d624e51c12f822b01d9d47daa1c2))
+  - Change function name to maintain consistently ([59d9884](https://github.com/Kuredew/grips/commit/59d988460548b3699c11b9cd95dda148ecdb18ad))
+  - Window overflow issue ([6737ce3](https://github.com/Kuredew/grips/commit/6737ce30a1790e7a695156944ee1f20e94572ebb))
+  - Make body overflow hidden ([bab63b6](https://github.com/Kuredew/grips/commit/bab63b64d631745ec082c419b79180ab65686cba))
+  - Key not present ([9ec1e36](https://github.com/Kuredew/grips/commit/9ec1e3684c1dfcc5d65ba84d00147be423e90f16))
+  - Save settings not working ([4534a6d](https://github.com/Kuredew/grips/commit/4534a6de90478dfe18c0b957cf50b8eae5f4475b))
+  - Overflow issue ([92ceceb](https://github.com/Kuredew/grips/commit/92cecebad6069819a8e7540a95a3d2cf01fbe040))
+  - CORS problem with the dfferent localhost port ([a2dadf8](https://github.com/Kuredew/grips/commit/a2dadf84025b67c61e7a78c18d01fff1cb8b0154))
+  - Make sure only add setTimeout after notification created ([97fac57](https://github.com/Kuredew/grips/commit/97fac57123336d698d13af90306c70bb20e00260))
+  - Import not resolve error ([c6bc6b8](https://github.com/Kuredew/grips/commit/c6bc6b86b787789c346d80e0147df73c8fd3974d))
+  - Ambigous variable name ([d7afed9](https://github.com/Kuredew/grips/commit/d7afed9b639ab3bd08ac49e0376777e502498d55))
+  - Validate response and options is not working ([6fc70ee](https://github.com/Kuredew/grips/commit/6fc70ee4168fb7a2a4de375a30d006ef4bad14c9))
+  - Progress bug ([53a23d2](https://github.com/Kuredew/grips/commit/53a23d2b06839c554c53bb32f815f522cea5adc9))
+  - Notification overflow if text is too many ([c9bb95f](https://github.com/Kuredew/grips/commit/c9bb95fa5fa18e05b71d351d9a64c27649c886fb))
+  - Window overflow if content is too many ([ae261f5](https://github.com/Kuredew/grips/commit/ae261f50adfed270f99ab1e1b7a5d53148e40296))
+  - Progress bug ([2c2b8ec](https://github.com/Kuredew/grips/commit/2c2b8ece075294246a55b8afaac2deac8ab40c72))
+  - Concatenated Json error because api sometimes sending 2 chunks ([bed1e55](https://github.com/Kuredew/grips/commit/bed1e5521daf074f5b3c754c19024effd3a901f1))
+  - Progress bugs and fix uncaught error ([79474dc](https://github.com/Kuredew/grips/commit/79474dcbb525ff14625e9772dd8d2170dd6f443f))
+  - Error log is empty, change to return last obj ([e2a9e91](https://github.com/Kuredew/grips/commit/e2a9e91b75effca63db236fc239198722dc4aa99))
+  - Some formats not found because args is wrong ([83e5b51](https://github.com/Kuredew/grips/commit/83e5b51db4055fb42c71d6348821674a86ffe078))
+  - Window is too small on mobile ([cc253f8](https://github.com/Kuredew/grips/commit/cc253f882264e5a231b126716c761c9476e02028))
+  - Forgot to add ```!``` to loading check ([8c5c65a](https://github.com/Kuredew/grips/commit/8c5c65a67719de5a0a4022fa8920930dbb910957))
+  - Fix build error due to \ character at the end of command ([c36f985](https://github.com/Kuredew/grips/commit/c36f98599edbed895088320b6f630c3ed3e2fde8))
+  - Download progress over 100% because contentLength is not valid after resuming download ([f2ce543](https://github.com/Kuredew/grips/commit/f2ce543b012af69502f6286d42010b1db58e05f8))
+  - Support confinue checking not working ([5207ff2](https://github.com/Kuredew/grips/commit/5207ff2cb038eb6a612515c5fc5a83e2aac9a9fb))
 
 - Other
-  - Change license from MIT to Unlicense
-  - Fix eslint gave error to motion framer-motion
+  - Change license from MIT to Unlicense ([6e9cad2](https://github.com/Kuredew/grips/commit/6e9cad2d66a168f5bee8aebddb99b4ff6d6e01fd))
+  - Fix eslint gave error to motion framer-motion ([49e43c3](https://github.com/Kuredew/grips/commit/49e43c38a2f63efe3404948829b8ab8d8f88e54d))
 
 - Docs
-  - Create README.md for grips project
-  - Provide grips web information
+  - Create README.md for grips project ([d59d329](https://github.com/Kuredew/grips/commit/d59d329d7355482999bceca849d6dca145cfde1c))
+  - Provide grips web information ([17c814c](https://github.com/Kuredew/grips/commit/17c814c24cc64b01a6eeba4f03edddbd2924bd32))
 
