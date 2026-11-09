@@ -26,6 +26,7 @@ export interface FinishedQueue extends BaseQueueItem {
 export interface FailedQueue extends BaseQueueItem {
 	state: 'failed';
 	errorDetail: string;
+	retry?: () => Promise<void>;
 }
 
 export type QueueItem = ExtractingQueue | DownloadingQueue | FinishedQueue | FailedQueue;
@@ -69,11 +70,13 @@ export function toFinished(item: DownloadingQueue, blob: Blob): FinishedQueue {
 
 export function toFailed(
 	item: DownloadingQueue | ExtractingQueue,
-	errorDetail: string
+	errorDetail: string,
+	retry?: () => Promise<void>
 ): FailedQueue {
 	return {
 		...item,
 		state: 'failed',
-		errorDetail
+		errorDetail,
+		retry
 	};
 }

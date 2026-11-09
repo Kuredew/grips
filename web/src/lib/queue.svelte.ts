@@ -73,107 +73,118 @@ class QueueManager {
 		}
 	}
 
-	createQueueJob(mediaInfo: MediaInfo, url: string, mediaType: 'video' | 'audio') {
-		const queueItem = this.addQueueItem(mediaInfo.title, url, mediaType);
+	createQueueJob(title: string, url: string, mediaType: 'video' | 'audio') {
+		const queueItem = this.addQueueItem(title, url, mediaType);
 		if (!queueItem) throw new Error('Queue is not created succesfully.');
 
 		let latestLog = '';
-		return {
-			start: async () => {
-				const settings = settingsManager.settingsValue.current;
-				const quality = settings['video_quality'] as Quality;
-				const recodeVideo = settings['recode_video'] as boolean;
+		const start = async () => {
+			const currentState = this.findQueueItem(queueItem.id);
+			if (currentState && currentState.state !== 'extracting') {
+				this.#updateItemInArray(createExtractingQueueItem(queueItem.id, title, url, mediaType));
+			}
 
-				let doneEventData: null | DoneEventData = null;
-				let errorEventData: null | ErrorEventData = null;
+			const settings = settingsManager.settingsValue.current;
+			const quality = settings['video_quality'] as Quality;
+			const recodeVideo = settings['recode_video'] as boolean;
 
-				try {
-					await streamVideoUrl(url, mediaType, quality, recodeVideo, (streamEvent) => {
-						const currentState = this.findQueueItem(queueItem.id);
-						if (!currentState) return;
+			let doneEventData: null | DoneEventData = null;
+			let errorEventData: null | ErrorEventData = null;
 
-						let data;
+			const process = async () => {
+				await streamVideoUrl(url, mediaType, quality, recodeVideo, (streamEvent) => {
+					const currentState = this.findQueueItem(queueItem.id);
+					if (!currentState) return;
 
-						switch (streamEvent.event) {
-							case 'error':
-								data = streamEvent.data as ErrorEventData;
-								errorEventData = data;
-								break;
-							case 'done':
-								data = streamEvent.data as DoneEventData;
-								doneEventData = data;
-								break;
-							case 'progress':
-								data = streamEvent.data as ProgressEventData;
-								if (currentState.state == 'extracting') {
-									this.#updateItemInArray({
-										...currentState,
-										log: [...currentState.log, data.log]
-									});
-								}
-								console.log(data.log);
-								latestLog = data.log;
-						}
-					});
+					let data;
 
-					if (!doneEventData) {
-						if (errorEventData) {
-							const errorData = errorEventData as ErrorEventData;
-							throw new Error(
-								`Error occured while downloading media to server: ${errorData.message}`
-							);
-						}
-
-						throw new Error('Error streamVideoUrl not return done event.');
+					switch (streamEvent.event) {
+						case 'error':
+							data = streamEvent.data as ErrorEventData;
+							errorEventData = data;
+							break;
+						case 'done':
+							data = streamEvent.data as DoneEventData;
+							doneEventData = data;
+							break;
+						case 'progress':
+							data = streamEvent.data as ProgressEventData;
+							if (currentState.state == 'extracting') {
+								this.#updateItemInArray({
+									...currentState,
+									log: [...currentState.log, data.log]
+								});
+							}
+							console.log(data.log);
+							latestLog = data.log;
 					}
-					const doneData = doneEventData as DoneEventData;
+				});
 
-					const currentItem = this.findQueueItem(queueItem.id);
-					if (currentItem && currentItem.state == 'extracting') {
-						this.#updateItemInArray(toDownloading(currentItem, 0, doneData.file_url));
-					}
-					const blob = await downloadFileWithProgress(doneData.file_url, (progress) => {
-						const itemNow = this.findQueueItem(queueItem.id);
-						if (itemNow && itemNow.state == 'downloading') {
-							this.#updateItemInArray({
-								...itemNow,
-								progress
-							});
-						}
-					});
-
-					const file_ext = doneData.file_name.split('.').pop();
-					const fileName = `${mediaInfo.title}.${file_ext}`;
-
-					const itemNow = this.findQueueItem(queueItem.id);
-					if (itemNow) {
-						this.#updateItemInArray({
-							...itemNow,
-							title: fileName
-						});
-					}
-
-					downloadBlob(blob, fileName);
-
-					const itemBeforeFinish = this.findQueueItem(queueItem.id);
-					if (itemBeforeFinish && itemBeforeFinish.state == 'downloading') {
-						this.#updateItemInArray(toFinished(itemBeforeFinish, blob));
-					}
-				} catch (e) {
-					const currentItem = this.findQueueItem(queueItem.id);
-					if (
-						currentItem &&
-						(currentItem.state == 'extracting' || currentItem.state == 'downloading')
-					) {
-						this.#updateItemInArray(
-							toFailed(currentItem, `queue failed: ${e}, Latest log: ${latestLog}`)
+				if (!doneEventData) {
+					if (errorEventData) {
+						const errorData = errorEventData as ErrorEventData;
+						throw new Error(
+							`Error occured while downloading media to server: ${errorData.message}`
 						);
 					}
 
-					console.error(`Theres an error in queue with id ${currentItem?.id}!`);
-					console.error(e);
+					throw new Error('Error streamVideoUrl not return done event.');
 				}
+				const doneData = doneEventData as DoneEventData;
+
+				const currentItem = this.findQueueItem(queueItem.id);
+				if (currentItem && currentItem.state == 'extracting') {
+					this.#updateItemInArray(toDownloading(currentItem, 0, doneData.file_url));
+				}
+				const blob = await downloadFileWithProgress(doneData.file_url, (progress) => {
+					const itemNow = this.findQueueItem(queueItem.id);
+					if (itemNow && itemNow.state == 'downloading') {
+						this.#updateItemInArray({
+							...itemNow,
+							progress
+						});
+					}
+				});
+
+				const file_ext = doneData.file_name.split('.').pop();
+				const fileName = `${title}.${file_ext}`;
+
+				const itemNow = this.findQueueItem(queueItem.id);
+				if (itemNow) {
+					this.#updateItemInArray({
+						...itemNow,
+						title: fileName
+					});
+				}
+
+				downloadBlob(blob, fileName);
+
+				const itemBeforeFinish = this.findQueueItem(queueItem.id);
+				if (itemBeforeFinish && itemBeforeFinish.state == 'downloading') {
+					this.#updateItemInArray(toFinished(itemBeforeFinish, blob));
+				}
+			};
+
+			try {
+				await process();
+			} catch (e) {
+				const currentItem = this.findQueueItem(queueItem.id);
+				if (
+					currentItem &&
+					(currentItem.state == 'extracting' || currentItem.state == 'downloading')
+				) {
+					this.#updateItemInArray(
+						toFailed(currentItem, `queue failed: ${e}, Latest log: ${latestLog}`, start)
+					);
+				}
+
+				console.error(`Theres an error in queue with id ${currentItem?.id}!`);
+				console.error(e);
 			}
+		};
+
+		return {
+			start
 		};
 	}
 }

@@ -1,8 +1,14 @@
 <script lang="ts">
+	import ButtonComponent from '#components/ui/button/ButtonComponent.svelte';
 	import type { QueueItem } from '#lib/types/queue.ts';
 	import { copyToClipboard } from '#lib/util/copyToClipboard.ts';
 	import { downloadBlob } from '#lib/util/downloadBlob.ts';
-	import { FileAudioIcon, SparkleIcon, VideoIcon } from 'phosphor-svelte';
+	import {
+		ArrowCounterClockwiseIcon,
+		FileAudioIcon,
+		SparkleIcon,
+		VideoIcon
+	} from 'phosphor-svelte';
 	let copiedHint = $state(false);
 
 	$effect(() => {
@@ -13,8 +19,17 @@
 		}, 1000);
 	});
 
-	let hover = $state(false);
 	let { queueItem }: { queueItem: QueueItem } = $props();
+
+	function retryQueue() {
+		if (!(queueItem.state == 'failed')) return;
+
+		if (queueItem.retry) {
+			queueItem.retry();
+		}
+	}
+
+	let hover = $state(false);
 </script>
 
 <button
@@ -46,7 +61,11 @@
 		{/if}
 	</div>
 
-	<div class="flex min-w-0 flex-1 flex-col {queueItem.state == 'downloading' ? 'gap-2' : 'gap-1'}">
+	<div
+		class="relative flex min-w-0 flex-1 flex-col {queueItem.state == 'downloading'
+			? 'gap-2'
+			: 'gap-1'}"
+	>
 		<p class="truncate text-left">{queueItem.title}</p>
 		{#if queueItem.state == 'downloading'}
 			<div class="relative flex h-1 max-h-1 min-h-1 flex-1 rounded-full bg-neutral-800">
@@ -82,6 +101,13 @@
 				{/if}
 			{/if}
 		</div>
+		{#if queueItem.state == 'failed'}
+			<div class="absolute top-[50%] right-0 translate-y-[-50%]">
+				<ButtonComponent onclick={retryQueue} variant="secondary" class="h-fit! w-fit! p-2!"
+					><ArrowCounterClockwiseIcon /></ButtonComponent
+				>
+			</div>
+		{/if}
 	</div>
 </button>
 
