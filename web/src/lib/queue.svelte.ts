@@ -73,15 +73,17 @@ class QueueManager {
 		}
 	}
 
-	createQueueJob(title: string, url: string, mediaType: 'video' | 'audio') {
-		const queueItem = this.addQueueItem(title, url, mediaType);
+	createQueueJob(mediaInfo: MediaInfo, url: string, mediaType: 'video' | 'audio') {
+		const queueItem = this.addQueueItem(mediaInfo.title, url, mediaType);
 		if (!queueItem) throw new Error('Queue is not created succesfully.');
 
 		let latestLog = '';
 		const start = async () => {
 			const currentState = this.findQueueItem(queueItem.id);
 			if (currentState && currentState.state !== 'extracting') {
-				this.#updateItemInArray(createExtractingQueueItem(queueItem.id, title, url, mediaType));
+				this.#updateItemInArray(
+					createExtractingQueueItem(queueItem.id, mediaInfo.title, url, mediaType)
+				);
 			}
 
 			const settings = settingsManager.settingsValue.current;
@@ -149,7 +151,7 @@ class QueueManager {
 				});
 
 				const file_ext = doneData.file_name.split('.').pop();
-				const fileName = `${title}.${file_ext}`;
+				const fileName = `${mediaInfo.title}.${file_ext}`;
 
 				const itemNow = this.findQueueItem(queueItem.id);
 				if (itemNow) {
