@@ -13,31 +13,26 @@ body = """
 {% else %}\
     ## [Unreleased]
 {% endif %}\
-{% set_global no_scope_commits = [] %}\
-{% for commit in commits %}\
-  {% if not commit.scope %}\
-    {% set_global no_scope_commits = no_scope_commits | concat(with=commit) %}\
-  {% endif %}\
-{% endfor %}\
-{% if no_scope_commits | length > 0 %}
-    ### General
 
-    {% for group_name, group_commits in no_scope_commits | group_by(attribute="group") %}\
-        - {{ group_name | striptags | trim | upper_first }}
-        {% for commit in group_commits %}\
-        {% raw %}  {% endraw %}- {% if commit.breaking %}[**breaking**] {% endif %}{{ commit.message | upper_first }} ([{{ commit.id | truncate(length=7, end="") }}](https://github.com/Kuredew/grips/commit/{{ commit.id }}))
-        {% endfor %}
-    {% endfor %}\
-{% endif %}\
-{% for scope_name, scope_commits in commits | group_by(attribute="scope") %}
-    ### {{ scope_name | striptags | trim | upper_first }}
+{% for group_name, group_commits in commits | group_by(attribute="group") %}\
+    {% set_global no_scope_commits = [] %}\
+    ### {{ group_name | striptags | trim | upper_first }}
 
-    {% for group_name, group_commits in scope_commits | group_by(attribute="group") %}\
-        - {{ group_name | striptags | trim | upper_first }}
-        {% for commit in group_commits %}\
-        {% raw %}  {% endraw %}- {% if commit.breaking %}[**breaking**] {% endif %}{{ commit.message | upper_first }} ([{{ commit.id | truncate(length=7, end="") }}](https://github.com/Kuredew/grips/commit/{{ commit.id }}))
-        {% endfor %}
+    {% for commit in group_commits %}\
+        {% if not commit.scope %}\
+            {% set_global no_scope_commits = no_scope_commits | concat(with=commit) %}\
+        {% endif %}\
     {% endfor %}\
+    {% if no_scope_commits | length > 0 %}\
+        {% for commit in no_scope_commits %}\
+            - {{ commit.message | upper_first }} ([{{ commit.id | truncate(length=7, end="") }}](https://github.com/Kuredew/grips/commit/{{ commit.id }})){% if commit.breaking %} (**breaking changes**){% endif %}
+        {% endfor %}\
+    {% endif %}\
+    {% for scope_name, scope_commits in group_commits | group_by(attribute="scope") %}\
+        {% for commit in scope_commits %}\
+            - {{ scope_name | upper_first }}: {{ commit.message | upper_first }} ([{{ commit.id | truncate(length=7, end="") }}](https://github.com/Kuredew/grips/commit/{{ commit.id }})){% if commit.breaking %} (**breaking changes**){% endif %}
+        {% endfor %}\
+    {% endfor %}
 {% endfor %}\
 
 """
