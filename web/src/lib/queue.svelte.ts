@@ -116,7 +116,9 @@ class QueueManager {
 								});
 							}
 							console.log(data.log);
-							latestLog = data.log;
+							if (data.log) {
+								latestLog = data.log;
+							}
 					}
 				});
 
