@@ -33,8 +33,6 @@
 </script>
 
 <button
-	onmouseenter={() => (hover = true)}
-	onmouseleave={() => (hover = false)}
 	onclick={() => {
 		switch (queueItem.state) {
 			case 'finished':
@@ -90,14 +88,12 @@
 					<p class="text-neutral-400">✓ Download finished</p>
 				{/if}
 			{:else if queueItem.state == 'failed'}
-				{#if hover}
-					{#if copiedHint}
-						<p class="text-neutral-400">Copied</p>
-					{:else}
-						<p class="text-neutral-400">Click to copy</p>
-					{/if}
+				{#if copiedHint}
+					<p class="text-neutral-400">Copied</p>
 				{:else}
-					<p class="text-neutral-400">{queueItem.errorDetail}</p>
+					<p class="overflow-hidden text-nowrap text-ellipsis text-neutral-400">
+						{queueItem.errorDetail}
+					</p>
 				{/if}
 			{/if}
 		</div>
