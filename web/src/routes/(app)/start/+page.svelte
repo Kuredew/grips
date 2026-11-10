@@ -9,11 +9,12 @@
 	import Spinner from '#components/ui/icon/Spinner.svelte';
 	import { queueManager } from '#lib/queue.svelte.ts';
 	import { getMediaInfo } from '#lib/api/getMediaInfo.ts';
-	import type { InfoResult } from '#lib/types/api.ts';
+	import type { InfoResult, MediaInfo } from '#lib/types/api.ts';
 	import { isValidUrl } from '#lib/util/url.ts';
 	import DialogError from '#components/ui/dialog/DialogError.svelte';
 	import { checkHealth } from '#lib/api/checkHealth.ts';
 	import { isVideo } from '#lib/util/mediaInfo.ts';
+	import MediaChooser from '#components/modules/dialog/MediaChooser.svelte';
 
 	let focus = $state(false);
 	let mediaType = $derived(inputManager.mediaType.current);
@@ -26,6 +27,14 @@
 	let isDown = $derived(inputManager.isDown);
 	let openDownErrorDialog = $state(false);
 	let isDownDialogOpened = $derived(inputManager.isDownDialogOpened);
+
+	let mediaChooser = $state<{
+		openDialog: boolean;
+		mediaList: MediaInfo[];
+	}>({
+		openDialog: false,
+		mediaList: []
+	});
 
 	let textareaElement: HTMLTextAreaElement | null = $state(null);
 
@@ -63,16 +72,45 @@
 			const job = queueManager.createQueueJob(
 				mediaInfo,
 				inputValue,
+				[],
 				isVideoMedia && mediaType == 'auto' ? 'video' : 'audio'
 			);
 			job.start();
 
+			inputManager.queueListOpened = true;
 			inputManager.inputValue.current = '';
-			inputManager.loading = false;
-			if (!inputManager.queueListOpened) {
-				inputManager.queueListOpened = true;
-			}
+		} else if (info.is_playlist) {
+			mediaChooser = {
+				openDialog: true,
+				mediaList: info.playlist_info.entries
+			};
 		}
+
+		inputManager.loading = false;
+	}
+
+	async function startDownloadPlaylist(selectedMediaIndex: number[]) {
+		const inputValue = inputManager.inputValue.current;
+
+		for (const index of selectedMediaIndex) {
+			const mediaInfo = mediaChooser.mediaList[index];
+			const isVideoMedia = isVideo(mediaInfo);
+
+			const job = queueManager.createQueueJob(
+				mediaInfo,
+				inputValue,
+				[index + 1],
+				isVideoMedia && mediaType == 'auto' ? 'video' : 'audio'
+			);
+			job.start();
+		}
+
+		inputManager.queueListOpened = true;
+		inputManager.inputValue.current = '';
+		mediaChooser = {
+			openDialog: false,
+			mediaList: []
+		};
 	}
 
 	$effect(() => {
@@ -120,6 +158,12 @@
 <DialogError
 	bind:open={openDownErrorDialog}
 	description="We are currently unable to connect to the server, it is most likely down, please wait a moment or monitor the status from the home page."
+/>
+
+<MediaChooser
+	bind:open={mediaChooser.openDialog}
+	mediaList={mediaChooser.mediaList}
+	callback={(mediaList) => startDownloadPlaylist(mediaList)}
 />
 
 <ContainerRoot>

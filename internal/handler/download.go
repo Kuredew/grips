@@ -54,6 +54,7 @@ func (h *DownloadHandler) handleDownload(w http.ResponseWriter, r *http.Request,
 	format := r.URL.Query().Get("format")
 	quality := r.URL.Query().Get("quality")
 	recodeVideoString := r.URL.Query().Get("recodeVideo")
+	playlistItems := r.URL.Query().Get("playlistItems")
 
 	recodeVideo, err := strconv.ParseBool(recodeVideoString)
 	if err != nil {
@@ -65,7 +66,7 @@ func (h *DownloadHandler) handleDownload(w http.ResponseWriter, r *http.Request,
 
 	detachedCtx := context.WithoutCancel(r.Context())
 
-	_, err = h.downloader.StartDownload(detachedCtx, downloadID, url, format, quality, recodeVideo, audioOnly)
+	_, err = h.downloader.StartDownload(detachedCtx, downloadID, url, format, quality, playlistItems, recodeVideo, audioOnly)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusServiceUnavailable)
 		return

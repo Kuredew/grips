@@ -6,6 +6,7 @@ export const streamVideoUrl = async (
 	url: string,
 	mediaType: 'video' | 'audio',
 	quality: Quality,
+	playlistItems: number[],
 	recodeVideo: boolean,
 	output: (streamEvent: StreamEvent) => void
 ): Promise<void> => {
@@ -14,6 +15,12 @@ export const streamVideoUrl = async (
 		params.append('url', url);
 		params.append('quality', quality);
 		params.append('recodeVideo', recodeVideo ? 'true' : 'false');
+
+		let playlistItemsString = '';
+		playlistItems.forEach((m) => {
+			playlistItemsString += `,${m}`;
+		});
+		params.append('playlistItems', `${playlistItemsString.slice(1)}`);
 
 		const res = await fetch(`${API_BASE_URL}/download/${mediaType}?${params.toString()}`);
 

@@ -73,7 +73,12 @@ class QueueManager {
 		}
 	}
 
-	createQueueJob(mediaInfo: MediaInfo, url: string, mediaType: 'video' | 'audio') {
+	createQueueJob(
+		mediaInfo: MediaInfo,
+		url: string,
+		playlistItems: number[],
+		mediaType: 'video' | 'audio'
+	) {
 		const queueItem = this.addQueueItem(mediaInfo.title, url, mediaType);
 		if (!queueItem) throw new Error('Queue is not created succesfully.');
 
@@ -94,7 +99,7 @@ class QueueManager {
 			let errorEventData: null | ErrorEventData = null;
 
 			const process = async () => {
-				await streamVideoUrl(url, mediaType, quality, recodeVideo, (streamEvent) => {
+				await streamVideoUrl(url, mediaType, quality, playlistItems, recodeVideo, (streamEvent) => {
 					const currentState = this.findQueueItem(queueItem.id);
 					if (!currentState) return;
 

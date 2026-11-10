@@ -23,7 +23,7 @@
 		<Dialog.Content
 			class="fixed top-[50%] left-[50%] w-120 max-w-dvw translate-[-50%] px-4 data-[state=closed]:animate-scale-out data-[state=open]:animate-scale-in"
 		>
-			<div class="flex w-full rounded-3xl border-2 border-neutral-800 bg-neutral-900 p-5">
+			<div class="flex w-full flex-col rounded-3xl border-2 border-neutral-800 bg-neutral-900 p-5">
 				{@render children()}
 			</div>
 		</Dialog.Content>

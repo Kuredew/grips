@@ -206,7 +206,7 @@ func (y *YTDLP) FetchInfo(ctx context.Context, url string) (*model.InfoResult, e
 	}
 }
 
-func (y *YTDLP) Download(ctx context.Context, url, format, quality, fileName string, outputDir string, recodeVideo bool, audioOnly bool, progressChan chan<- model.ProgressEventData) (string, error) {
+func (y *YTDLP) Download(ctx context.Context, url, format, quality, playlistItems, fileName, outputDir string, recodeVideo bool, audioOnly bool, progressChan chan<- model.ProgressEventData) (string, error) {
 	ctx, cancel := context.WithTimeout(ctx, y.timeout)
 	defer cancel()
 
@@ -235,6 +235,11 @@ func (y *YTDLP) Download(ctx context.Context, url, format, quality, fileName str
 		} else {
 			args = append(args, "--remux-video", "mp4")
 		}
+
+	}
+
+	if playlistItems != "" {
+		args = append(args, "--playlist-items", playlistItems)
 	}
 
 	args = append(args, y.requiredArguments...)
