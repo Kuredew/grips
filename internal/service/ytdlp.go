@@ -236,6 +236,8 @@ func (y *YTDLP) Download(ctx context.Context, url, format, quality, playlistItem
 			args = append(args, "--remux-video", "mp4")
 		}
 
+		// prioritize h264 codec by default
+		args = append(args, "-S", "codec:h264:aac")
 	}
 
 	if playlistItems != "" {
