@@ -157,7 +157,7 @@
 
 <DialogError
 	bind:open={openDownErrorDialog}
-	description="We are currently unable to connect to the server, it is most likely down, please wait a moment or monitor the status from the home page."
+	description="There was a problem connecting to the server, please wait a moment and then reload this page."
 />
 
 <MediaChooser
@@ -222,8 +222,7 @@
 				</div>
 				{#if isDown}
 					<p class="cursor-default text-center text-sm text-balance">
-						We are currently unable to connect to the server, it is most likely down, please wait a
-						moment or monitor the status from the home page.
+					    There was a problem connecting to the server.
 					</p>
 				{:else if isInvalid}
 					<p class="cursor-default text-center text-sm text-balance">
