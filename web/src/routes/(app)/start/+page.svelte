@@ -151,12 +151,14 @@
 
 <DialogError
 	bind:open={openErrorDialog}
-	description="An error occurred, the server could not get information from the link you provided."
+	title="Check your link"
+	description="Make sure the link you enter is supported by yt-dlp, open an issue if you feel this is a mistake."
 	{log}
 />
 
 <DialogError
 	bind:open={openDownErrorDialog}
+	title="Server offline"
 	description="There was a problem connecting to the server, please wait a moment and then reload this page."
 />
 
