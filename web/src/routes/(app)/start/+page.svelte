@@ -188,7 +188,7 @@
 						class="resize-none overflow-hidden text-white"
 						autocomplete="off"
 						rows="3"
-						placeholder="Paste your media link"
+						placeholder="Paste the link here"
 						bind:value={inputManager.inputValue.current}></textarea>
 					<div class="flex justify-between">
 						<div class="flex gap-1.5">
@@ -224,14 +224,14 @@
 				</div>
 				{#if isDown}
 					<p class="cursor-default text-center text-sm text-balance">
-					    There was a problem connecting to the server.
+					    Service is offline
 					</p>
 				{:else if isInvalid}
 					<p class="cursor-default text-center text-sm text-balance">
-						What you entered is not even a valid link!
+						Invalid link!
 					</p>
 				{:else}
-					<p class="cursor-default text-sm">At first glance, this looks like an AI chatbot heh?</p>
+					<p class="cursor-default text-sm">Paste the link and start download!</p>
 				{/if}
 			</div>
 		</div>
