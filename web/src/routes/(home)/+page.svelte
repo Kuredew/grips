@@ -33,13 +33,22 @@
 						and tracker-free.
 					</p>
 				</div>
-				<div class="flex gap-2">
-					<a href={resolve('/(app)/start')}><ButtonComponent>Get started</ButtonComponent></a>
-					<a href="https://github.com/kuredew/grips"
-						><ButtonComponent variant="secondary" class="flex gap-2"
-							><GithubLogoIcon /> Github</ButtonComponent
-						></a
+				<div class="flex flex-col gap-4">
+					<div class="flex gap-2">
+						<a href={resolve('/(app)/start')}><ButtonComponent>Get started</ButtonComponent></a>
+						<a href="https://github.com/kuredew/grips"
+							><ButtonComponent variant="secondary" class="flex gap-2"
+								><GithubLogoIcon /> Github</ButtonComponent
+							></a
+						>
+					</div>
+					<a
+						class="flex cursor-pointer items-center justify-center gap-4 text-sm font-medium"
+						href="https://discord.gg/WUjZgmsea"
 					>
+						<p>sponsored by</p>
+						<img src="/img/azhima_white_transparent.png" class="h-20 w-20" alt="" />
+					</a>
 				</div>
 				{#if scrollDownActive}
 					<div
