@@ -4,6 +4,7 @@ import semver from 'semver';
 export interface Changelog {
 	content: string;
 	content_raw: string;
+  whats_new: string;
 	metadata: {
 		title: string;
 		date: string;
@@ -44,10 +45,12 @@ const parseChanglogMarkdown = async (fileContent: string): Promise<Changelog> =>
 	}
 
 	const content = await marked.parse(markdownBody);
+	const whatsNew = await marked.parse(markdownBody.split("<!--WHAT'S_NEW-->")[1])
 
 	return {
 		content,
 		content_raw: markdownBody,
+		whats_new: whatsNew,
 		metadata: {
 			title,
 			date,

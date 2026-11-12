@@ -15,6 +15,7 @@
 	import { checkHealth } from '#lib/api/checkHealth.ts';
 	import { isVideo } from '#lib/util/mediaInfo.ts';
 	import MediaChooser from '#components/modules/dialog/MediaChooser.svelte';
+	import WhatsNew from '#components/modules/dialog/WhatsNew.svelte';
 
 	let focus = $state(false);
 	let mediaType = $derived(inputManager.mediaType.current);
@@ -35,6 +36,8 @@
 		openDialog: false,
 		mediaList: []
 	});
+
+	let openWhatsNewDialog = $state(false);
 
 	let textareaElement: HTMLTextAreaElement | null = $state(null);
 
@@ -135,6 +138,11 @@
 		})();
 	});
 
+	$effect(() => {
+		const isShowed = localStorage.getItem(version);
+		if (!isShowed) openWhatsNewDialog = true;
+	});
+
 	onMount(() => {
 		if (!textareaElement) {
 			return;
@@ -147,6 +155,9 @@
 			textareaElement.style.height = textareaElement.scrollHeight + 'px';
 		});
 	});
+
+	let { data } = $props();
+	let version = $derived(`v${data.latestChangelog.version}-${data.latestCommitHash}`);
 </script>
 
 <DialogError
@@ -162,6 +173,15 @@
 	description="There was a problem connecting to the server, please wait a moment and then reload this page."
 />
 
+<WhatsNew
+	bind:open={openWhatsNewDialog}
+	{version}
+	changelogHtml={data.latestChangelog.changelog.whats_new}
+	callback={() => {
+		localStorage.setItem(version, 'true');
+	}}
+/>
+
 <MediaChooser
 	bind:open={mediaChooser.openDialog}
 	mediaList={mediaChooser.mediaList}
@@ -171,7 +191,14 @@
 <ContainerRoot>
 	<ContainerContent>
 		<div class="flex h-full flex-col items-center justify-center gap-20">
-			<div class="py-8 text-[200px] leading-0 font-medium text-white">{isInvalid ? '?' : '*'}</div>
+			<div class="flex flex-col gap-4">
+				<div class="text-lg leading-0 font-medium text-white">{version}</div>
+				<button onclick={() => (openWhatsNewDialog = true)}
+					><p class="cursor-pointer text-sm hover:text-white hover:underline">
+						What's new?
+					</p></button
+				>
+			</div>
 
 			<div class="flex w-full max-w-150 flex-col items-center gap-4">
 				<div
@@ -223,13 +250,9 @@
 					</div>
 				</div>
 				{#if isDown}
-					<p class="cursor-default text-center text-sm text-balance">
-					    Service is offline
-					</p>
+					<p class="cursor-default text-center text-sm text-balance">Service is offline</p>
 				{:else if isInvalid}
-					<p class="cursor-default text-center text-sm text-balance">
-						Invalid link!
-					</p>
+					<p class="cursor-default text-center text-sm text-balance">Invalid link!</p>
 				{:else}
 					<p class="cursor-default text-sm">Paste the link and start download!</p>
 				{/if}
