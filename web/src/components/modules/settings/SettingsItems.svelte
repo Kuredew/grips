@@ -47,5 +47,5 @@
 		{/if}
 	{/each}
 {:else}
-	<p class="text-center">settings for this have not been added yet.</p>
+	<p class="text-center text-sm">There are no settings for this scope yet.</p>
 {/if}

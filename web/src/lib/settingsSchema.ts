@@ -48,7 +48,7 @@ const VideoSettingItems: SettingItem[] = [
 		groupKey: 'video',
 		subGroupKey: 'video_processing',
 		type: 'toggle',
-		description: 'Enable re-encode the downloaded video.'
+		description: 'Re-encode the downloaded video in server. Please remember that the download process will take a long time because the server has to re-encode the file.'
 	},
 	{
 		key: 'video_codec',
