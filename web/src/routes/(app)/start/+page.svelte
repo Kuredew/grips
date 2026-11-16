@@ -2,42 +2,35 @@
 	import ContainerContent from '#components/ui/container/ContainerContent.svelte';
 	import ContainerRoot from '#components/ui/container/ContainerRoot.svelte';
 	import ButtonComponent from '#components/ui/button/ButtonComponent.svelte';
-	import { inputManager } from '#lib/input.svelte.ts';
-	import type { MediaType } from '#lib/types.ts';
-	import { ArrowUpIcon, MusicNoteIcon, SparkleIcon } from 'phosphor-svelte';
-	import { onMount } from 'svelte';
 	import Spinner from '#components/ui/icon/Spinner.svelte';
-	import { queueManager } from '#lib/queue.svelte.ts';
-	import { getMediaInfo } from '#lib/api/getMediaInfo.ts';
-	import type { InfoResult, MediaInfo } from '#lib/types/api.ts';
-	import { isValidUrl } from '#lib/util/url.ts';
 	import DialogError from '#components/ui/dialog/DialogError.svelte';
-	import { checkHealth } from '#lib/api/checkHealth.ts';
-	import { isVideo } from '#lib/util/mediaInfo.ts';
 	import MediaChooser from '#components/modules/dialog/MediaChooser.svelte';
 	import WhatsNew from '#components/modules/dialog/WhatsNew.svelte';
+	import { inputManager } from '#lib/input.svelte.ts';
+	import { onMount } from 'svelte';
+	import { queueManager } from '#lib/queue.svelte.ts';
+	import { getMediaInfo } from '#lib/api/getMediaInfo.ts';
+	import { isValidUrl } from '#lib/util/url.ts';
+	import { checkHealth } from '#lib/api/checkHealth.ts';
+	import { isVideo } from '#lib/util/mediaInfo.ts';
+	import { ArrowUpIcon, MusicNoteIcon, SparkleIcon } from 'phosphor-svelte';
+	import type { InfoResult, MediaInfo } from '#lib/types/api.ts';
+	import type { MediaType } from '#lib/types.ts';
 
 	let focus = $state(false);
 	let mediaType = $derived(inputManager.mediaType.current);
 	let isLoading = $derived(inputManager.loading);
 
 	let isInvalid = $state(false);
-	let log = $state<string | null>(null);
-	let openErrorDialog = $state(false);
+	let errorDetail = $state<string | null>(null);
 
-	let isDown = $derived(inputManager.isDown);
-	let openDownErrorDialog = $state(false);
-	let isDownDialogOpened = $derived(inputManager.isDownDialogOpened);
+	let isOffline = $derived(inputManager.isOffline);
+	let offlineDialogOpen = $state(false);
+	let isOfflineDialogOpened = $derived(inputManager.isOfflineDialogOpened);
 
-	let mediaChooser = $state<{
-		openDialog: boolean;
-		mediaList: MediaInfo[];
-	}>({
-		openDialog: false,
-		mediaList: []
-	});
+	let mediaList = $state<MediaInfo[] | null>(null);
 
-	let openWhatsNewDialog = $state(false);
+	let changelogDialogOpen = $state(false);
 
 	let textareaElement: HTMLTextAreaElement | null = $state(null);
 
@@ -61,8 +54,7 @@
 			info = await getMediaInfo(inputValue);
 		} catch (e) {
 			console.error(`failed to get media information: ${e}`);
-			log = String(e);
-			openErrorDialog = true;
+			errorDetail = String(e);
 			return;
 		} finally {
 			inputManager.loading = false;
@@ -83,20 +75,22 @@
 			inputManager.queueListOpened = true;
 			inputManager.inputValue.current = '';
 		} else if (info.is_playlist) {
-			mediaChooser = {
-				openDialog: true,
-				mediaList: info.playlist_info.entries
-			};
+			mediaList = info.playlist_info.entries;
 		}
 
 		inputManager.loading = false;
 	}
 
 	async function startDownloadPlaylist(selectedMediaIndex: number[]) {
+		if (mediaList == null) {
+			console.error('function startDownloadPlaylist is aborted because medialist is null.');
+			return;
+		}
+
 		const inputValue = inputManager.inputValue.current;
 
 		for (const index of selectedMediaIndex) {
-			const mediaInfo = mediaChooser.mediaList[index];
+			const mediaInfo = mediaList[index];
 			const isVideoMedia = isVideo(mediaInfo);
 
 			const job = queueManager.createQueueJob(
@@ -110,10 +104,7 @@
 
 		inputManager.queueListOpened = true;
 		inputManager.inputValue.current = '';
-		mediaChooser = {
-			openDialog: false,
-			mediaList: []
-		};
+		mediaList = [];
 	}
 
 	$effect(() => {
@@ -121,18 +112,18 @@
 	});
 
 	$effect(() => {
-		if (isDown && !isDownDialogOpened) {
-			openDownErrorDialog = true;
-			inputManager.isDownDialogOpened = true;
+		if (isOffline && !isOfflineDialogOpened) {
+			offlineDialogOpen = true;
+			inputManager.isOfflineDialogOpened = true;
 		}
 	});
 
 	$effect(() => {
-		if (isDown || inputManager.isServerChecked) return;
+		if (isOffline || inputManager.isServerChecked) return;
 		inputManager.loading = true;
 
 		(async () => {
-			inputManager.isDown = !(await checkHealth());
+			inputManager.isOffline = !(await checkHealth());
 			inputManager.isServerChecked = true;
 			inputManager.loading = false;
 		})();
@@ -140,7 +131,7 @@
 
 	$effect(() => {
 		const isShowed = localStorage.getItem(version);
-		if (!isShowed) openWhatsNewDialog = true;
+		if (!isShowed) changelogDialogOpen = true;
 	});
 
 	onMount(() => {
@@ -161,20 +152,21 @@
 </script>
 
 <DialogError
-	bind:open={openErrorDialog}
+	open={errorDetail !== null}
 	title="Check your link"
 	description="Make sure the link you enter is supported by yt-dlp, open an issue if you feel this is a mistake."
-	{log}
+	log={errorDetail}
+	onClose={() => (errorDetail = null)}
 />
 
 <DialogError
-	bind:open={openDownErrorDialog}
+	bind:open={offlineDialogOpen}
 	title="Server offline"
 	description="There was a problem connecting to the server, please wait a moment and then reload this page."
 />
 
 <WhatsNew
-	bind:open={openWhatsNewDialog}
+	bind:open={changelogDialogOpen}
 	{version}
 	changelogHtml={data.latestChangelog.changelog.whats_new}
 	callback={() => {
@@ -182,18 +174,14 @@
 	}}
 />
 
-<MediaChooser
-	bind:open={mediaChooser.openDialog}
-	mediaList={mediaChooser.mediaList}
-	callback={(mediaList) => startDownloadPlaylist(mediaList)}
-/>
+<MediaChooser bind:mediaList callback={(mediaList) => startDownloadPlaylist(mediaList)} />
 
 <ContainerRoot>
 	<ContainerContent>
 		<div class="flex h-full flex-col items-center justify-center gap-20">
 			<div class="flex flex-col gap-4">
 				<div class="text-lg leading-0 font-medium text-white">{version}</div>
-				<button onclick={() => (openWhatsNewDialog = true)}
+				<button onclick={() => (changelogDialogOpen = true)}
 					><p class="cursor-pointer text-sm hover:text-white hover:underline">
 						What's new?
 					</p></button
@@ -204,7 +192,7 @@
 				<div
 					class="flex h-fit w-full max-w-full flex-col gap-4 rounded-3xl border-2 border-neutral-800 bg-neutral-900 px-6 pt-6 pb-4 transition-all {isInvalid
 						? 'border-red-900'
-						: ''} {isLoading || isDown ? 'pointer-events-none opacity-50' : ''} {focus
+						: ''} {isLoading || isOffline ? 'pointer-events-none opacity-50' : ''} {focus
 						? 'border-neutral-500!'
 						: ''}"
 				>
@@ -249,7 +237,7 @@
 						</div>
 					</div>
 				</div>
-				{#if isDown}
+				{#if isOffline}
 					<p class="cursor-default text-center text-sm text-balance">Service is offline</p>
 				{:else if isInvalid}
 					<p class="cursor-default text-center text-sm text-balance">Invalid link!</p>

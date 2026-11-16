@@ -9,6 +9,7 @@
 		title?: string;
 		description: string;
 		log?: string | null;
+		onClose?: () => void;
 	}
 
 	let copiedHint = $state(false);
@@ -21,14 +22,20 @@
 		}, 1000);
 	});
 
-	let { open = $bindable(false), title, description, log }: Props = $props();
+	let { open = $bindable(false), title, description, log, onClose = () => null }: Props = $props();
+
+	$effect(() => {
+		if (!open) {
+			onClose();
+		}
+	});
 </script>
 
 <Dialog bind:open>
 	<div class="flex max-w-full flex-col items-center justify-center gap-4">
 		<div class="flex max-w-full flex-col items-center justify-center gap-2">
 			<WarningCircleIcon size="50px" class="text-white" />
-			<p class="text-xl font-medium text-white">{title || "Oops!"}</p>
+			<p class="text-xl font-medium text-white">{title || 'Oops!'}</p>
 			<p class="text-center text-pretty">
 				{description}
 			</p>

@@ -5,9 +5,9 @@ class InputManager {
 	#inputValue = new PersistentState<string>('input_value', '');
 	#mediaType = new PersistentState<MediaType>('media_type', 'auto');
 	loading = $state(false);
-	isDown = $state(false);
+	isOffline = $state(false);
 	isServerChecked = $state(false);
-	isDownDialogOpened = $state(false);
+	isOfflineDialogOpened = $state(false);
 	queueListOpened = $state(false);
 
 	get inputValue() {
