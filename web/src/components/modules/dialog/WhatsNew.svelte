@@ -15,7 +15,7 @@
 	} = $props();
 </script>
 
-<Dialog {open}>
+<Dialog bind:open>
 	<div class="mb-5 w-full">
 		<h1 class="text-2xl font-medium tracking-tight text-white">
 			What's new? <span class="text-sm text-neutral-400">{version}</span>
@@ -34,7 +34,7 @@
 			onclick={() => {
 				callback();
 				open = false;
-			}}>Got it!</ButtonComponent
+			}}>Don't show me again</ButtonComponent
 		>
 	</div>
 </Dialog>
