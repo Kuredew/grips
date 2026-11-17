@@ -3,9 +3,9 @@
 	import ContainerRoot from '#components/ui/container/ContainerRoot.svelte';
 	import ButtonComponent from '#components/ui/button/ButtonComponent.svelte';
 	import Spinner from '#components/ui/icon/Spinner.svelte';
-	import DialogError from '#components/ui/dialog/DialogError.svelte';
 	import MediaChooser from '#components/modules/dialog/MediaChooser.svelte';
 	import WhatsNew from '#components/modules/dialog/WhatsNew.svelte';
+	import ErrorDialog from '#components/ui/dialog/ErrorDialog.svelte';
 	import { inputManager } from '#lib/input.svelte.ts';
 	import { onMount } from 'svelte';
 	import { queueManager } from '#lib/queue.svelte.ts';
@@ -16,6 +16,7 @@
 	import { ArrowUpIcon, MusicNoteIcon, SparkleIcon } from 'phosphor-svelte';
 	import type { InfoResult, MediaInfo } from '#lib/types/api.ts';
 	import type { MediaType } from '#lib/types.ts';
+	import UnsupportedLink from '#components/modules/dialog/UnsupportedLink.svelte';
 
 	let focus = $state(false);
 	let mediaType = $derived(inputManager.mediaType.current);
@@ -151,18 +152,12 @@
 	let version = $derived(`v${data.latestChangelog.version}-${data.latestCommitHash}`);
 </script>
 
-<DialogError
-	open={errorDetail !== null}
-	title="Check your link"
-	description="Make sure the link you enter is supported by yt-dlp, open an issue if you feel this is a mistake."
-	log={errorDetail}
-	onClose={() => (errorDetail = null)}
-/>
+<UnsupportedLink bind:error={errorDetail} />
 
-<DialogError
+<ErrorDialog
 	bind:open={offlineDialogOpen}
 	title="Server offline"
-	description="There was a problem connecting to the server, please wait a moment and then reload this page."
+	message="There was a problem connecting to the server, please wait a moment and then reload this page."
 />
 
 <WhatsNew
