@@ -6,7 +6,6 @@
 	import AlertDialogRoot from '#components/ui/alertDialog/AlertDialogRoot.svelte';
 	import AlertDialogTitle from '#components/ui/alertDialog/AlertDialogTitle.svelte';
 	import ButtonComponent from '#components/ui/button/ButtonComponent.svelte';
-	import Dialog from '#components/ui/dialog/Dialog.svelte';
 
 	let {
 		open = $bindable(false),
