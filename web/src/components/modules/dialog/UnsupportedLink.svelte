@@ -1,8 +1,13 @@
 <script lang="ts">
+	import AlertDialogContent from '#components/ui/alertDialog/AlertDialogContent.svelte';
+	import AlertDialogDescription from '#components/ui/alertDialog/AlertDialogDescription.svelte';
+	import AlertDialogOverlay from '#components/ui/alertDialog/AlertDialogOverlay.svelte';
+	import AlertDialogPortal from '#components/ui/alertDialog/AlertDialogPortal.svelte';
+	import AlertDialogRoot from '#components/ui/alertDialog/AlertDialogRoot.svelte';
+	import AlertDialogTitle from '#components/ui/alertDialog/AlertDialogTitle.svelte';
 	import ButtonComponent from '#components/ui/button/ButtonComponent.svelte';
 	import TextLink from '#components/ui/text/TextLink.svelte';
 	import { copyToClipboard } from '#lib/util/copyToClipboard.ts';
-	import { AlertDialog } from 'bits-ui';
 	import { WarningCircleIcon } from 'phosphor-svelte';
 
 	let copied = $state(false);
@@ -14,7 +19,7 @@
 	} = $props();
 </script>
 
-<AlertDialog.Root
+<AlertDialogRoot
 	bind:open={
 		() => error !== null,
 		(isOpen) => {
@@ -24,20 +29,13 @@
 		}
 	}
 >
-	<AlertDialog.Portal>
-		<AlertDialog.Overlay
-			class="fixed inset-0 z-50 bg-black/80 data-[state=closed]:animate-fade-out data-[state=open]:animate-fade-in"
-		/>
-		<AlertDialog.Content
-			class="shadow-popover fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-2 rounded-2xl border-2 border-neutral-800 bg-neutral-900 p-7 outline-hidden data-[state=closed]:animate-scale-out data-[state=open]:animate-scale-in sm:max-w-lg md:w-full"
-		>
+	<AlertDialogPortal>
+		<AlertDialogOverlay />
+		<AlertDialogContent>
 			<WarningCircleIcon size="50px" class="text-white" />
+			<AlertDialogTitle>Unsupported Link</AlertDialogTitle>
 
-			<AlertDialog.Title class="text-lg font-semibold tracking-tight">
-				Unsupported Link
-			</AlertDialog.Title>
-
-			<AlertDialog.Description class="text-sm">
+			<AlertDialogDescription>
 				Make sure the link you enter is <TextLink
 					href="https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md"
 					>supported by yt-dlp</TextLink
@@ -56,11 +54,11 @@
 						}
 					}}>{copied ? 'copied' : 'this log'}</button
 				>).
-			</AlertDialog.Description>
+			</AlertDialogDescription>
 
 			<ButtonComponent variant="primary" class="mt-4 w-full" onclick={() => (error = null)}
 				>Okay</ButtonComponent
 			>
-		</AlertDialog.Content>
-	</AlertDialog.Portal>
-</AlertDialog.Root>
+		</AlertDialogContent>
+	</AlertDialogPortal>
+</AlertDialogRoot>

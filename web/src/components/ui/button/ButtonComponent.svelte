@@ -15,7 +15,7 @@
 	<Button.Root
 		class="button rounded-input bg-dark text-background shadow-mini hover:bg-dark/95 inline-flex
         h-12 cursor-pointer items-center justify-center
-        rounded-lg px-5.25 text-[15px] font-medium transition-all active:scale-[0.98] {klass} {variantClass}"
+        rounded-lg px-5.25 text-[15px] font-medium transition-all active:scale-[0.98] {klass} {variantClass} disabled:cursor-not-allowed disabled:opacity-50"
 		{...rest}
 	>
 		{@render children()}

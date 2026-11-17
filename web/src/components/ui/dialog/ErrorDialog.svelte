@@ -1,7 +1,13 @@
 <script lang="ts">
+	import AlertDialogContent from '#components/ui/alertDialog/AlertDialogContent.svelte';
+	import AlertDialogDescription from '#components/ui/alertDialog/AlertDialogDescription.svelte';
+	import AlertDialogOverlay from '#components/ui/alertDialog/AlertDialogOverlay.svelte';
+	import AlertDialogPortal from '#components/ui/alertDialog/AlertDialogPortal.svelte';
+	import AlertDialogRoot from '#components/ui/alertDialog/AlertDialogRoot.svelte';
+	import AlertDialogTitle from '#components/ui/alertDialog/AlertDialogTitle.svelte';
 	import { WarningCircleIcon } from 'phosphor-svelte';
 	import ButtonComponent from '../button/ButtonComponent.svelte';
-	import { AlertDialog } from 'bits-ui';
+	import type { AlertDialog } from 'bits-ui';
 
 	interface Props extends AlertDialog.RootProps {
 		title?: string;
@@ -19,7 +25,7 @@
 		}, 1000);
 	});
 
-	let { open = $bindable(false), title, message, onClose = () => null }: Props = $props();
+	let { open = $bindable(false), title, message, onClose = () => null, ...rest }: Props = $props();
 
 	$effect(() => {
 		if (!open) {
@@ -28,27 +34,23 @@
 	});
 </script>
 
-<AlertDialog.Root bind:open>
-	<AlertDialog.Portal>
-		<AlertDialog.Overlay
-			class="fixed inset-0 z-50 bg-black/80 data-[state=closed]:animate-fade-out data-[state=open]:animate-fade-in"
-		/>
-		<AlertDialog.Content
-			class="shadow-popover fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-2 rounded-2xl border-2 border-neutral-800 bg-neutral-900 p-7 outline-hidden data-[state=closed]:animate-scale-out data-[state=open]:animate-scale-in sm:max-w-lg md:w-full"
-		>
+<AlertDialogRoot bind:open {...rest}>
+	<AlertDialogPortal>
+		<AlertDialogOverlay />
+		<AlertDialogContent>
 			<WarningCircleIcon size="50px" class="text-white" />
 
-			<AlertDialog.Title class="text-lg font-semibold tracking-tight">
+			<AlertDialogTitle>
 				{title || 'Oops!'}
-			</AlertDialog.Title>
+			</AlertDialogTitle>
 
-			<AlertDialog.Description class="text-sm">
+			<AlertDialogDescription>
 				{message}
-			</AlertDialog.Description>
+			</AlertDialogDescription>
 
 			<ButtonComponent variant="primary" class="mt-4 w-full" onclick={() => (open = false)}
 				>Okay</ButtonComponent
 			>
-		</AlertDialog.Content>
-	</AlertDialog.Portal>
-</AlertDialog.Root>
+		</AlertDialogContent>
+	</AlertDialogPortal>
+</AlertDialogRoot>
